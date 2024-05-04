@@ -1,0 +1,54 @@
+
+
+
+
+main {
+    position: absolute;
+    width: 100%;
+    top: 4rem;
+    z-index: 1;
+}
+
+app-navbar {
+    // position: fixed;
+}
+
+app-sidebar {
+    position: fixed;
+    left: 0rem;
+    width: 70px;
+    // margin-top: 15px;
+    height: calc(100vh - 4rem);
+    // box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
+    // background-color: rgba(34,34,34,1);
+    // background-color: #242a33;
+    background-color: #f6f6f9;
+    border-top: 1px solid white;
+    overflow-x: hidden;
+    white-space: nowrap;
+    transition: 0.8s cubic-bezier(.36,-0.01,0,.77);
+    // transition: 2.2s cubic-bezier(.36,-0.01,0,.77);
+}
+
+.app-side-nav-open {
+    width: 250px;
+    transition: 0.8s cubic-bezier(.36,-0.01,0,.77);
+}
+
+.display-area {
+    position: absolute;
+    // transition: 2.2s cubic-bezier(.36,-0.01,0,.77);
+    // left: 60px;
+    // margin: 15px;
+    // margin-left: 15px;
+    // margin-top: 15px;
+    left: 70px;
+    transition: 0.8s cubic-bezier(.36,-0.01,0,.77);
+    // width: calc(100% - 60px);
+}
+
+.display-area-shrink {
+    transition: 0.8s cubic-bezier(.36,-0.01,0,.77);
+    left: 250px;
+    width: calc(100% - 250px);
+}

@@ -1,0 +1,36 @@
+.products {
+    margin: 15px 30px 0 15px;
+}
+
+.products h1 {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+
+.table-controls {
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.btn-add {
+    height: 35px;
+    background: #7380ec;
+    color: #fff;
+    border: #7380ec;
+}
+
+// table {
+//     width: 100%;
+//   }
+  
+.mat-mdc-form-field {
+    font-size: 14px;
+    width: 50%;
+  }
+  
+// td, th {
+//     width: 25%;
+//   }

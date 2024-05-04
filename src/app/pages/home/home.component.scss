@@ -1,0 +1,194 @@
+
+.dashboard {
+    margin: 15px 30px 0 15px;
+}
+
+.dashboard h1 {
+    font-weight: 700;
+    font-size: 1.5rem;
+}
+
+.dashboard .dates {
+    display: flex;
+    gap: 1rem;
+    margin: 10px 0px;
+}
+
+.dashboard .dates .date {
+    display: inline-block;
+    background: rgba(132, 139, 200, 0.18);
+    border-radius: 0.4rem;
+    margin-top: 1rem;
+    padding: 0.5rem 1.6rem;
+}
+
+
+.dashboard .dates .date input[type="date"] {
+    background: transparent;
+    color: #363949;
+    border: none;
+}
+.dashboard .insights {
+
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.6rem;
+}
+
+.dashboard .insights > div {
+    background: #fff ;
+    padding: 1.8rem;
+    border-radius: 2rem;
+    margin-top: 1rem;
+    box-shadow: 0 2rem 3rem rgba(132, 139, 200, 0.18);
+    transition: all 300ms ease;
+}
+
+.dashboard .insights > div:hover {
+    box-shadow: none;
+}
+
+.dashboard .insights > div span {
+    background: #7380ec;
+    padding: 0.4rem 0.8rem;
+   
+    border-radius: 100%;
+    color: #fff;
+    font-size: 2rem;
+}
+
+.dashboard .insights > div span mat-icon {
+    font-size: 1.5rem;
+}
+
+.dashboard .insights > div.expenses span {
+    background: #ff7782;
+}
+
+.dashboard .insights > div.sales span {
+    background: #41f123;
+}
+
+
+.dashboard .insights > div .middle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 0.5rem;
+}
+
+.dashboard .insights h3 {
+    margin: 1rem 0 0.6rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-transform: capitalize;
+    color: #363949;
+}
+.dashboard .insights h2 {
+    color: #363949;
+    font-size: 1.3rem;
+    font-weight: bold;
+}
+
+.dashboard .insights .progress {
+    position: relative;
+    display: flex;
+    
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: none;
+    border: #363949;
+}
+
+.dashboard .insights .progress .number {
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: none;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dashboard .insights small {
+    margin-top: 1.3rem;
+    display: block;
+}
+
+
+.sales .mat-mdc-progress-spinner { --mdc-circular-progress-active-indicator-color: #41f123; }
+.expenses .mat-mdc-progress-spinner { --mdc-circular-progress-active-indicator-color: #ff7782; }
+.products .mat-mdc-progress-spinner { --mdc-circular-progress-active-indicator-color: #7380ec; }
+
+.table-reports {
+    display: grid;
+    margin-top: 2rem;
+    // background-color: red;
+    grid-template-columns: 2fr 1fr;
+    gap: 1.6rem;
+}
+
+.peru {
+    width: 100%;
+    height: 100%;
+    background-color: peru;
+}
+
+.recent-orders h2{
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+.recent-orders table {
+    background: #fff;
+    width: 100%;
+    border-radius: 2rem;
+    padding: 1.8rem;
+    text-align: center;
+    box-shadow: 0 2rem 3rem rgba(132, 139, 200, 0.18);
+    transition: all 300ms ease;
+}
+
+.recent-orders table:hover {
+    box-shadow: none;
+}
+
+table tbody td {
+    height: 2.8rem;
+    border-bottom: 1px solid rgba(132, 139, 200, 0.18);
+    color: #677483;
+}
+
+table tbody tr:last-child td {
+    border: none;
+}
+
+.recent-orders a {
+    text-align: center;
+    display: block;
+    margin: 1rem auto;
+    color: #7380ec;
+}
+
+.low-stock h2{
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+}
+
+
+.list-stock {
+    width: 100%;
+    background: #fff;
+    border-radius: 2rem;
+    padding: 1.8rem;
+    box-shadow: 0 2rem 3rem rgba(132, 139, 200, 0.18);
+}
+
+.list-stock ul li {
+    display: flex;
+    justify-content: space-around;
+}

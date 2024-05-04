@@ -1,0 +1,152 @@
+<div class="dashboard">
+    <h1>DASHBOARD</h1>
+    <!-- <div class="dates">
+        <div class="date">
+            <input type="date">
+        </div>
+        <div class="date">
+            <input type="date">
+        </div>
+    </div> -->
+    <div class="dates">
+        <mat-form-field >
+            <mat-label>Ingrese un rango de fechas:</mat-label>
+            <mat-date-range-input [formGroup]="range" [rangePicker]="picker">
+                <input matStartDate formControlName="start" placeholder="Start date">
+                <input matEndDate formControlName="end" placeholder="End date">
+            </mat-date-range-input>
+            <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+        </mat-form-field>
+    </div>
+
+    <div class="insights">
+        <div class="products">
+            <span>
+                <mat-icon fontIcon="shopping_cart"></mat-icon>
+            </span>
+            <div class="middle">
+                <div class="left">
+                    <h3>total de productos</h3>
+                    <h2>800</h2>
+                </div>
+                <div class="progress">
+                    <mat-progress-spinner [color]="color" [mode]="mode" [value]="value"></mat-progress-spinner>
+                    <div class="number">
+                        81%
+                    </div>
+                </div>
+            </div>
+            <small class="text-muted">Last 24 hours</small>
+        </div>
+        <div class="sales">
+            <span>
+                <mat-icon fontIcon="analytics"></mat-icon>
+            </span>
+            <div class="middle">
+                <div class="left">
+                    <h3>total de ventas</h3>
+                    <h2>2500 PEN</h2>
+                </div>
+                <div class="progress">
+                    <mat-progress-spinner [color]="color" [mode]="mode" [value]="value"></mat-progress-spinner>
+                    <div class="number">
+                        81%
+                    </div>
+                </div>
+            </div>
+            <small class="text-muted">Last 24 hours</small>
+        </div>
+        <div class="expenses">
+            <span>
+                <mat-icon fontIcon="stacked_line_chart"></mat-icon>
+            </span>
+            <div class="middle">
+                <div class="left">
+                    <h3>total de pedidos</h3>
+                    <h2>10</h2>
+                </div>
+                <div class="progress">
+                    <mat-progress-spinner [color]="color" [mode]="mode" [value]="value"></mat-progress-spinner>
+                    <div class="number">
+                        {{value}}%
+                    </div>
+                </div>
+            </div>
+            <small class="text-muted">Last 24 hours</small>
+        </div>
+    </div>
+    <div class="table-reports">
+        <div class="recent-orders">
+            <h2>PRODUCTOS TOP</h2>
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+                <!--- Note that these columns can be defined in any order.
+                      The actual rendered columns are set as a property on the row definition" -->
+              
+                <!-- Position Column -->
+                <ng-container matColumnDef="position">
+                  <th mat-header-cell *matHeaderCellDef> No. </th>
+                  <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                </ng-container>
+              
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef> Name </th>
+                  <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                </ng-container>
+              
+                <!-- Weight Column -->
+                <ng-container matColumnDef="weight">
+                  <th mat-header-cell *matHeaderCellDef> Weight </th>
+                  <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+                </ng-container>
+              
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="symbol">
+                  <th mat-header-cell *matHeaderCellDef> Symbol </th>
+                  <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+        <div class="low-stock">
+            <h2>BAJOS EN STOCK</h2>
+            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort (matSortChange)="announceSortChange($event)">
+
+                <!--- Note that these columns can be defined in any order.
+                      The actual rendered columns are set as a property on the row definition" -->
+              
+                <!-- Position Column -->
+                <ng-container matColumnDef="position">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number"> No. </th>
+                  <td mat-cell *matCellDef="let element"> {{element.position}} </td>
+                </ng-container>
+              
+                <!-- Name Column -->
+                <ng-container matColumnDef="name">
+                  <th mat-header-cell *matHeaderCellDef> Name </th>
+                  <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                </ng-container>
+              
+                <!-- Weight Column -->
+                <ng-container matColumnDef="weight">
+                  <th mat-header-cell *matHeaderCellDef> Weight </th>
+                  <td mat-cell *matCellDef="let element"> {{element.weight}} </td>
+                </ng-container>
+              
+                <!-- Symbol Column -->
+                <ng-container matColumnDef="symbol">
+                  <th mat-header-cell *matHeaderCellDef> Symbol </th>
+                  <td mat-cell *matCellDef="let element"> {{element.symbol}} </td>
+                </ng-container>
+              
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+        </div>
+    </div>
+</div>

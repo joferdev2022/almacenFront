@@ -1,1 +1,70 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { 
+    margin: 0; 
+    font-family: Roboto, "Helvetica Neue", sans-serif; 
+    background-color: #f6f6f9;
+}
+
+
+// PERSONALIZADO
+
+a {
+    color: #363949;
+    text-decoration: none;
+}
+h1 {
+    font-weight: 800;
+    font-size: 1.8rem;
+}
+
+h2 {
+    font-size: 1.4rem;
+}
+
+h3 {
+    font-size: 0.87rem;
+}
+
+h4 {
+    font-size: 0.8rem;
+}
+
+h5 {
+    font-size: 0.77rem;
+
+}
+
+.text-muted {
+    color: #7d8da1;
+}
+
+p {
+    color: #677483;
+}
+
+b {
+    color: #363949;
+}
+
+.primary {
+    color: #7380ec;
+}
+
+.danger {
+    color: #ff7782;
+}
+
+.success {
+    color: #41f123;
+}
+
+.warning {
+    color: #ffbb55;
+}
+
+
+// .mat-progress-spinner circle, .mat-spinner circle {
+//     stroke: #2A79FF!important;
+// }

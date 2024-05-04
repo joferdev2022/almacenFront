@@ -1,0 +1,16 @@
+<div class="side-nav-content">
+    <div class="nav-list" [ngClass]="{'nav-list-open': sideNavStatus}">
+        <a  routerLink="./inicio" routerLinkActive="active">
+            <mat-icon fontIcon="grid_view"></mat-icon>
+            <h3>Dashboard</h3>
+        </a>
+        <a  routerLink="./productos" routerLinkActive="active">
+            <mat-icon fontIcon="shopping_cart"></mat-icon>
+            <h3>Productos</h3>
+        </a>
+        <a routerLink="./ventas" routerLinkActive="active">
+            <mat-icon fontIcon="receipt_long"></mat-icon>
+            <h3>Ventas</h3>
+        </a>
+    </div>
+</div>
