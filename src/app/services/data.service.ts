@@ -20,12 +20,12 @@ export class DataService {
 
 
 
-  loadProducts(page: number = 1, perPage: number = 10):Observable<ProductResponse> {
+  loadProducts(page: number = 1, perPage: number = 100):Observable<ProductResponse> {
     const url = `${ base_url }/products?page=${ page }&xpage=${ perPage }`;
     return this.http.get<ProductResponse>(url).pipe(map(res => ProductResponse.createFromObject(res)));
   }
 
-  loadSales(page: number = 1, perPage: number = 10):Observable<SaleResponse> {
+  loadSales(page: number = 1, perPage: number = 100):Observable<SaleResponse> {
     const url = `${ base_url }/sales?page=${ page }&xpage=${ perPage }`;
     return this.http.get<SaleResponse>(url).pipe(map(res => SaleResponse.createFromObject(res)));
   }

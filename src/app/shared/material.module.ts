@@ -10,6 +10,8 @@ import {MatTableModule, MatTableDataSource} from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort'
 import {MatInputModule} from '@angular/material/input';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
+import {MatDialogModule} from '@angular/material/dialog';
+
 
 
 
@@ -26,7 +28,9 @@ import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
     MatTableModule,
     MatSortModule,
     MatInputModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatDialogModule,
+  
 
   ]
 })

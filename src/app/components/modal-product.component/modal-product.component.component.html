@@ -1,0 +1,53 @@
+<h2 *ngIf="data.operation == 'create'" mat-dialog-title>Crear Nuevo Cliente:</h2>
+<h2 *ngIf="data.operation == 'update'" mat-dialog-title>Actualizar Cliente:</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="example-container" >
+    <form class="example-form" [formGroup]="productForm">
+      <mat-form-field class="example-full-width">
+        <mat-label>Name:</mat-label>
+        <input matInput type="text" placeholder="" formControlName="nameProduct" required>
+      </mat-form-field>
+    
+       <mat-form-field class="example-full-width">
+        <mat-label>descripción:</mat-label>
+        <input matInput placeholder="" formControlName="description" required>
+      </mat-form-field>
+       <mat-form-field class="example-full-width">
+        <mat-label>Categoria:</mat-label>
+        <input matInput placeholder="" formControlName="category" required>
+      </mat-form-field>
+       <mat-form-field class="example-full-width">
+        <mat-label>medida:</mat-label>
+        <input matInput placeholder="" formControlName="measure" required>
+      </mat-form-field>
+       <mat-form-field class="example-full-width">
+        <mat-label>Precio de compra:</mat-label>
+        <input matInput placeholder="" formControlName="buyPrice" required>
+      </mat-form-field>
+       <mat-form-field class="example-full-width">
+        <mat-label>precio de venta:</mat-label>
+        <input matInput placeholder="" formControlName="salePrice" required>
+      </mat-form-field>
+       <mat-form-field class="example-full-width">
+        <mat-label>Stock:</mat-label>
+        <input matInput placeholder="" formControlName="Stock" required>
+      </mat-form-field>
+      <!-- <div class="state-radio-button">
+        <label>Estado: </label>
+        <mat-radio-group formControlName="state">
+          <mat-radio-button value="ACTIVE">ACTIVO</mat-radio-button>
+          <mat-radio-button value="INACTIVE">INACTIVO</mat-radio-button>
+        </mat-radio-group>
+      </div> -->
+      <!-- <mat-form-field class="example-full-width">
+        <mat-label>Conceptos:</mat-label>
+        <input matInput type="text" placeholder="" formControlName="subscriptions" >
+      </mat-form-field> -->
+    </form> 
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancelar</button>
+  <button *ngIf="data.operation == 'create'" mat-button (click)="onCreate()" [mat-dialog-close]="true" cdkFocusInitial>Guardar</button>
+  <!-- <button *ngIf="data.operation == 'update'" mat-button (click)="onUpdate()" [mat-dialog-close]="true" cdkFocusInitial>Guardar</button> -->
+</mat-dialog-actions>

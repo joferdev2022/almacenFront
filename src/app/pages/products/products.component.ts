@@ -4,9 +4,11 @@ import {MatPaginator} from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import { MatPaginatorIntl } from '@angular/material/paginator';
+import { MatDialog } from '@angular/material/dialog';
 
 import { DataService } from 'src/app/services/data.service';
 import { ProductModel } from 'src/app/models/internal/product.model';
+import { ModalProductComponentComponent } from 'src/app/components/modal-product.component/modal-product.component.component';
 
 
 @Component({
@@ -29,7 +31,8 @@ export class ProductsComponent implements OnInit{
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private dataService: DataService,
-              private paginatorIntl: MatPaginatorIntl) {
+              private paginatorIntl: MatPaginatorIntl,
+              public dialog: MatDialog) {
       
        paginatorIntl.itemsPerPageLabel = 'items por página'; 
 
@@ -66,6 +69,18 @@ export class ProductsComponent implements OnInit{
       }
     })
 
+  }
+  openDialogCreate() {
+    const dialogRef = this.dialog.open(ModalProductComponentComponent, {
+      data: {customer: '', operation: "create"}
+    });
+    // dialogRef.afterOpened().subscribe(result => console.log(user))
+    dialogRef.afterClosed().subscribe(result => {
+      if( result== true) {
+        this.loadAllProducts();
+      }
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
   applyFilter(event: Event) {

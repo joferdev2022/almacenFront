@@ -7,7 +7,7 @@
             <mat-label>Buscar</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="" #input>
         </mat-form-field>
-        <button class="btn-add">
+        <button class="btn-add" (click)="openDialogCreate()">
             Agregar Producto
         </button>
     </div>
