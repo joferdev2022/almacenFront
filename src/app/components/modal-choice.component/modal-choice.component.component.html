@@ -1,0 +1,12 @@
+
+<h1 mat-dialog-title align="center">
+    <mat-icon  fontIcon="warning"></mat-icon>
+    <!-- {{data.title}} -->
+  </h1>
+  <div mat-dialog-content class="subtitle">
+    {{data.subTitle}}
+  </div>
+  <div mat-dialog-actions align="center" class="butons">
+    <button mat-button mat-dialog-close>Cancelar</button>
+    <button mat-button [mat-dialog-close] = "true" class="btn-accept" cdkFocusInitial>Aceptar</button>
+  </div>

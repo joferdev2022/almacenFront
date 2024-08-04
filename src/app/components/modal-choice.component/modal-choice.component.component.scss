@@ -1,0 +1,26 @@
+.butons {
+    display: flex;
+    gap: 2rem;
+}
+
+.butons button {
+    outline: none;
+    border: none;
+    border-radius: 40px;
+    padding: 0 2rem;
+}
+.butons .btn-accept {
+    color: #fff;
+    background-color: #7380ec;
+}
+
+mat-icon {
+    color: #ff7782;
+    // font-size: 100px;
+ 
+}
+
+.subtitle {
+    font-size: 18px;
+    color: #030303;
+}

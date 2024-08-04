@@ -6,6 +6,7 @@ import { Observable, map } from 'rxjs';
 import { ProductResponse } from '../models/response/product.response';
 import { SaleResponse } from '../models/response/sale.response';
 import { DashboardResponse } from '../models/response/dashboard.response';
+import { ProductRequest } from '../models/request/product.request';
 
 
 
@@ -33,5 +34,25 @@ export class DataService {
   loadDashboard() {
     const url = `${ base_url }/dashboard`;
     return this.http.get<DashboardResponse>(url).pipe(map(res => DashboardResponse.createFromObject(res)));
+  }
+
+
+  saveProduct(productData: ProductRequest):Observable<any> {
+
+    const url = `${ base_url }/products`;
+    console.log(productData);
+    
+    // return this.http.post<any>( url, productData ).pipe(map(res => ResponseCustomer.createFromObject(res)));
+    return this.http.post<any>( url, productData ).pipe(map(res => console.log(res)));
+  }
+
+  updateProductById(productId: any , productData:ProductRequest):Observable<any> {
+    const url = `${ base_url }/products/${productId}`;
+    return this.http.put<any>( url, productData ).pipe(map(res => console.log(res)));
+  }
+
+  deleteProductById(productId: any):Observable<any> {
+    const url = `${ base_url }/products/${productId}`;
+    return this.http.delete<any>(url).pipe(map(res => console.log(res)));
   }
 }

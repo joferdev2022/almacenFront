@@ -1,4 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { timer } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import {MatPaginator} from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -9,6 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { DataService } from 'src/app/services/data.service';
 import { ProductModel } from 'src/app/models/internal/product.model';
 import { ModalProductComponentComponent } from 'src/app/components/modal-product.component/modal-product.component.component';
+import { ModalChoiceComponentComponent } from 'src/app/components/modal-choice.component/modal-choice.component.component';
 
 
 @Component({
@@ -18,7 +21,7 @@ import { ModalProductComponentComponent } from 'src/app/components/modal-product
 })
 
 export class ProductsComponent implements OnInit{
-  displayedColumns: string[] = ['name', 'description', 'category', 'measure', 'priceBuy', 'priceSale', 'stock'];
+  displayedColumns: string[] = ['name', 'description', 'category', 'measure', 'priceBuy', 'priceSale', 'stock', 'actions'];
   dataSource!: MatTableDataSource<ProductModel>;
 
   public totalProducts?:number;
@@ -74,10 +77,45 @@ export class ProductsComponent implements OnInit{
     const dialogRef = this.dialog.open(ModalProductComponentComponent, {
       data: {customer: '', operation: "create"}
     });
-    // dialogRef.afterOpened().subscribe(result => console.log(user))
     dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+
       if( result== true) {
-        this.loadAllProducts();
+
+        timer(1000).subscribe(() => {
+
+          this.loadAllProducts();
+        });
+        
+      }
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
+  deleteProduct(productId: any) {
+    console.log(productId);
+    
+    this.dataService.deleteProductById(productId).subscribe({
+      next: (res) => {
+        timer(1000).subscribe(() => {
+
+          this.loadAllProducts();
+        });
+      }
+    })
+  }
+
+  openDeleteModal(productId:any) {
+    const dialogRef = this.dialog.open(ModalChoiceComponentComponent, {
+      data: {title: 'Eliminar Producto', subTitle: "Deseas eliminar este producto?"},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result == true) {
+
+        this.deleteProduct(productId);
+        // console.log("ahora si procedemos a borrar", user.tel);
+        
       }
       console.log(`Dialog result: ${result}`);
     });
