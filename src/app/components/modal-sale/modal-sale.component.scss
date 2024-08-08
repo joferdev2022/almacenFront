@@ -1,0 +1,252 @@
+.example-form {
+    min-width: 150px;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+.example-full-width {
+    width: 100%;
+  }
+
+mat-radio-button {
+    margin: 0px 20px;
+  }
+
+.state-radio-button {
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+.select-div {
+    display: flex;
+    justify-content: space-around;
+    // gap: 2rem;
+    // margin-left: 1rem;
+}
+
+.input-div {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+
+button {
+    height: 35px;
+    background: #7380ec;
+    color: #fff;
+    border: #7380ec;
+    border-radius: 40px;
+    padding: 0 2rem;
+    margin: 0.25rem;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    height: 35px;
+    // line-height: 40px;
+    background: #fff;
+    color: black;
+    border: 2px solid rgb(176, 176, 176);
+    border-radius: 40px;
+    padding: 0 2rem;
+    cursor: pointer;
+}
+
+.cart {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+}
+// .cart-title {
+//     display: flex;
+//     justify-content: space-around;
+//     text-align: center;
+//     width: 750px;
+// }
+
+.cart-title, .cart-element {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr 1fr;
+    align-items: center;
+    gap: 10px;
+    width: 750px;
+}
+
+.cart-element .unitaryPrice {
+    margin-left: 38px;
+    margin-top: 10px;
+}
+
+.cart-element .product {
+    margin-top: 10px;
+}
+
+.cart-element mat-icon {
+    margin-top: -6px;
+    margin-left: 38px;
+    cursor: pointer;
+}
+.cart-title h3 {
+    margin: 0;
+    font-weight: bold;
+  }
+
+.cart-title .cantidad {
+    margin-left: 50px;
+}
+
+// .cart .cart-element {
+//     display: flex;
+//     width: 750px;
+//     justify-content: space-around;
+//     text-align: center;
+    
+// }
+.cart .cart-element .input-cantidad {
+    display: flex;
+    text-align: center;
+}
+
+.cart .cart-element button {
+    color: #7380ec;
+    width: 20px;
+    height: 20px;
+}
+
+
+
+.example-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ajusta esto según tus necesidades */
+}
+
+.example-form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.table-container {
+    display: flex;
+    flex-direction: column;
+    width: 750px;
+    height: 350px; /* Ajusta esta altura según tus necesidades */
+    margin-bottom: 20px;
+}
+
+.table-header {
+    padding: 10px;
+}
+
+.table-scroll {
+    flex: 1;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+
+}
+
+table {
+    width: 100%;
+}
+
+.mat-mdc-header-row {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 1;
+}
+
+.mat-mdc-paginator {
+    border: 1px solid #e0e0e0;
+    border-top: none;
+}
+
+.cart {
+    margin-top: 20px;
+}
+
+.input-name {
+    width: 750px;
+}
+
+
+.quantity {
+    display: inline-block; 
+    padding: 5px;
+    background-color:#eeeeee;
+    border-radius: 15px;
+}
+
+.quantity .input-text.qty {
+ width: 75px;
+ height: 39px;
+ padding: 0 5px;
+ text-align: center;
+ background-color: transparent;
+ border: none;
+ 
+}
+
+.quantity.buttons_added {
+    text-align: left;
+    position: relative;
+    white-space: nowrap;
+    vertical-align: top; 
+    width: 180px;
+    margin-left: 25px;
+}
+
+.quantity.buttons_added input {
+ display: inline-block;
+ margin: 0;
+ vertical-align: top;
+ box-shadow: none;
+}
+
+.quantity.buttons_added .minus,
+.quantity.buttons_added .plus {
+ padding: 10px 20px;
+ height: 41px;
+ background-color: white;
+ border: none;
+ cursor:pointer;
+border-radius: 15px;
+}
+
+.quantity.buttons_added .minus {
+ border-right: 0; }
+
+.quantity.buttons_added .plus {
+ border-left: 0; }
+
+.quantity.buttons_added .minus:hover,
+.quantity.buttons_added .plus:hover {
+ background: #eeeeee; }
+
+ .quantity input::-webkit-outer-spin-button,
+.quantity input::-webkit-inner-spin-button {
+ -webkit-appearance: none;
+ -moz-appearance: none;
+ margin: 0; }
+ 
+ .quantity.buttons_added .minus:focus,
+.quantity.buttons_added .plus:focus {
+ outline: none; }
+
+.cart-total {
+    margin-top: 70px;
+    width: 670px;
+}
+
+
+ .cart-total_item{
+    display: flex;
+    justify-content: flex-end;
+    gap: 3rem;
+ }
+
+ .cart-total p {
+    font-weight: bold;
+    font-size: 20px;
+ }

@@ -1,11 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
-import {MatPaginator} from '@angular/material/paginator';
+import {MatPaginator, MatPaginatorIntl} from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
+import { MatDialog } from '@angular/material/dialog';
+
 import { SaleModel } from 'src/app/models/internal/sale.model';
 import { DataService } from 'src/app/services/data.service';
+import { ModalSaleComponent } from 'src/app/components/modal-sale/modal-sale.component';
+import { timer } from 'rxjs';
+import { ModalChoiceComponentComponent } from 'src/app/components/modal-choice.component/modal-choice.component.component';
 
 
 @Component({
@@ -14,7 +19,7 @@ import { DataService } from 'src/app/services/data.service';
   styleUrls: ['./sales.component.scss']
 })
 export class SalesComponent implements OnInit {
-  displayedColumns: string[] = ['clientName', 'dateSale', 'totalPrice', 'products', 'state'];
+  displayedColumns: string[] = ['clientName', 'dateSale', 'totalPrice', 'products', 'actions'];
   dataSource!: MatTableDataSource<SaleModel>;
 
   public totalSales?:number;
@@ -31,7 +36,13 @@ export class SalesComponent implements OnInit {
     end: new FormControl<Date | null>(null),
   });
 
-  constructor(private dataService: DataService) {}
+  constructor(private dataService: DataService,
+              private paginatorIntl: MatPaginatorIntl,
+              public dialog: MatDialog,) {
+
+            paginatorIntl.itemsPerPageLabel = 'items por página'; 
+            
+              }
 
   ngOnInit(): void {
     this.loadAllSales();
@@ -57,6 +68,60 @@ export class SalesComponent implements OnInit {
       }
     })
 
+  }
+
+  openDialogCreate(){
+    const dialogRef = this.dialog.open(ModalSaleComponent, {
+      data: {customer: '', operation: "create"},
+      width: '800px',
+      height: '600px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+
+      if( result== true) {
+
+        timer(1000).subscribe(() => {
+
+          this.loadAllSales();
+        });
+        
+      }
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+  openDialogUpdate(sale: any) {
+
+  }
+
+  deleteSale(saleId: any) {
+    console.log(saleId);
+    
+    this.dataService.deleteSaleById(saleId).subscribe({
+      next: (res) => {
+        timer(1000).subscribe(() => {
+
+          this.loadAllSales();
+        });
+      }
+    })
+  }
+
+  openDeleteModal(saleId:any) {
+    const dialogRef = this.dialog.open(ModalChoiceComponentComponent, {
+      data: {title: 'Eliminar Venta', subTitle: "Deseas eliminar esta Venta?"},
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result == true) {
+
+        this.deleteSale(saleId);
+        // console.log("ahora si procedemos a borrar", user.tel);
+        
+      }
+      console.log(`Dialog result: ${result}`);
+    });
   }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;

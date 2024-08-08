@@ -86,5 +86,5 @@
 <mat-dialog-actions align="end">
   <button class="btn-cancel" mat-button mat-dialog-close>Cancelar</button>
   <button *ngIf="data.operation == 'create'" mat-button (click)="onCreate()" [mat-dialog-close]="true" cdkFocusInitial>Guardar</button>
-  <!-- <button *ngIf="data.operation == 'update'" mat-button (click)="onUpdate()" [mat-dialog-close]="true" cdkFocusInitial>Guardar</button> -->
+  <button *ngIf="data.operation == 'update'" mat-button (click)="onUpdate()" [mat-dialog-close]="true" cdkFocusInitial>Guardar</button>
 </mat-dialog-actions>

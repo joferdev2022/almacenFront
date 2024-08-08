@@ -12,4 +12,30 @@
     align-items: center;
 }
 
+.btn-add {
+    height: 35px;
+    background: #7380ec;
+    color: #fff;
+    border: #7380ec;
+    border-radius: 40px;
+    padding: 0 2rem;
+}
 
+.mat-mdc-form-field {
+    font-size: 14px;
+    width: 50%;
+  }
+
+.btn-actions {
+    display: flex;
+    
+}
+.btn-actions button {
+    border: none;
+    outline: none;
+    background-color: #fff;
+}
+.btn-actions mat-icon {
+    color: #7d8da1;;
+    // color: #7380ec;
+}

@@ -92,6 +92,28 @@ export class ProductsComponent implements OnInit{
     });
   }
 
+  openDialogUpdate(product: any) {
+    console.log(product);
+    
+    const dialogRef = this.dialog.open(ModalProductComponentComponent, {
+      data: {product: product, operation: "update"}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+
+      if( result== true) {
+
+        timer(1000).subscribe(() => {
+
+          this.loadAllProducts();
+        });
+        
+      }
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
   deleteProduct(productId: any) {
     console.log(productId);
     

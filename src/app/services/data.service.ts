@@ -7,6 +7,7 @@ import { ProductResponse } from '../models/response/product.response';
 import { SaleResponse } from '../models/response/sale.response';
 import { DashboardResponse } from '../models/response/dashboard.response';
 import { ProductRequest } from '../models/request/product.request';
+import { SaleRequest } from '../models/request/sale.request';
 
 
 
@@ -21,12 +22,12 @@ export class DataService {
 
 
 
-  loadProducts(page: number = 1, perPage: number = 100):Observable<ProductResponse> {
+  loadProducts(page: number = 1, perPage: number = 2000):Observable<ProductResponse> {
     const url = `${ base_url }/products?page=${ page }&xpage=${ perPage }`;
     return this.http.get<ProductResponse>(url).pipe(map(res => ProductResponse.createFromObject(res)));
   }
 
-  loadSales(page: number = 1, perPage: number = 100):Observable<SaleResponse> {
+  loadSales(page: number = 1, perPage: number = 5000):Observable<SaleResponse> {
     const url = `${ base_url }/sales?page=${ page }&xpage=${ perPage }`;
     return this.http.get<SaleResponse>(url).pipe(map(res => SaleResponse.createFromObject(res)));
   }
@@ -53,6 +54,20 @@ export class DataService {
 
   deleteProductById(productId: any):Observable<any> {
     const url = `${ base_url }/products/${productId}`;
+    return this.http.delete<any>(url).pipe(map(res => console.log(res)));
+  }
+
+  
+  saveSale(saleData: SaleRequest):Observable<any> {
+
+    const url = `${ base_url }/sales`;
+    console.log(saleData);
+    
+    // return this.http.post<any>( url, productData ).pipe(map(res => ResponseCustomer.createFromObject(res)));
+    return this.http.post<any>( url, saleData ).pipe(map(res => console.log(res)));
+  }
+  deleteSaleById(saleId: any):Observable<any> {
+    const url = `${ base_url }/sales/${saleId}`;
     return this.http.delete<any>(url).pipe(map(res => console.log(res)));
   }
 }

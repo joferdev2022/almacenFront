@@ -8,6 +8,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { MaterialModule } from '../shared/material.module';
 import { ModalProductComponentComponent } from './modal-product.component/modal-product.component.component';
 import { ModalChoiceComponentComponent } from './modal-choice.component/modal-choice.component.component';
+import { ModalSaleComponent } from './modal-sale/modal-sale.component';
 
 
 
@@ -16,7 +17,8 @@ import { ModalChoiceComponentComponent } from './modal-choice.component/modal-ch
     SidebarComponent,
     NavbarComponent,
     ModalProductComponentComponent,
-    ModalChoiceComponentComponent
+    ModalChoiceComponentComponent,
+    ModalSaleComponent
   ],
   exports: [
     SidebarComponent,

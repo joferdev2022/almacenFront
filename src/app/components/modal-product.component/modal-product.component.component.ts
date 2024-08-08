@@ -21,6 +21,10 @@ export class ModalProductComponentComponent implements OnInit {
     {value: 'Herbicidas', viewValue: 'Herbicidas'},
     {value: 'Fertilizantes', viewValue: 'Fertilizantes'},
     {value: 'Bioestimulantes', viewValue: 'Bioestimulantes'},
+    {value: 'Fungicidas', viewValue: 'Fungicidas'},
+    {value: 'Abonos Foliares', viewValue: 'Abonos Foliares'},
+    {value: 'Fertilizantes solubles', viewValue: 'Fertilizantes solubles'},
+    {value: 'Fertilizantes edáficos', viewValue: 'Fertilizantes edáficos'},
   ]
 
   measure = [
@@ -45,16 +49,16 @@ export class ModalProductComponentComponent implements OnInit {
   createForm() {
     this.productForm = this.fb.group({
       // tel: new FormControl()
-      nameProduct: [  this.data.product ? this.data.product.nameProduct : '' , Validators.required ],
+      nameProduct: [  this.data.product ? this.data.product.name : '' , Validators.required ],
       description: [ this.data.product ? this.data.product.description : '', [ Validators.required] ],
       category: [ this.data.product ? this.data.product.category : '', Validators.required ],
       measure: [ this.data.product ? this.data.product.measure : '', Validators.required ],
-      buyPrice: [ this.data.product ? this.data.product.buyPrice : '', Validators.required ],
-      salePrice: [ this.data.product ? this.data.product.salePrice : '', Validators.required ],
-      Stock: [ this.data.product ? this.data.product.Stock : '', Validators.required ],
-      provId: [ this.data.product ? this.data.product.provId : '', Validators.required ],
-      startDate: [ this.data.product ? this.data.product.startDate : '', Validators.required ],
-      endDate: [ this.data.product ? this.data.product.endDate : '', Validators.required ],
+      buyPrice: [ this.data.product ? this.data.product.priceBuy : '', Validators.required ],
+      salePrice: [ this.data.product ? this.data.product.priceSale : '', Validators.required ],
+      Stock: [ this.data.product ? this.data.product.stock : '', Validators.required ],
+      provId: [ this.data.product ? this.data.product.proovId : '', Validators.required ],
+      startDate: [ this.data.product ? this.data.product.creationDate : '', Validators.required ],
+      endDate: [ this.data.product ? this.data.product.expirationDate : '', Validators.required ],
       // subscriptions: [ this.data.customer ? this.data.customer.subscriptions : '', Validators.required ],
     });
     console.log(this.data.product);
@@ -86,6 +90,20 @@ export class ModalProductComponentComponent implements OnInit {
       // this.openConfirmationModal(Default.CONFIRM_ERROR);
     }
     
+  }
+
+  onUpdate() {
+    console.log("vamos a updatear");
+    if(true){
+      this.dataService.updateProductById(this.data.product.id, ProductRequest.createFromObject(this.productForm.value)).subscribe({
+        next: (res) => {
+          console.log(res);
+        },
+        error: (e) => {
+          console.log(e);
+        }
+      });
+    }
   }
 
  
