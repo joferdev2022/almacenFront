@@ -8,7 +8,7 @@
         <input matInput type="text" placeholder="" formControlName="nombreCliente" required>
       </mat-form-field>
       
-      <div formArrayName="productos" class="table-container">
+      <div  class="table-container">
         <div class="table-controls">
           <mat-form-field class="example-full-width">
               <mat-label>Buscar productos</mat-label>
@@ -65,22 +65,32 @@
         
       </div>
       
-      <div class="cart">
+      <div class="cart" formArrayName="productos">
         <div class="cart-title">
           <h3>Producto:</h3>
           <h3 class="cantidad">Cantidad:</h3>
           <h3>Precio Unitario:</h3>
           <h3>Eliminar producto:</h3>
         </div>
-        <div class="cart-element" *ngFor="let item of productos.controls; let i = index">
+        <div class="cart-element" *ngFor="let item of productos.controls; let i = index" [formGroupName]="i">
           <h3 class="product">{{ item.get('productName')!.value }}</h3>
           <div class="quantity buttons_added">
             <input type="button" value="-" class="minus" (click)="decrementCantidad(i)">
-            <input  (change)="updatePrecioTotal()" type="number" step="1" name="quantity" [value]="item.get('cantidad')!.value" class="input-text qty text" size="4">
+            <input  (change)="updatePrecioTotal()" type="number" step="1" name="quantity" [value]="item.get('cantidad')!.value" class="input-text qty text" size="4" formControlName="cantidad">
             <input type="button" value="+" class="plus" (click)="incrementCantidad(i)">
           </div>
           <!-- <input type="number" (change)="updatePrecioTotal()"> -->
-          <h3 class="unitaryPrice" (change)="updatePrecioTotal()">S/.{{ item.get('precioUnitario')!.value | number:'1.2-2' }}</h3>
+          <!-- <h3 class="unitaryPrice" (change)="updatePrecioTotal()">S/.{{ item.get('precioUnitario')!.value | number:'1.2-2' }}</h3> -->
+          <!-- <input type="number" name="" id="" [value]="item.get('precioUnitario')!.value"> -->
+          <mat-form-field class="unitaryPrice">
+            <input matInput type="number" 
+                   formControlName="precioUnitario" 
+                   (change)="updatePrecioTotal()" 
+                   step="0.01" 
+                   min="0"
+                   class="price-input">
+            <span matPrefix>S/.</span>
+          </mat-form-field>
           <mat-icon fontIcon="delete" (click)="removeProducto(i)"></mat-icon>
         </div>
       </div>

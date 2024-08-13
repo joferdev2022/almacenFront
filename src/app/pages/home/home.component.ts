@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
   color: ThemePalette = 'primary';
   mode: ProgressSpinnerMode = 'determinate';
   value = 100;
-  displayedColumns: string[] = ['productoId', 'productName', 'cantidad_vendida'];
+  displayedColumns: string[] = ['index', 'productName', 'cantidad_vendida'];
   displayedColumns2: string[] = ['nombre', 'categoria', 'cantidadEnStock'];
   totalProducts: number = 0;
   totalSales: number = 0;

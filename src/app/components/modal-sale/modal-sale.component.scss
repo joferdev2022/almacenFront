@@ -73,9 +73,31 @@ button {
 }
 
 .cart-element .unitaryPrice {
-    margin-left: 38px;
+    // margin-left: 38px;
     margin-top: 10px;
+    width: 115px;
 }
+
+.unitaryPrice input::-webkit-outer-spin-button,
+.unitaryPrice input::-webkit-inner-spin-button {
+ -webkit-appearance: none;
+ -moz-appearance: none;
+ margin: 0; }
+
+.price-input {
+    text-align: center;
+    padding-left: 10px;
+}
+
+.unitaryPrice span {
+    position: absolute;
+    left: 5px;
+    top: 50%;
+}
+
+.unitaryPrice .mat-form-field-underline {
+    display: none;
+  }
 
 .cart-element .product {
     margin-top: 10px;
@@ -83,7 +105,7 @@ button {
 
 .cart-element mat-icon {
     margin-top: -6px;
-    margin-left: 38px;
+    margin-left: 51px;
     cursor: pointer;
 }
 .cart-title h3 {
@@ -195,6 +217,7 @@ table {
     vertical-align: top; 
     width: 180px;
     margin-left: 25px;
+    margin-top: -10px;
 }
 
 .quantity.buttons_added input {
@@ -224,7 +247,7 @@ border-radius: 15px;
 .quantity.buttons_added .plus:hover {
  background: #eeeeee; }
 
- .quantity input::-webkit-outer-spin-button,
+.quantity input::-webkit-outer-spin-button,
 .quantity input::-webkit-inner-spin-button {
  -webkit-appearance: none;
  -moz-appearance: none;
@@ -235,7 +258,8 @@ border-radius: 15px;
  outline: none; }
 
 .cart-total {
-    margin-top: 70px;
+    margin-top: 30px;
+    margin-left: 20px;
     width: 670px;
 }
 
