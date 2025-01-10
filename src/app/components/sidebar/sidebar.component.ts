@@ -9,5 +9,10 @@ export class SidebarComponent {
 
   @Input() sideNavStatus: boolean = false;
   collapse = false;
+  public user: any;
+  // public user: any;
 
+  constructor() { 
+    
+  }
 }

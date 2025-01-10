@@ -29,6 +29,7 @@ export class ProductsComponent implements OnInit{
   productsTemp!:any;
   currentPage?: number = 1;
   itemsPerPage?: number;
+  local!: any;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -38,7 +39,7 @@ export class ProductsComponent implements OnInit{
               public dialog: MatDialog) {
       
        paginatorIntl.itemsPerPageLabel = 'items por página'; 
-
+       this.local = JSON.parse(localStorage.getItem('local')!) ? JSON.parse(localStorage.getItem('local')!) : '';         
     
   }
   ngOnInit(): void {
@@ -53,7 +54,7 @@ export class ProductsComponent implements OnInit{
 
 
   loadAllProducts() {
-    this.dataService.loadProducts(this.currentPage, this.itemsPerPage).subscribe({
+    this.dataService.loadProducts(this.currentPage, this.itemsPerPage, this.local ).subscribe({
       next: (res) => {
         console.log(res);
         

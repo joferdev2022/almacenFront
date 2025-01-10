@@ -8,9 +8,11 @@ import { Component, EventEmitter, Output } from '@angular/core';
 export class NavbarComponent {
   @Output() sideNavToggled = new EventEmitter<boolean>();
   menuStatus: boolean = false;
+  user: any;
 
-
-
+  constructor() { 
+    this.user = JSON.parse(localStorage.getItem('user')!) ? JSON.parse(localStorage.getItem('user')!) : '';
+  }
 
 
   sideNavToggle() {

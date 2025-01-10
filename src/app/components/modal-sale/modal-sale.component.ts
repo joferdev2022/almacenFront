@@ -28,6 +28,8 @@ export class ModalSaleComponent implements OnInit{
   currentPage?: number = 1;
   itemsPerPage?: number;
 
+  local!: number;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -39,6 +41,7 @@ export class ModalSaleComponent implements OnInit{
               public dialog: MatDialog,
               private paginatorIntl: MatPaginatorIntl,) {
 
+      this.local = JSON.parse(localStorage.getItem('local')!) ? JSON.parse(localStorage.getItem('local')!) : '';                 
       this.loadAllProducts();
 
       paginatorIntl.itemsPerPageLabel = 'items por página';
@@ -47,7 +50,8 @@ export class ModalSaleComponent implements OnInit{
       nombreCliente: ['', Validators.required],
       productos: this.fb.array([]),
       precioTotal: [0, Validators.min(0)],
-      estado: ['cancelado', Validators.required]
+      estado: ['cancelado', Validators.required],
+      local: [this.local]
     });
               }
   
@@ -61,7 +65,7 @@ export class ModalSaleComponent implements OnInit{
 
   
   loadAllProducts() {
-    this.dataService.loadProducts(this.currentPage, this.itemsPerPage).subscribe({
+    this.dataService.loadProducts(this.currentPage, this.itemsPerPage, this.local).subscribe({
       next: (res) => {
         console.log(res);
         
@@ -88,7 +92,12 @@ export class ModalSaleComponent implements OnInit{
 
   addProducto(productItem:any) {
     console.log(productItem);
-    
+    console.log(productItem.stock);
+    if(productItem.stock <= 0) {
+      console.log("no hay stock");
+      alert("No hay stock disponible");
+      return;
+    }
     const productoForm = this.fb.group({
       productoId: [productItem ? productItem.id : '' , Validators.required],
       cantidad: [1, [Validators.required, Validators.min(1)]],
@@ -143,8 +152,9 @@ export class ModalSaleComponent implements OnInit{
 
   onCreate() {
 
-    console.log(this.saleForm.value);
     
+    // this.saleForm.patchValue({ local: this.local });
+    console.log(this.saleForm.value);
     if(true) {
       const saleData = this.saleForm.value;
       const saleRequest = SaleRequest.createFromObject(saleData);

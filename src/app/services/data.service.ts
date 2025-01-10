@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, map } from 'rxjs';
 
@@ -11,7 +11,7 @@ import { SaleRequest } from '../models/request/sale.request';
 
 
 
-const base_url = "http://localhost:8000/api";
+const base_url = "https://almacenback.onrender.com/api";
 
 @Injectable({
   providedIn: 'root'
@@ -22,19 +22,28 @@ export class DataService {
 
 
 
-  loadProducts(page: number = 1, perPage: number = 2000):Observable<ProductResponse> {
-    const url = `${ base_url }/products?page=${ page }&xpage=${ perPage }`;
+  loadProducts(page: number = 1, perPage: number = 2000, local: any):Observable<ProductResponse> {
+    const url = `${ base_url }/products?page=${ page }&xpage=${ perPage }&local=${local}`;
     return this.http.get<ProductResponse>(url).pipe(map(res => ProductResponse.createFromObject(res)));
   }
 
-  loadSales(page: number = 1, perPage: number = 5000):Observable<SaleResponse> {
-    const url = `${ base_url }/sales?page=${ page }&xpage=${ perPage }`;
+  loadSales(page: number = 1, perPage: number = 5000, local:any):Observable<SaleResponse> {
+    const url = `${ base_url }/sales?page=${ page }&xpage=${ perPage }&local=${local}`;
     return this.http.get<SaleResponse>(url).pipe(map(res => SaleResponse.createFromObject(res)));
   }
 
-  loadDashboard() {
+  loadDashboard(fechaInicio?: Date, fechaFin?: Date, local?: any) {
+
+    let params = new HttpParams();
+    if (fechaInicio) {
+      params = params.set('fecha_inicio', fechaInicio.toISOString());
+    }
+    if (fechaFin) {
+      params = params.set('fecha_fin', fechaFin.toISOString());
+    }
+
     const url = `${ base_url }/dashboard`;
-    return this.http.get<DashboardResponse>(url).pipe(map(res => DashboardResponse.createFromObject(res)));
+    return this.http.get<DashboardResponse>(url,  { params }).pipe(map(res => DashboardResponse.createFromObject(res)));
   }
 
 

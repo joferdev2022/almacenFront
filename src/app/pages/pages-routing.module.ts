@@ -3,12 +3,14 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { PagesComponent } from './pages.component';
 import { SalesModule } from './sales/sales.module';
+import { authGuard } from '../guards/auth.guard';
 
 
 const routes: Routes = [
   {
     path: '',
     component: PagesComponent,
+    canActivate: [authGuard],
     children: [
       {
         path: '', redirectTo: 'inicio', pathMatch: 'full'

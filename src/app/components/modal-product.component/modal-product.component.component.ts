@@ -13,6 +13,7 @@ import { ProductRequest } from 'src/app/models/request/product.request';
 })
 export class ModalProductComponentComponent implements OnInit {
   public productForm!: FormGroup;
+  local!: any;
 
   selectedValue!: string;
 
@@ -37,6 +38,8 @@ export class ModalProductComponentComponent implements OnInit {
               private fb: FormBuilder,
               private dataService: DataService,
               public dialog: MatDialog) {
+          
+        this.local = JSON.parse(localStorage.getItem('local')!) ? JSON.parse(localStorage.getItem('local')!) : '';  
 
               }
 
@@ -59,6 +62,7 @@ export class ModalProductComponentComponent implements OnInit {
       provId: [ this.data.product ? this.data.product.proovId : '', Validators.required ],
       startDate: [ this.data.product ? this.data.product.creationDate : '', Validators.required ],
       endDate: [ this.data.product ? this.data.product.expirationDate : '', Validators.required ],
+      local: [ this.local ],
       // subscriptions: [ this.data.customer ? this.data.customer.subscriptions : '', Validators.required ],
     });
     console.log(this.data.product);

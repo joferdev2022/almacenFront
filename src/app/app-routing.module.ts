@@ -9,10 +9,10 @@ const routes: Routes = [
     path: 'almacen',
     loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule)
   },
-  // {
-  //   path: 'auth',
-  //   loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
-  // },
+  {
+    path: 'auth',
+    loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
+  },
   {
     path: '**', redirectTo: 'almacen'
   }

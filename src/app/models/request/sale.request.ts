@@ -10,6 +10,7 @@ export class SaleRequest {
     precioTotal!: number;
     estado!: string;
     productos!: ProductoVenta[];
+    local!: number;
   
   
     static createFromObject(sale: any): SaleRequest {
@@ -17,6 +18,7 @@ export class SaleRequest {
       newObj.nombreCliente = sale.nombreCliente;
       newObj.precioTotal = sale.precioTotal;
       newObj.estado = sale.estado;
+      newObj.local = sale.local;
       newObj.productos = sale.productos.map((product: any) => {
         const productoVenta = new ProductoVenta();
         productoVenta.productoId = product.productoId;

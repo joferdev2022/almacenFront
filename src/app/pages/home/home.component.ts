@@ -45,8 +45,8 @@ export class HomeComponent implements OnInit {
     this.loadDashboardData();
   }
 
-  loadDashboardData() {
-    this.dataService.loadDashboard().subscribe({
+  loadDashboardData(fechaInicio?: Date, fechaFin?: Date) {
+    this.dataService.loadDashboard(fechaInicio, fechaFin).subscribe({
       next: (res) => {
         console.log(res);
         

@@ -9,7 +9,7 @@ export class ProductRequest {
     cantidadEnStock!: number;
     unidadDeMedida!: string;
     fechaDeCaducidad!: Date;
-  
+    local!: number;
   
     static createFromObject(product: any): ProductRequest {
       const newObj = new ProductRequest();
@@ -20,6 +20,7 @@ export class ProductRequest {
       newObj.precioVenta = product.salePrice;
       newObj.cantidadEnStock = product.Stock;
       newObj.unidadDeMedida = product.measure;
+      newObj.local = product.local;
       // newObj.fechaDeCaducidad = product.startDate;
    
       return newObj;

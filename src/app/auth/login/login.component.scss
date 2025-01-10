@@ -1,0 +1,33 @@
+.login-register {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: inherit;
+    height: 100%;
+    width: 100%;
+    padding: 10% 0;
+    position: fixed; }
+
+.login-box {
+    width: 500px;
+    margin: 0 auto;
+}
+
+.login-sidebar {
+    padding: 0px;
+    margin-top: 0px; }
+    .login-sidebar .login-box {
+      right: 0px;
+      position: absolute;
+      height: 100%; }
+
+.full-width {
+    width: 100%;
+  }
+
+.logo {
+    // margin-top: 30px;
+    // margin-bottom: 50px;
+    // padding-bottom: 40px;
+    width: 250px;
+    height: 250px;
+}
