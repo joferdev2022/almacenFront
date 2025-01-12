@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 
 
 const base_url = "https://almacenback.onrender.com/api";
+// const base_url = "http://localhost:8000/api";
 
 @Injectable({
   providedIn: 'root'
@@ -110,7 +111,7 @@ export class AuthService {
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    localStorage.removeItem('refresh');
+    localStorage.removeItem('local');
     this.router.navigateByUrl('auth/login');
 
   }

@@ -11,6 +11,7 @@ import { SaleRequest } from '../models/request/sale.request';
 
 
 
+// const base_url = "http://localhost:8000/api";
 const base_url = "https://almacenback.onrender.com/api";
 
 @Injectable({
@@ -40,6 +41,10 @@ export class DataService {
     }
     if (fechaFin) {
       params = params.set('fecha_fin', fechaFin.toISOString());
+    }
+
+    if(local) {
+      params = params.set('local', local);
     }
 
     const url = `${ base_url }/dashboard`;

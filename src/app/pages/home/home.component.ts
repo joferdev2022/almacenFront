@@ -28,6 +28,7 @@ export class HomeComponent implements OnInit {
   amountSales: number = 0;
   productsTop!:Array<TopProduct>;
   productsLow!:Array<LowProduct>;
+  local!: any;
   
   dataSource = new MatTableDataSource<TopProduct>;
   dataSource2 = new MatTableDataSource<LowProduct>;
@@ -40,13 +41,16 @@ export class HomeComponent implements OnInit {
   constructor(private _liveAnnouncer: LiveAnnouncer,
               private dataService: DataService, ) {
 
+
+                this.local = JSON.parse(localStorage.getItem('local')!) ? JSON.parse(localStorage.getItem('local')!) : ''; 
+
               }
   ngOnInit(): void {
     this.loadDashboardData();
   }
 
   loadDashboardData(fechaInicio?: Date, fechaFin?: Date) {
-    this.dataService.loadDashboard(fechaInicio, fechaFin).subscribe({
+    this.dataService.loadDashboard(fechaInicio, fechaFin, this.local).subscribe({
       next: (res) => {
         console.log(res);
         
