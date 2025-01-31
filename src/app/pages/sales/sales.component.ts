@@ -11,6 +11,7 @@ import { DataService } from 'src/app/services/data.service';
 import { ModalSaleComponent } from 'src/app/components/modal-sale/modal-sale.component';
 import { timer } from 'rxjs';
 import { ModalChoiceComponentComponent } from 'src/app/components/modal-choice.component/modal-choice.component.component';
+import Swal from 'sweetalert2';
 
 
 @Component({
@@ -19,7 +20,7 @@ import { ModalChoiceComponentComponent } from 'src/app/components/modal-choice.c
   styleUrls: ['./sales.component.scss']
 })
 export class SalesComponent implements OnInit {
-  displayedColumns: string[] = ['clientName', 'dateSale', 'totalPrice', 'products', 'actions'];
+  displayedColumns: string[] = ['clientName', 'dateSale', 'totalPrice', 'products', 'state', 'actions'];
   dataSource!: MatTableDataSource<SaleModel>;
 
   public totalSales?:number;
@@ -28,6 +29,7 @@ export class SalesComponent implements OnInit {
   currentPage?: number = 1;
   itemsPerPage?: number;
   local!: any
+  stateBand!: string
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -55,6 +57,8 @@ export class SalesComponent implements OnInit {
         console.log(res);
         
         this.sales = res.data;
+        this.sales.sort((a, b) => new Date(b.dateSale).getTime() - new Date(a.dateSale).getTime())  
+        console.log(res);
         this.dataSource = new MatTableDataSource(this.sales);
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
@@ -132,6 +136,45 @@ export class SalesComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  openSwal(val: any) {
+    console.log(val);
+      this.stateBand = val.state === 'cancelado' ? 'credito' : 'cancelado';
+       
+      console.log(this.stateBand);
+      
+      
+      Swal.fire({
+        // title: 'deseas cambiar el estado de esta venta?',
+        text: '¿Deseas cambiar el estado de esta venta?',
+        // text: `deseas cambiar el estado de ${val}`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No'
+      }).then((result) => {
+        console.log(result);
+        
+        if (result.isConfirmed) {
+          // this.changeState(val);
+
+          this.dataService.updatStateSaleById(val.id, this.stateBand).subscribe({
+            next: (res) => {
+              Swal.fire({
+                title: "Hecho!",
+                text: "El estado de esta venta ha sido cambiado.",
+                icon: "success"
+              });
+              timer(1000).subscribe(() => {
+                this.loadAllSales();
+              });
+            }
+          })
+          
+        }
+
+      })
+      }
 }
 
 

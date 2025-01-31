@@ -21,8 +21,10 @@ export class SaleResponse {
       newObj.xpage = responseData_.xpage;
       newObj.data = responseData_.data &&  SaleModel.createFromObjects(responseData_.data[0]);
   
-  
+      console.log("newObj",newObj);
+      
       return newObj;
+      
     }
   }
   

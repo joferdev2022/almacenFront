@@ -28,8 +28,15 @@ export class DataService {
     return this.http.get<ProductResponse>(url).pipe(map(res => ProductResponse.createFromObject(res)));
   }
 
+  
+
   loadSales(page: number = 1, perPage: number = 5000, local:any):Observable<SaleResponse> {
     const url = `${ base_url }/sales?page=${ page }&xpage=${ perPage }&local=${local}`;
+    return this.http.get<SaleResponse>(url).pipe(map(res => SaleResponse.createFromObject(res)));
+  }
+
+  loadSalesWithCredit(page: number = 1, perPage: number = 5000, local:any):Observable<SaleResponse> {
+    const url = `${ base_url }/sales/credits?page=${ page }&xpage=${ perPage }&local=${local}`;
     return this.http.get<SaleResponse>(url).pipe(map(res => SaleResponse.createFromObject(res)));
   }
 
@@ -64,6 +71,11 @@ export class DataService {
   updateProductById(productId: any , productData:ProductRequest):Observable<any> {
     const url = `${ base_url }/products/${productId}`;
     return this.http.put<any>( url, productData ).pipe(map(res => console.log(res)));
+  }
+
+  updatStateSaleById(saleId: any , state: any):Observable<any> {
+    const url = `${ base_url }/sales/state/${saleId}?state=${state}`;
+    return this.http.put<any>( url, {} ).pipe(map(res => console.log(res)));
   }
 
   deleteProductById(productId: any):Observable<any> {

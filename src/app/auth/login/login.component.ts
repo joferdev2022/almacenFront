@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import {BreakpointObserver, Breakpoints} from '@angular/cdk/layout';
+
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -12,14 +14,29 @@ export class LoginComponent {
 
   public loginForm!: FormGroup;
   public hide = true;
+  hideSideButton = false;
 
   constructor(private router: Router,
+              private responsive: BreakpointObserver,
               private fb: FormBuilder,
               private authService: AuthService) { }
   
 
   ngOnInit(): void {
     this.createForm();
+
+    this.responsive.observe([
+      Breakpoints.TabletPortrait,
+      Breakpoints.HandsetLandscape])
+      .subscribe(result => {
+    
+        const breakpoints = result.breakpoints;
+        this.hideSideButton = false;
+        if (result.matches) {
+          this.hideSideButton = true;
+        }
+    
+      });
   }
   
   createForm() {
