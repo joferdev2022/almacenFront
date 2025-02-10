@@ -46,6 +46,7 @@ export class AuthService {
     // localStorage.setItem('user', data.user_data.email );
     localStorage.setItem('user', JSON.stringify(data.user) );
     localStorage.setItem('local', JSON.stringify(data.local) );
+    localStorage.setItem('permissions', JSON.stringify(data.permissions) );
     localStorage.setItem('token', JSON.stringify(data.access_token));
     // localStorage.setItem('refresh', JSON.stringify(data.token_data.refresh_token) );
     
@@ -112,6 +113,7 @@ export class AuthService {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('local');
+    localStorage.removeItem('permissions');
     this.router.navigateByUrl('auth/login');
 
   }

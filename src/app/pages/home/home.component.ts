@@ -29,6 +29,7 @@ export class HomeComponent implements OnInit {
   productsTop!:Array<TopProduct>;
   productsLow!:Array<LowProduct>;
   local!: any;
+  permissions!: any;
   
   dataSource = new MatTableDataSource<TopProduct>;
   dataSource2 = new MatTableDataSource<LowProduct>;
@@ -43,6 +44,7 @@ export class HomeComponent implements OnInit {
 
 
                 this.local = JSON.parse(localStorage.getItem('local')!) ? JSON.parse(localStorage.getItem('local')!) : ''; 
+                // this.permissions = JSON.parse(localStorage.getItem('permissions')!) ? JSON.parse(localStorage.getItem('permissions')!) : ''; 
 
               }
   ngOnInit(): void {

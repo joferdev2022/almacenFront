@@ -30,6 +30,7 @@ export class SalesComponent implements OnInit {
   itemsPerPage?: number;
   local!: any
   stateBand!: string
+  permissions!: any;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -45,6 +46,7 @@ export class SalesComponent implements OnInit {
 
             paginatorIntl.itemsPerPageLabel = 'items por página'; 
             this.local = JSON.parse(localStorage.getItem('local')!) ? JSON.parse(localStorage.getItem('local')!) : '';
+            this.permissions = JSON.parse(localStorage.getItem('permissions')!) ? JSON.parse(localStorage.getItem('permissions')!) : '';
               }
 
   ngOnInit(): void {
