@@ -76,7 +76,8 @@
           <h3 class="product">{{ item.get('productName')!.value }}</h3>
           <div class="quantity buttons_added">
             <input type="button" value="-" class="minus" (click)="decrementCantidad(i)">
-            <input  (change)="updatePrecioTotal()" type="number" step="1" name="quantity" [value]="item.get('cantidad')!.value" class="input-text qty text" size="4" formControlName="cantidad">
+            <input readonly (change)="updatePrecioTotal()" type="number" step="1" name="quantity" 
+            [value]="item.get('cantidad')!.value" class="input-text qty text" size="4" formControlName="cantidad">
             <input type="button" value="+" class="plus" (click)="incrementCantidad(i)">
           </div>
           <!-- <input type="number" (change)="updatePrecioTotal()"> -->

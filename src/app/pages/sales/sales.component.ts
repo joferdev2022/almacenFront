@@ -115,21 +115,54 @@ export class SalesComponent implements OnInit {
     })
   }
 
-  openDeleteModal(saleId:any) {
-    const dialogRef = this.dialog.open(ModalChoiceComponentComponent, {
-      data: {title: 'Eliminar Venta', subTitle: "Deseas eliminar esta Venta?"},
-    });
+  openDeleteSaleSwal(saleId: any) {
+    Swal.fire({
+      // title: 'deseas cambiar el estado de esta venta?',
+      text: '¿Deseas eliminar esta venta?',
+      // text: `deseas cambiar el estado de ${val}`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Si',
+      cancelButtonText: 'No'
+    }).then((result) => {
+      console.log(result);
+      
+      if (result.isConfirmed) {
+        // this.changeState(val);
 
-    dialogRef.afterClosed().subscribe(result => {
-      if(result == true) {
-
-        this.deleteSale(saleId);
-        // console.log("ahora si procedemos a borrar", user.tel);
+        this.dataService.deleteSaleById(saleId).subscribe({
+          next: (res) => {
+            Swal.fire({
+              title: "Hecho!",
+              text: "La venta se ha eliminado correctamente.",
+              icon: "success"
+            });
+            timer(1000).subscribe(() => {
+              this.loadAllSales();
+            });
+          }
+        })
         
       }
-      console.log(`Dialog result: ${result}`);
-    });
+
+    })
   }
+
+  // openDeleteModal(saleId:any) {
+  //   const dialogRef = this.dialog.open(ModalChoiceComponentComponent, {
+  //     data: {title: 'Eliminar Venta', subTitle: "Deseas eliminar esta Venta?"},
+  //   });
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if(result == true) {
+
+  //       this.deleteSale(saleId);
+  //       // console.log("ahora si procedemos a borrar", user.tel);
+        
+  //     }
+  //     console.log(`Dialog result: ${result}`);
+  //   });
+  // }
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
@@ -140,7 +173,7 @@ export class SalesComponent implements OnInit {
   }
 
   openSwal(val: any) {
-    console.log(val);
+      console.log(val);
       this.stateBand = val.state === 'cancelado' ? 'credito' : 'cancelado';
        
       console.log(this.stateBand);

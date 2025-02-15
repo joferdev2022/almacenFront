@@ -65,7 +65,7 @@
             <td mat-cell *matCellDef="let row">
               <div class="btn-actions">
                 <button [disabled]="this.permissions == 0" (click)="openDialogUpdate(row)"><mat-icon fontIcon="edit" ></mat-icon></button>
-                <button [disabled]="this.permissions ==0" (click)="openDeleteModal(row.id)"><mat-icon fontIcon="delete" ></mat-icon></button>
+                <button [disabled]="this.permissions ==0" (click)="openDeleteProductSwal(row.id)"><mat-icon fontIcon="delete" ></mat-icon></button>
                 
                 
                 

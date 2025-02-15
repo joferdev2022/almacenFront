@@ -117,7 +117,19 @@ export class ModalSaleComponent implements OnInit{
   }
 
   incrementCantidad(index: number) {
+    console.log(this.productos.at(index));
+    
     const control = this.productos.at(index).get('cantidad')!;
+    const productoId = this.productos.at(index).get('productoId')!.value;
+    const product = this.products.find(p => p.id === productoId);
+
+    if(control.value >= product!.stock) {
+      alert("No hay suficiente stock disponible");
+      return;
+
+    }
+    
+
     control.setValue(control.value + 1);
     this.updatePrecioTotal();
   }

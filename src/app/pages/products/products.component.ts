@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import {MatSort} from '@angular/material/sort';
 import { MatPaginatorIntl } from '@angular/material/paginator';
 import { MatDialog } from '@angular/material/dialog';
+import Swal from 'sweetalert2';
 
 import { DataService } from 'src/app/services/data.service';
 import { ProductModel } from 'src/app/models/internal/product.model';
@@ -132,21 +133,54 @@ export class ProductsComponent implements OnInit{
     })
   }
 
-  openDeleteModal(productId:any) {
-    const dialogRef = this.dialog.open(ModalChoiceComponentComponent, {
-      data: {title: 'Eliminar Producto', subTitle: "Deseas eliminar este producto?"},
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if(result == true) {
-
-        this.deleteProduct(productId);
-        // console.log("ahora si procedemos a borrar", user.tel);
+  openDeleteProductSwal(productId:any) {
+      Swal.fire({
+        // title: 'deseas cambiar el estado de esta venta?',
+        text: '¿Deseas eliminar este producto?',
+        // text: `deseas cambiar el estado de ${val}`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Si',
+        cancelButtonText: 'No'
+      }).then((result) => {
+        console.log(result);
         
-      }
-      console.log(`Dialog result: ${result}`);
-    });
-  }
+        if (result.isConfirmed) {
+          // this.changeState(val);
+  
+          this.dataService.deleteProductById(productId).subscribe({
+            next: (res) => {
+              Swal.fire({
+                title: "Hecho!",
+                text: "El producto se ha eliminado correctamente.",
+                icon: "success"
+              });
+              timer(1000).subscribe(() => {
+                this.loadAllProducts();
+              });
+            }
+          })
+          
+        }
+  
+      })
+    }
+
+  // openDeleteModal(productId:any) {
+  //   const dialogRef = this.dialog.open(ModalChoiceComponentComponent, {
+  //     data: {title: 'Eliminar Producto', subTitle: "Deseas eliminar este producto?"},
+  //   });
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if(result == true) {
+
+  //       this.deleteProduct(productId);
+  //       // console.log("ahora si procedemos a borrar", user.tel);
+        
+  //     }
+  //     console.log(`Dialog result: ${result}`);
+  //   });
+  // }
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value;
