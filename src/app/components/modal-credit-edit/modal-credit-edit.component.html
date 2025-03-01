@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>Actualizar Estado de Credito:</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="div_container" >
+    <form class="form-container"  [formGroup]="creditSaleForm">
+      <mat-form-field class="monto_pagar">
+        <mat-label>Monto a pagar:</mat-label>
+        <input matInput type="number" placeholder="" formControlName="amountPayment" required>
+        <mat-error *ngIf="creditSaleForm.get('amountPayment')?.hasError('amountExceedsDebt')">
+          El monto a pagar no puede ser mayor que el total de la deuda.
+        </mat-error>
+      </mat-form-field>
+    
+       <mat-form-field class="credito_total">
+        <mat-label>Total Deuda:</mat-label>
+        <input matInput placeholder="" formControlName="totalPrice" [readOnly]="true" >
+        
+      </mat-form-field> 
+    </form> 
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button *ngIf="data.operation == 'update'" mat-button (click)="onUpdateCredit()" [mat-dialog-close]="true" cdkFocusInitial>Guardar</button>
+  <button class="btn-cancel" mat-button mat-dialog-close>Cancelar</button>
+</mat-dialog-actions>

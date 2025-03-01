@@ -9,6 +9,7 @@ import { MaterialModule } from '../shared/material.module';
 import { ModalProductComponentComponent } from './modal-product.component/modal-product.component.component';
 import { ModalChoiceComponentComponent } from './modal-choice.component/modal-choice.component.component';
 import { ModalSaleComponent } from './modal-sale/modal-sale.component';
+import { ModalCreditEditComponent } from './modal-credit-edit/modal-credit-edit.component';
 
 
 
@@ -18,12 +19,14 @@ import { ModalSaleComponent } from './modal-sale/modal-sale.component';
     NavbarComponent,
     ModalProductComponentComponent,
     ModalChoiceComponentComponent,
-    ModalSaleComponent
+    ModalSaleComponent,
+    ModalCreditEditComponent
   ],
   exports: [
     SidebarComponent,
     NavbarComponent,
-    ModalProductComponentComponent
+    ModalProductComponentComponent,
+    ModalCreditEditComponent
   ],
   imports: [
     CommonModule,

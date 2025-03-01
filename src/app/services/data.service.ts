@@ -78,6 +78,11 @@ export class DataService {
     return this.http.put<any>( url, {} ).pipe(map(res => console.log(res)));
   }
 
+  updatePaymentSaleById(saleId: any , payment: any):Observable<any> {
+    const url = `${ base_url }/sales/payment/${saleId}?payment=${payment}`;
+    return this.http.put<any>( url, {} ).pipe(map(res => console.log(res)));
+  }
+
   deleteProductById(productId: any):Observable<any> {
     const url = `${ base_url }/products/${productId}`;
     return this.http.delete<any>(url).pipe(map(res => console.log(res)));

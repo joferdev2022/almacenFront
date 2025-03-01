@@ -34,3 +34,28 @@
     // padding-left: 10px;
     // margin-right: 30px;
 }
+
+// .btn-actions {
+//     display: flex;
+//     justify-content: center;
+//     align-items: center;
+//     height: 100%;
+// }
+
+
+.btn-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    
+}
+.btn-actions button {
+    border: none;
+    outline: none;
+    background-color: #fff;
+}
+.btn-actions mat-icon {
+    color: #7d8da1;;
+    // color: #7380ec;
+}
