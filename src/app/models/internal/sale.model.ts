@@ -6,6 +6,7 @@ export class SaleModel {
     dateSale!: string;
     products!: [];
     totalPrice!: number;
+    precioTotalOriginal?: number;
     state!: string;
     
 
@@ -17,6 +18,7 @@ export class SaleModel {
         newObj.dateSale = obj.fechaVenta;
         newObj.products = obj.productos;
         newObj.totalPrice = obj.precioTotal;
+        newObj.precioTotalOriginal = obj.precioTotalOriginal;
         newObj.state = obj.estado;
     
         return newObj;

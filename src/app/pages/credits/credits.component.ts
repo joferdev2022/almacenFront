@@ -17,7 +17,7 @@ import { ModalCreditEditComponent } from 'src/app/components/modal-credit-edit/m
 })
 export class CreditsComponent {
 
-  displayedColumns: string[] = ['clientName', 'dateSale', 'totalPrice', 'products', 'state', 'actions'];
+  displayedColumns: string[] = ['clientName', 'dateSale','totalPriceSale', 'totalDebt', 'products', 'state', 'actions'];
   dataSource!: MatTableDataSource<SaleModel>;
 
 

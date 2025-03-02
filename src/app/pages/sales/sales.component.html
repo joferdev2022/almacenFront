@@ -35,8 +35,9 @@
       
           <!-- totalPrice Column -->
           <ng-container matColumnDef="totalPrice">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio Total </th>
-            <td mat-cell *matCellDef="let row"> S/.{{row.totalPrice | number:'1.2-2'}} </td>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Precio Venta </th>
+            <!-- <td mat-cell *matCellDef="let row"> S/.{{row.totalPrice | number:'1.2-2'}} </td> -->
+            <td mat-cell *matCellDef="let row"> S/.{{ row.precioTotalOriginal ? row.precioTotalOriginal : row.totalPrice | number:'1.2-2' }} </td>
           </ng-container>
       
           <!-- products Column -->
