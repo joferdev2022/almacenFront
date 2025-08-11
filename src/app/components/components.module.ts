@@ -10,6 +10,7 @@ import { ModalProductComponentComponent } from './modal-product.component/modal-
 import { ModalChoiceComponentComponent } from './modal-choice.component/modal-choice.component.component';
 import { ModalSaleComponent } from './modal-sale/modal-sale.component';
 import { ModalCreditEditComponent } from './modal-credit-edit/modal-credit-edit.component';
+import { ModalInfoSaleComponent } from './modal-info-sale/modal-info-sale.component';
 
 
 
@@ -20,13 +21,15 @@ import { ModalCreditEditComponent } from './modal-credit-edit/modal-credit-edit.
     ModalProductComponentComponent,
     ModalChoiceComponentComponent,
     ModalSaleComponent,
-    ModalCreditEditComponent
+    ModalCreditEditComponent,
+    ModalInfoSaleComponent
   ],
   exports: [
     SidebarComponent,
     NavbarComponent,
     ModalProductComponentComponent,
-    ModalCreditEditComponent
+    ModalCreditEditComponent,
+    ModalInfoSaleComponent
   ],
   imports: [
     CommonModule,

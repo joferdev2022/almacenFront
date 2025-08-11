@@ -1,0 +1,139 @@
+.modal-info-sale {
+  font-family: 'Inter', Arial, sans-serif;
+  background: #fff;
+  padding: 24px 24px 0 24px;
+  border-radius: 12px;
+  max-width: 480px;
+  color: #18181b;
+  margin: 16px auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.header h2 {
+  margin: 0 0 4px 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  color: #71717a;
+  font-size: 1rem;
+  margin-bottom: 0;
+}
+
+.status.completed {
+  background: #d1f7d6;
+  color: #198754;
+  font-size: 1rem;
+  font-weight: 500;
+  border-radius: 16px;
+  padding: 4px 16px 4px 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.section-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin: 24px 0 12px 0;
+}
+
+.product-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.product-item {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-name {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.product-desc {
+  color: #71717a;
+  font-size: 0.98rem;
+}
+
+.product-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #18181b;
+  white-space: nowrap;
+}
+
+.summary {
+  margin: 28px 0 0 0;
+  padding-bottom: 8px;
+  border-radius: 12px;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.08rem;
+  margin-bottom: 8px;
+  color: #18181b;
+}
+
+.summary-row.total {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-top: 12px;
+}
+
+.summary-value {
+  font-weight: 500;
+}
+
+.summary-total {
+  color: #22c55e;
+  font-weight: 700;
+}
+
+hr {
+  border: none;
+  border-top: 1.5px solid #e5e7eb;
+  margin: 16px 0 12px 0;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 18px;
+  margin-bottom: 8px;
+}
+
+.close-btn {
+  background: #fff;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 22px;
+  font-size: 1.08rem;
+  font-weight: 500;
+  color: #18181b;
+  cursor: pointer;
+  transition: background 0.15s, border 0.15s;
+}
+
+.close-btn:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}

@@ -12,6 +12,7 @@ import { ModalSaleComponent } from 'src/app/components/modal-sale/modal-sale.com
 import { timer } from 'rxjs';
 import { ModalChoiceComponentComponent } from 'src/app/components/modal-choice.component/modal-choice.component.component';
 import Swal from 'sweetalert2';
+import { ModalInfoSaleComponent } from 'src/app/components/modal-info-sale/modal-info-sale.component';
 
 
 @Component({
@@ -100,6 +101,28 @@ export class SalesComponent implements OnInit {
   }
   openDialogUpdate(sale: any) {
 
+  }
+
+  openDialogInfoSale(sale: any) {
+    const dialogRef = this.dialog.open(ModalInfoSaleComponent, {
+      data: {data: sale, operation: "info"},
+      width: '550px',
+      height: '600px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+
+      if( result== true) {
+
+        timer(1000).subscribe(() => {
+
+          this.loadAllSales();
+        });
+        
+      }
+      console.log(`Dialog result: ${result}`);
+    });
   }
 
   deleteSale(saleId: any) {

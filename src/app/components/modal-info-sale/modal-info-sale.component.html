@@ -1,0 +1,54 @@
+<div *ngIf="data" class="modal-info-sale">
+  <div class="header">
+    <div>
+      <h2>Venta VTA-NULL</h2>
+      <div class="subtitle">{{data.data.clientName ? data.data.clientName : 'Sin Nombre'}} - {{data.data.dateSale | date:'dd/MM/yyyy'}}</div>
+    </div>
+    <div>
+      <span class="status completed">
+        <svg width="16" height="16" fill="currentColor" style="vertical-align:middle;margin-right:4px;">
+          <circle cx="8" cy="8" r="8" fill="#d1f7d6"/>
+          <path d="M5 8.5l2 2 4-4" stroke="#34c759" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+        {{data.data.state}}
+      </span>
+    </div>
+  </div>
+
+  <div class="section-title">Productos Vendidos</div>
+  <div class="product-list">
+    <div class="product-item" *ngFor="let prod of data.data.products">
+      <div>
+        <div class="product-name">{{prod.productName}}</div>
+        <div class="product-desc">Unidad: {{prod.cantidad}} - S/. {{prod.precioUnitario | number:'1.2-2'}}</div>
+      </div>
+      <div class="product-price">S/.{{prod.cantidad * prod.precioUnitario | number:'1.2-2'}}</div>
+    </div>
+  </div>
+  <div class="summary">
+    <!-- <div class="summary-row">
+      <span>Subtotal:</span>
+      <span class="summary-value">$7095.00</span>
+    </div> -->
+    <!-- <div class="summary-row">
+      <span>IVA (16%):</span>
+      <span class="summary-value">$1135.20</span>
+    </div> -->
+    <hr>
+    <div class="summary-row total">
+      <span>Total:</span>
+      <span class="summary-total">S/.{{data.data.totalPrice | number:'1.2-2'}}</span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <!-- <button class="close-btn">Cerrar</button> -->
+    <button class="close-btn" mat-button mat-dialog-close>Cerrar</button>
+  </div>
+</div>
+
+<!-- <mat-dialog-actions align="end">
+  <button class="btn-cancel" mat-button mat-dialog-close>Cancelar</button>
+  <button *ngIf="data.operation == 'create'" mat-button (click)="onCreate()" [mat-dialog-close]="true" cdkFocusInitial>Guardar</button>
+  <button *ngIf="data.operation == 'update'" mat-button (click)="onUpdate()" [mat-dialog-close]="true" cdkFocusInitial>Guardar</button>
+</mat-dialog-actions> -->
