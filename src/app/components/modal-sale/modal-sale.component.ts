@@ -101,8 +101,10 @@ export class ModalSaleComponent implements OnInit{
     const productoForm = this.fb.group({
       productoId: [productItem ? productItem.id : '' , Validators.required],
       cantidad: [1, [Validators.required, Validators.min(1)]],
+      precioBuy: [productItem ? productItem.priceBuy : 0, [Validators.required, Validators.min(0)]],
       precioUnitario: [productItem ? productItem.priceSale : 0, [Validators.required, Validators.min(0)]],
-      productName: [productItem ? productItem.name : '', Validators.required]
+      productName: [productItem ? productItem.name : '', Validators.required],
+
     });
 
     this.productos.push(productoForm);
@@ -167,9 +169,13 @@ export class ModalSaleComponent implements OnInit{
     
     // this.saleForm.patchValue({ local: this.local });
     console.log(this.saleForm.value);
+    // console.log();
+    
     if(true) {
       const saleData = this.saleForm.value;
       const saleRequest = SaleRequest.createFromObject(saleData);
+      console.log(saleRequest);
+      
       this.dataService.saveSale(saleRequest).subscribe({
         next: (res) => {
           console.log(res);

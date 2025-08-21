@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 
 import {MatPaginator, MatPaginatorIntl} from '@angular/material/paginator';
@@ -32,6 +32,15 @@ export class SalesComponent implements OnInit {
   local!: any
   stateBand!: string
   permissions!: any;
+  today: Date = new Date();
+
+  // daily_
+
+  @Input() netProfit: number = 0;
+  @Input() totalSales2: number = 0;
+  @Input() margin: number = 0;
+  @Input() salesCount: number = 0;
+  @Input() avgSale: number = 0;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -48,10 +57,30 @@ export class SalesComponent implements OnInit {
             paginatorIntl.itemsPerPageLabel = 'items por página'; 
             this.local = JSON.parse(localStorage.getItem('local')!) ? JSON.parse(localStorage.getItem('local')!) : '';
             this.permissions = JSON.parse(localStorage.getItem('permissions')!) ? JSON.parse(localStorage.getItem('permissions')!) : '';
-              }
+            
+            
+            
+          
+          
+          }
 
   ngOnInit(): void {
     this.loadAllSales();
+    this.loadSalesReportDayly();
+  }
+
+  loadSalesReportDayly() {
+    this.dataService.dayliSalesByLocal(this.local).subscribe({
+                next: (res) => {
+                  console.log(res);
+                  this.netProfit = res.ganancia_neta;
+                  this.totalSales2 = res.ventas_totales;
+                  this.salesCount = res.numero_ventas;
+                },
+                error: (e) => {
+                  console.log(e);
+                }
+              });
   }
 
   loadAllSales() {
@@ -93,6 +122,7 @@ export class SalesComponent implements OnInit {
         timer(1000).subscribe(() => {
 
           this.loadAllSales();
+          this.loadSalesReportDayly();
         });
         
       }
@@ -133,6 +163,7 @@ export class SalesComponent implements OnInit {
         timer(1000).subscribe(() => {
 
           this.loadAllSales();
+          this.loadSalesReportDayly();
         });
       }
     })
@@ -162,6 +193,7 @@ export class SalesComponent implements OnInit {
             });
             timer(1000).subscribe(() => {
               this.loadAllSales();
+              this.loadSalesReportDayly();
             });
           }
         })

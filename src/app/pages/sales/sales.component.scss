@@ -63,3 +63,72 @@
     // padding-left: 10px;
     // margin-right: 30px;
 }
+
+.summary-card {
+  background: #e9fdf2;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px #0001;
+}
+.summary-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+.summary-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #1a7f37;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.summary-date {
+  background: #b6f5d8;
+  border-radius: 16px;
+  padding: 4px 12px;
+  font-size: 0.95rem;
+  color: #1a7f37;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.summary-content {
+  display: flex;
+  gap: 18px;
+}
+.summary-item {
+  background: #fff;
+  border-radius: 10px;
+  padding: 18px;
+  flex: 1;
+  box-shadow: 0 1px 4px #0001;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 120px;
+}
+.item-title {
+  font-size: 1rem;
+  color: #1a7f37;
+  font-weight: 500;
+}
+.item-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #222;
+}
+.item-value.net {
+  color: #1a7f37;
+}
+.item-sub {
+  font-size: 0.95rem;
+  color: #555;
+}
+.item-icon {
+  color: #1a7f37;
+  font-size: 2rem;
+  align-self: flex-end;
+}

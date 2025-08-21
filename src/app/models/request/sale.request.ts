@@ -2,6 +2,7 @@ export class ProductoVenta {
   productoId!: string;
   cantidad!: number;
   precioUnitario!: number;
+  precioBuy!:number;
   productName!: string;
 }
 
@@ -24,6 +25,7 @@ export class SaleRequest {
         productoVenta.productoId = product.productoId;
         productoVenta.cantidad = product.cantidad;
         productoVenta.precioUnitario = product.precioUnitario;
+        productoVenta.precioBuy = product.precioBuy ? product.precioBuy: 0;
         productoVenta.productName = product.productName;
         return productoVenta;
       });

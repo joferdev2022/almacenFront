@@ -101,4 +101,10 @@ export class DataService {
     const url = `${ base_url }/sales/${saleId}`;
     return this.http.delete<any>(url).pipe(map(res => console.log(res)));
   }
+
+  dayliSalesByLocal(local: any):Observable<any> {
+    // localhost:8000/api/sales/summary/daily
+    const url = `${ base_url }/sales/summary/daily?local=${local}`;
+    return this.http.get<any>(url).pipe(map(res => {return res;}));
+  }
 }
