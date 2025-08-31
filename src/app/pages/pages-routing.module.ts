@@ -40,6 +40,11 @@ const routes: Routes = [
         // component: 
         loadChildren: () => import('./expenses/expenses.module').then(m => m.ExpensesModule)
       },
+      {
+        path: 'vendedores',
+        // component: 
+        loadChildren: () => import('./vendedores/vendedores.module').then(m => m.VendedoresModule)
+      },
       
     ]
   }

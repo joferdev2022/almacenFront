@@ -7,6 +7,7 @@ import { ProductModel } from 'src/app/models/internal/product.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-modal-sale',
@@ -19,6 +20,8 @@ export class ModalSaleComponent implements OnInit{
 
   public totalPriceView = 0;
 
+  // selected = 'option2';
+
   displayedColumns: string[] = ['name', 'category', 'measure', 'priceSale', 'stock', 'actions'];
   dataSource!: MatTableDataSource<ProductModel>;
 
@@ -29,6 +32,12 @@ export class ModalSaleComponent implements OnInit{
   itemsPerPage?: number;
 
   local!: number;
+
+  vendedores: any[] = [
+    {value: 'Vendedor1', viewValue: 'Vendedor1'},
+    {value: 'Vendedor2', viewValue: 'Vendedor2'},
+    {value: 'Vendedor3', viewValue: 'Vendedor3'},
+  ];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -47,6 +56,7 @@ export class ModalSaleComponent implements OnInit{
       paginatorIntl.itemsPerPageLabel = 'items por página';
 
       this.saleForm = this.fb.group({
+      nombreVendedor: ['Fernando', Validators.required],
       nombreCliente: ['', Validators.required],
       productos: this.fb.array([]),
       precioTotal: [0, Validators.min(0)],
@@ -179,11 +189,19 @@ export class ModalSaleComponent implements OnInit{
       this.dataService.saveSale(saleRequest).subscribe({
         next: (res) => {
           console.log(res);
-          
+          Swal.fire({
+                        title: "Hecho!",
+                        text: "La venta se ha realizado correctamente.",
+                        icon: "success"
+                      });
         },
         error: (e) => {
           console.log(e);
-          
+          Swal.fire({
+                        title: "ERROR!",
+                        text: "La venta no se ha pudo realizar.",
+                        icon: "error"
+                      });
         }
       })
     }

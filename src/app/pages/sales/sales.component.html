@@ -49,6 +49,12 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre Cliente </th>
             <td mat-cell *matCellDef="let row"> {{row.clientName}} </td>
           </ng-container>
+
+          <!-- nameVendedor Column -->
+          <ng-container matColumnDef="nombreVendedor">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre Vendedor </th>
+            <td mat-cell *matCellDef="let row"> {{row.nombreVendedor}} </td>
+          </ng-container>
       
           <!-- dateSale Column -->
           <ng-container matColumnDef="dateSale">
@@ -64,20 +70,14 @@
           </ng-container>
       
           <!-- products Column -->
-          <ng-container matColumnDef="products">
+          <!-- <ng-container matColumnDef="products">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Productos</th>
-            <!-- <td mat-cell *matCellDef="let row"> {{row.products}} </td> -->
             <td mat-cell *matCellDef="let row"> 
-              <!-- <ng-container *ngIf="row.products && row.products.length > 0">
-                <ul>
-                  <li *ngFor="let product of row.products">{{product.productoId}}</li>
-                </ul>
-              </ng-container> -->
               <ng-container *ngFor="let product of row.products; index as i;">
                {{ product.productName | titlecase }}.
               </ng-container>
             </td>
-          </ng-container>
+          </ng-container> -->
 
           <!-- state Column -->
           <ng-container matColumnDef="state">

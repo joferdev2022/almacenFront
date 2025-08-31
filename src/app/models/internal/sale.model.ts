@@ -2,6 +2,7 @@
 export class SaleModel {
 
     id!: string;
+    nombreVendedor?: string;
     clientName!: string;
     dateSale!: string;
     products!: [];
@@ -14,6 +15,7 @@ export class SaleModel {
     static createFromObject(obj: any): SaleModel {
         const newObj = new SaleModel();
         newObj.id = obj.id;
+        newObj.nombreVendedor = obj.nombreVendedor;
         newObj.clientName = obj.nombreCliente;
         newObj.dateSale = obj.fechaVenta;
         newObj.products = obj.productos;

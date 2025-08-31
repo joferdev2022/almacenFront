@@ -7,6 +7,7 @@ export class ProductoVenta {
 }
 
 export class SaleRequest {
+    nombreVendedor!: string;
     nombreCliente!: string;
     precioTotal!: number;
     estado!: string;
@@ -16,6 +17,7 @@ export class SaleRequest {
   
     static createFromObject(sale: any): SaleRequest {
       const newObj = new SaleRequest();
+      newObj.nombreVendedor = sale.nombreVendedor;
       newObj.nombreCliente = sale.nombreCliente;
       newObj.precioTotal = sale.precioTotal;
       newObj.estado = sale.estado;

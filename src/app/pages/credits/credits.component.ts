@@ -8,6 +8,7 @@ import { DataService } from 'src/app/services/data.service';
 import Swal from 'sweetalert2'
 import { timer } from 'rxjs';
 import { ModalCreditEditComponent } from 'src/app/components/modal-credit-edit/modal-credit-edit.component';
+import { ModalInfoSaleComponent } from 'src/app/components/modal-info-sale/modal-info-sale.component';
 
 
 @Component({
@@ -17,7 +18,7 @@ import { ModalCreditEditComponent } from 'src/app/components/modal-credit-edit/m
 })
 export class CreditsComponent {
 
-  displayedColumns: string[] = ['clientName', 'dateSale','totalPriceSale', 'totalDebt', 'products', 'state', 'actions'];
+  displayedColumns: string[] = ['clientName', 'nombreVendedor', 'dateSale','totalPriceSale', 'totalDebt', 'state', 'actions'];
   dataSource!: MatTableDataSource<SaleModel>;
 
 
@@ -130,5 +131,26 @@ export class CreditsComponent {
       });
     }
 
+  openDialogInfoSale(sale: any) {
+    const dialogRef = this.dialog.open(ModalInfoSaleComponent, {
+      data: {data: sale, operation: "info"},
+      width: '550px',
+      height: '600px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+
+      if( result== true) {
+
+        timer(1000).subscribe(() => {
+
+          this.loadCreditSales();
+        });
+        
+      }
+      console.log(`Dialog result: ${result}`);
+    });
+  }
           
 }
