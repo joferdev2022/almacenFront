@@ -21,7 +21,7 @@ import { ModalInfoSaleComponent } from 'src/app/components/modal-info-sale/modal
   styleUrls: ['./sales.component.scss']
 })
 export class SalesComponent implements OnInit {
-  displayedColumns: string[] = ['clientName', 'nombreVendedor', 'dateSale', 'totalPrice', 'state', 'actions'];
+  displayedColumns: string[] = ['clientName', 'direccionCliente','nombreVendedor', 'dateSale', 'totalPrice', 'state', 'actions'];
   dataSource!: MatTableDataSource<SaleModel>;
 
   public totalSales?:number;

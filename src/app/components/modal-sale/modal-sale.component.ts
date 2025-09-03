@@ -56,8 +56,9 @@ export class ModalSaleComponent implements OnInit{
       paginatorIntl.itemsPerPageLabel = 'items por página';
 
       this.saleForm = this.fb.group({
-      nombreVendedor: ['Fernando', Validators.required],
-      nombreCliente: ['', Validators.required],
+      nombreVendedor: ['', Validators.required],
+      nombreCliente: ['',],
+      direccionCliente: ['', ],
       productos: this.fb.array([]),
       precioTotal: [0, Validators.min(0)],
       estado: ['cancelado', Validators.required],

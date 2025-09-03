@@ -9,6 +9,7 @@ export class ProductoVenta {
 export class SaleRequest {
     nombreVendedor!: string;
     nombreCliente!: string;
+    direccionCliente!: string;
     precioTotal!: number;
     estado!: string;
     productos!: ProductoVenta[];
@@ -19,6 +20,7 @@ export class SaleRequest {
       const newObj = new SaleRequest();
       newObj.nombreVendedor = sale.nombreVendedor;
       newObj.nombreCliente = sale.nombreCliente;
+      newObj.direccionCliente = sale.direccionCliente;
       newObj.precioTotal = sale.precioTotal;
       newObj.estado = sale.estado;
       newObj.local = sale.local;

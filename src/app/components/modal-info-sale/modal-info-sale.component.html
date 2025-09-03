@@ -1,8 +1,8 @@
 <div *ngIf="data" class="modal-info-sale">
   <div class="header">
     <div>
-      <h2>Venta VTA-NULL</h2>
-      <div class="subtitle">{{data.data.clientName ? data.data.clientName : 'Sin Nombre'}} - {{data.data.dateSale | date:'dd/MM/yyyy'}}</div>
+      <h2>{{data.data.clientName ? data.data.clientName : 'Sin Nombre'}}</h2>
+      <div class="subtitle">{{data.data.direccionCliente ? data.data.direccionCliente : 'Sin Direccion'}} - {{data.data.dateSale | date:'dd/MM/yyyy'}}</div>
     </div>
     <div>
       <span class="status completed">

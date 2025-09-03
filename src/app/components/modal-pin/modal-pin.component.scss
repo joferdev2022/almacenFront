@@ -1,0 +1,97 @@
+// .modal-pin-content {
+//   position: relative;
+//   padding: 32px 24px 24px 24px;
+//   min-width: 350px;
+//   text-align: center;
+//   border-radius: 12px;
+
+//   .close-btn {
+//     position: absolute;
+//     top: 12px;
+//     right: 12px;
+//   }
+
+//   .modal-title {
+//     font-size: 1.6rem;
+//     font-weight: 700;
+//     margin-bottom: 8px;
+//     color: #222;
+//   }
+
+//   .modal-subtitle {
+//     font-size: 1rem;
+//     color: #6b7280;
+//     margin-bottom: 24px;
+//   }
+
+//   .pin-input-container {
+//     display: flex;
+//     justify-content: center;
+//     margin-bottom: 32px;
+
+//     .pin-input {
+//       width: 80px;
+//       font-size: 2rem;
+//       text-align: center;
+//       letter-spacing: 8px;
+//       padding: 8px;
+//       border-radius: 8px;
+//       border: 1px solid #e5e7eb;
+//       background: #fafafa;
+//     }
+//   }
+
+//   .modal-actions {
+//     display: flex;
+//     justify-content: space-between;
+//     gap: 16px;
+
+//     button {
+//       flex: 1;
+//       font-size: 1rem;
+//       height: 44px;
+//       border-radius: 8px;
+//       font-weight: 600;
+//     }
+//   }
+// }
+
+.pin-dialog {
+  text-align: center;
+  padding: 1rem;
+  min-width: 320px;
+
+  .title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 1.5rem;
+  }
+
+  .pin-input {
+    width: 120px;
+    margin: 0 auto 1.5rem auto;
+
+    input {
+      text-align: center;
+      font-size: 1.5rem;
+      letter-spacing: 0.5rem;
+    }
+  }
+
+  .actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;
+
+    button {
+      border-radius: 8px;
+      min-width: 120px;
+    }
+  }
+}

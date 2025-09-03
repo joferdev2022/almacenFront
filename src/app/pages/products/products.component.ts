@@ -13,6 +13,7 @@ import { DataService } from 'src/app/services/data.service';
 import { ProductModel } from 'src/app/models/internal/product.model';
 import { ModalProductComponentComponent } from 'src/app/components/modal-product.component/modal-product.component.component';
 import { ModalChoiceComponentComponent } from 'src/app/components/modal-choice.component/modal-choice.component.component';
+import { ModalPinComponent } from 'src/app/components/modal-pin/modal-pin.component';
 
 
 @Component({
@@ -79,6 +80,50 @@ export class ProductsComponent implements OnInit{
     })
 
   }
+
+  openDialogPin() {
+    const dialogRef = this.dialog.open(ModalPinComponent, {
+      data: {info: 'create'}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if( result== true) {
+        Swal.fire({
+          title: "Hecho!",
+          text: "El producto se ha creado correctamente.",
+          icon: "success"
+        });
+        timer(1000).subscribe(() => {
+        this.loadAllProducts();
+      });
+    } else if (result === false) {
+      Swal.fire({
+        title: "Error",
+        text: "No se pudo actualizar el producto. Intenta nuevamente.",
+        icon: "error"
+      });
+    }
+
+      // console.log(result);
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+  openDialogPinUpdate(product: any) {
+    const dialogRef = this.dialog.open(ModalPinComponent, {
+      data: {info: 'update', product: product }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if( result== true) {
+        timer(1000).subscribe(() => {
+        this.loadAllProducts();
+      });
+    }
+      // console.log(result);
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
   openDialogCreate() {
     const dialogRef = this.dialog.open(ModalProductComponentComponent, {
       data: {customer: '', operation: "create"}

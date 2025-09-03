@@ -7,7 +7,7 @@
             <mat-label>Buscar</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="" #input>
         </mat-form-field>
-        <button *ngIf="this.permissions == 1 ? true : false"  class="btn-add" (click)="openDialogCreate()">
+        <button *ngIf="this.permissions == 1 ? true : false"  class="btn-add" (click)="openDialogPin()">
             Agregar Producto
         </button>
     </div>
@@ -64,7 +64,7 @@
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones </th>
             <td mat-cell *matCellDef="let row">
               <div class="btn-actions">
-                <button [disabled]="this.permissions == 0" (click)="openDialogUpdate(row)"><mat-icon fontIcon="edit" ></mat-icon></button>
+                <button [disabled]="this.permissions == 0" (click)="openDialogPinUpdate(row)"><mat-icon fontIcon="edit" ></mat-icon></button>
                 <button [disabled]="this.permissions ==0" (click)="openDeleteProductSwal(row.id)"><mat-icon fontIcon="delete" ></mat-icon></button>
                 
                 

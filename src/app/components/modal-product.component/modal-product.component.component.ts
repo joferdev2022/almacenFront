@@ -81,11 +81,17 @@ export class ModalProductComponentComponent implements OnInit {
       this.dataService.saveProduct(ProductRequest.createFromObject(this.productForm.value)).subscribe({
         next: (res) => {
           console.log(res)
+          if (res && res.success) {
+            this.dialogRef.close(true);
+          } else {
+            this.dialogRef.close(false);
+          }
           // this.cus.alertService = res.message;
         },
         error: (e) => {
           // this.openConfirmationModal(Default.CONFIRM_ERROR);
           console.log(e);
+          this.dialogRef.close(false);
         }
 
       });
@@ -102,9 +108,15 @@ export class ModalProductComponentComponent implements OnInit {
       this.dataService.updateProductById(this.data.product.id, ProductRequest.createFromObject(this.productForm.value)).subscribe({
         next: (res) => {
           console.log(res);
+          if (res && res.success) {
+            this.dialogRef.close(true);
+          } else {
+            this.dialogRef.close(false);
+          }
         },
         error: (e) => {
           console.log(e);
+          this.dialogRef.close(false);
         }
       });
     }

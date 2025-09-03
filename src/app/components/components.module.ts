@@ -11,6 +11,7 @@ import { ModalChoiceComponentComponent } from './modal-choice.component/modal-ch
 import { ModalSaleComponent } from './modal-sale/modal-sale.component';
 import { ModalCreditEditComponent } from './modal-credit-edit/modal-credit-edit.component';
 import { ModalInfoSaleComponent } from './modal-info-sale/modal-info-sale.component';
+import { ModalPinComponent } from './modal-pin/modal-pin.component';
 
 
 
@@ -22,14 +23,17 @@ import { ModalInfoSaleComponent } from './modal-info-sale/modal-info-sale.compon
     ModalChoiceComponentComponent,
     ModalSaleComponent,
     ModalCreditEditComponent,
-    ModalInfoSaleComponent
+    ModalInfoSaleComponent,
+    ModalPinComponent
+    
   ],
   exports: [
     SidebarComponent,
     NavbarComponent,
     ModalProductComponentComponent,
     ModalCreditEditComponent,
-    ModalInfoSaleComponent
+    ModalInfoSaleComponent,
+    ModalPinComponent
   ],
   imports: [
     CommonModule,

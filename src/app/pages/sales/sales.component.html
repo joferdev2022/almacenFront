@@ -50,9 +50,15 @@
             <td mat-cell *matCellDef="let row"> {{row.clientName}} </td>
           </ng-container>
 
+          <!-- direccionCliente Column -->
+          <ng-container matColumnDef="direccionCliente">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Direccion </th>
+            <td mat-cell *matCellDef="let row"> {{row.direccionCliente}} </td>
+          </ng-container>
+
           <!-- nameVendedor Column -->
           <ng-container matColumnDef="nombreVendedor">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre Vendedor </th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Vendedor </th>
             <td mat-cell *matCellDef="let row"> {{row.nombreVendedor}} </td>
           </ng-container>
       

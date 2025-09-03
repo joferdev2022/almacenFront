@@ -18,7 +18,7 @@ import { ModalInfoSaleComponent } from 'src/app/components/modal-info-sale/modal
 })
 export class CreditsComponent {
 
-  displayedColumns: string[] = ['clientName', 'nombreVendedor', 'dateSale','totalPriceSale', 'totalDebt', 'state', 'actions'];
+  displayedColumns: string[] = ['clientName', 'direccionCliente', 'nombreVendedor', 'dateSale','totalPriceSale', 'totalDebt', 'state', 'actions'];
   dataSource!: MatTableDataSource<SaleModel>;
 
 
