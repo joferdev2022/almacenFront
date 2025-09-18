@@ -33,11 +33,13 @@ export class ModalSaleComponent implements OnInit{
 
   local!: number;
 
-  vendedores: any[] = [
-    {value: 'Vendedor1', viewValue: 'Vendedor1'},
-    {value: 'Vendedor2', viewValue: 'Vendedor2'},
-    {value: 'Vendedor3', viewValue: 'Vendedor3'},
-  ];
+  // vendedores: any[] = [
+  //   {value: 'Vendedor1', viewValue: 'Vendedor1'},
+  //   {value: 'Vendedor2', viewValue: 'Vendedor2'},
+  //   {value: 'Vendedor3', viewValue: 'Vendedor3'},
+  // ];
+
+  vendedores: any[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -71,9 +73,23 @@ export class ModalSaleComponent implements OnInit{
 
     // this.addProducto();
 
+    this.loadVendedores();
 
   }
 
+  loadVendedores() {
+    this.dataService.loadAllSellers(1, 100, this.local).subscribe({
+      next: (res:any) => {
+        console.log(res);
+        this.vendedores = res.data;
+        
+      },
+      error: (err) => {
+        console.log(err);
+        
+      }
+    })
+  }
   
   loadAllProducts() {
     this.dataService.loadProducts(this.currentPage, this.itemsPerPage, this.local).subscribe({

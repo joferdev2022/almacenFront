@@ -7,8 +7,8 @@
         <mat-label>Vendedor:</mat-label>
         <mat-select formControlName="nombreVendedor">
           <!-- <mat-option>None</mat-option> -->
-          <mat-option *ngFor="let item of vendedores" [value]="item.value">
-          {{item.viewValue}}
+          <mat-option *ngFor="let item of vendedores" [value]="item.aliasVendedor">
+          {{item.aliasVendedor}}
           </mat-option>
         </mat-select>
       </mat-form-field>

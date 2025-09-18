@@ -1,0 +1,23 @@
+<h2 *ngIf="data.operation == 'create'" mat-dialog-title>Crear Nuevo Vendedor:</h2>
+<h2 *ngIf="data.operation == 'update'" mat-dialog-title>Actualizar Vendedor:</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="example-container" >
+    <form class="example-form" [formGroup]="sellerForm">
+      <mat-form-field class="example-full-width">
+        <mat-label>Vendedor:</mat-label>
+        <input matInput type="text" placeholder="" formControlName="nombreVendedor" required>
+      </mat-form-field>
+    
+       <mat-form-field class="example-full-width">
+        <mat-label>Alias:</mat-label>
+        <input matInput placeholder="" formControlName="aliasVendedor" required>
+      </mat-form-field>
+
+    </form> 
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button class="btn-cancel" mat-button mat-dialog-close>Cancelar</button>
+  <button *ngIf="data.operation == 'create'" mat-button (click)="onCreate()" [mat-dialog-close]="true" cdkFocusInitial>Guardar</button>
+  <button *ngIf="data.operation == 'update'" mat-button (click)="onUpdate()" [mat-dialog-close]="true" cdkFocusInitial>Guardar</button>
+</mat-dialog-actions>

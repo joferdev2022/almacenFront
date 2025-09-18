@@ -12,6 +12,8 @@ import { ModalSaleComponent } from './modal-sale/modal-sale.component';
 import { ModalCreditEditComponent } from './modal-credit-edit/modal-credit-edit.component';
 import { ModalInfoSaleComponent } from './modal-info-sale/modal-info-sale.component';
 import { ModalPinComponent } from './modal-pin/modal-pin.component';
+import { ModalSellerComponent } from './modal-seller/modal-seller.component';
+import { ModalPinSellerComponent } from './modal-pin-seller/modal-pin-seller.component';
 
 
 
@@ -24,7 +26,9 @@ import { ModalPinComponent } from './modal-pin/modal-pin.component';
     ModalSaleComponent,
     ModalCreditEditComponent,
     ModalInfoSaleComponent,
-    ModalPinComponent
+    ModalPinComponent,
+    ModalSellerComponent,
+    ModalPinSellerComponent
     
   ],
   exports: [
@@ -33,7 +37,9 @@ import { ModalPinComponent } from './modal-pin/modal-pin.component';
     ModalProductComponentComponent,
     ModalCreditEditComponent,
     ModalInfoSaleComponent,
-    ModalPinComponent
+    ModalPinComponent,
+    ModalSellerComponent,
+    ModalPinSellerComponent
   ],
   imports: [
     CommonModule,

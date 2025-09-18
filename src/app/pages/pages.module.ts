@@ -7,13 +7,15 @@ import { SharedModule } from '../shared/shared.module';
 import { MaterialModule } from '../shared/material.module';
 import { PagesRoutingModule } from './pages-routing.module';
 import { ComponentsModule } from '../components/components.module';
+import { ProvidersComponent } from './providers/providers.component';
 
 
 
 
 @NgModule({
   declarations: [
-    PagesComponent,  
+    PagesComponent,
+      
     
   ],
   imports: [

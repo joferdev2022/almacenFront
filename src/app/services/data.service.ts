@@ -8,11 +8,13 @@ import { SaleResponse } from '../models/response/sale.response';
 import { DashboardResponse } from '../models/response/dashboard.response';
 import { ProductRequest } from '../models/request/product.request';
 import { SaleRequest } from '../models/request/sale.request';
+import { SellerResponse } from '../models/response/seller.response';
+import { SellerRequest } from '../models/request/seller.request';
 
 
 
-// const base_url = "http://localhost:8000/api";
-const base_url = "https://almacenback.onrender.com/api";
+const base_url = "http://localhost:8000/api";
+// const base_url = "https://almacenback.onrender.com/api";
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +31,10 @@ export class DataService {
   }
 
   
+  loadAllSellers(page: number = 1, perPage: number = 5000, local:any):Observable<any> {
+    const url = `${ base_url }/sellers?page=${ page }&xpage=${ perPage }&local=${local}`;
+    return this.http.get<SellerResponse>(url).pipe(map(res => SellerResponse.createFromObject(res)));
+  }
 
   loadSales(page: number = 1, perPage: number = 5000, local:any):Observable<SaleResponse> {
     const url = `${ base_url }/sales?page=${ page }&xpage=${ perPage }&local=${local}`;
@@ -67,10 +73,23 @@ export class DataService {
     // return this.http.post<any>( url, productData ).pipe(map(res => ResponseCustomer.createFromObject(res)));
     return this.http.post<any>( url, productData ).pipe(map(res => console.log(res)));
   }
+  saveSeller(sellerData: SellerRequest):Observable<any> {
+
+    const url = `${ base_url }/sellers`;
+    console.log(sellerData);
+    
+    // return this.http.post<any>( url, productData ).pipe(map(res => ResponseCustomer.createFromObject(res)));
+    return this.http.post<any>( url, sellerData ).pipe(map(res => console.log(res)));
+  }
 
   updateProductById(productId: any , productData:ProductRequest):Observable<any> {
     const url = `${ base_url }/products/${productId}`;
     return this.http.put<any>( url, productData ).pipe(map(res => console.log(res)));
+  }
+
+  updateSellerById(sellerId: any , sellerData:SellerRequest):Observable<any> {
+    const url = `${ base_url }/sellers/${sellerId}`;
+    return this.http.put<any>( url, sellerData ).pipe(map(res => console.log(res)));
   }
 
   updatStateSaleById(saleId: any , state: any):Observable<any> {
@@ -85,6 +104,11 @@ export class DataService {
 
   deleteProductById(productId: any):Observable<any> {
     const url = `${ base_url }/products/${productId}`;
+    return this.http.delete<any>(url).pipe(map(res => console.log(res)));
+  }
+
+  deleteSellerById(sellerId: any):Observable<any> {
+    const url = `${ base_url }/sellers/${sellerId}`;
     return this.http.delete<any>(url).pipe(map(res => console.log(res)));
   }
 

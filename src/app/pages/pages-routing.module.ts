@@ -45,6 +45,11 @@ const routes: Routes = [
         // component: 
         loadChildren: () => import('./vendedores/vendedores.module').then(m => m.VendedoresModule)
       },
+      {
+        path: 'proveedores',
+        // component: 
+        loadChildren: () => import('./providers/providers.module').then(m => m.ProvidersModule)
+      },
       
     ]
   }
