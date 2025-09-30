@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>Realizar Pago</h2>
+
+<mat-dialog-content class="dialog-content" [formGroup]="payProviderForm">
+  <p class="subtitulo">Registra un pago para {{data.provider.nombreProvider}}</p>
+
+  <div class="deuda">
+    <span>Deuda actual</span>
+    <h1 class="monto-deuda">
+        <!-- {{ data.provider?.deudaActual ? ('S/.' + data.provider.deudaActual) : 'S/.0.00' }} -->
+        S/.{{ currentDebt | number:'1.2-2' }}
+    </h1>
+  </div>
+
+  <mat-form-field appearance="outline" class="input-pago">
+    <mat-label>Monto del pago</mat-label>
+    <input matInput type="number" placeholder="0.00" formControlName="amountPayment" />
+    <mat-error *ngIf="payProviderForm.get('amountPayment')?.hasError('required')">
+      El monto es requerido
+    </mat-error>
+    <mat-error *ngIf="payProviderForm.get('amountPayment')?.hasError('amountExceedsDebt')">
+      El monto no puede ser mayor a la deuda
+    </mat-error>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-flat-button color="primary" class="btn-pago"
+    [mat-dialog-close]="true"
+    (click)="onPayProvider()">
+    <mat-icon>credit_card</mat-icon>
+    Pagar
+  </button>
+</mat-dialog-actions>
+
+<!-- <mat-dialog-actions align="end">
+  <button mat-fab extended disabled>
+    <mat-icon>credit_card</mat-icon>
+    Pagar
+  </button>
+</mat-dialog-actions> -->
+

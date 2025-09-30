@@ -1,0 +1,56 @@
+.dialog-content {
+  font-family: Arial, sans-serif;
+  color: #333;
+
+  .subtitulo {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+
+  .deuda {
+    margin: 10px 0;
+
+    span {
+      font-size: 14px;
+      color: #555;
+    }
+
+    .monto-deuda {
+      color: #d32f2f; // rojo
+      font-size: 28px;
+      font-weight: bold;
+      margin: 0;
+    }
+  }
+
+  .input-pago {
+    width: 100%;
+    // height: 10px;
+    margin-top: 10px;
+
+
+    input {
+      font-size: 16px;
+      padding: 8px;
+      height: 15px;
+    }
+  }
+}
+
+.btn-pago {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;  
+  background-color: #8bc34a !important; // verde
+  color: white !important;
+  font-weight: bold;
+  border-radius: 6px;
+  padding: 8px 16px;
+  margin: 10px 0;
+
+  mat-icon {
+    margin-right: 6px;
+  }
+}

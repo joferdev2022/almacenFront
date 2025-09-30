@@ -1,0 +1,28 @@
+<div class="pin-dialog">
+  <h2 class="title">Ingresa tu PIN</h2>
+  <p class="subtitle">Ingresa tu PIN de 4 dígitos para continuar</p>
+
+  <mat-form-field class="pin-input" appearance="outline">
+    <input
+      matInput
+      type="password"
+      maxlength="4"
+     [(ngModel)]="pin"
+      placeholder="****"
+    />
+  </mat-form-field>
+
+  <div class="actions">
+    <button mat-stroked-button color="primary" mat-dialog-close >
+      Cancelar
+    </button>
+    <button
+      mat-flat-button
+      color="primary"
+      (click)="onConfirm()"
+      [disabled]="pin.length !== 4"
+    >
+      Confirmar
+    </button>
+  </div>
+</div>

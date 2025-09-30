@@ -6,21 +6,108 @@
       </div>
       <div class="summary-content">
         <div class="summary-item">
-          <div class="item-title">Ganancia Neta</div>
-          <div class="item-value net">S/ 18</div>
+          <div class="item-title">Numero de Proveedores</div>
+          <div class="item-value net">{{totalProviders}}</div>
           <!-- <mat-icon class="item-icon">trending_up</mat-icon> -->
         </div>
         <div class="summary-item">
-          <div class="item-title">Ventas Totales</div>
-          <div class="item-value">S/ 18</div>
+          <div class="item-title">Numero de Proveedores</div>
+          <div class="item-value">{{totalProviders}}</div>
           <!-- <div class="item-sub">Margen: {{ margin | percent:'1.1-1' }}</div> -->
         </div>
         <div class="summary-item">
-          <div class="item-title">Ventas Realizadas</div>
-          <div class="item-value">18</div>
+          <div class="item-title">Numero de Proveedores</div>
+          <div class="item-value">{{totalProviders}}</div>
           <!-- <div class="item-sub">Promedio: S/ {{ avgSale | number:'1.2-2' }}</div> -->
         </div>
       </div>
+    </div>
+
+    <div class="providers-controls">
+        <mat-form-field>
+            <mat-label>Buscar</mat-label>
+            <input matInput (keyup)="applyFilter($event)" placeholder="" #input>
+        </mat-form-field>
+        <div class="controls">
+            <button *ngIf="this.permissions == 1 ? true : false" class="btn-add" (click)="openDialogPin()">Nuevo Proveedor</button> 
+        </div>
+    </div>
+    <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort>
+          <!-- nombre Proveedor Column -->
+          <ng-container matColumnDef="nombreProvider">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+            <td mat-cell *matCellDef="let row"> {{row.nombreProvider}} </td>
+          </ng-container>
+
+          <!-- celular proveedor Column -->
+          <ng-container matColumnDef="numeroProvider">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Celular </th>
+            <td mat-cell *matCellDef="let row"> {{row.numeroProvider}} </td>
+          </ng-container>
+
+          <!-- fechacreditoInicial proveedor Column -->
+          <ng-container matColumnDef="fechaCredito">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Crédito </th>
+            <td mat-cell *matCellDef="let row"> {{row.fechaCreacion | date:"dd/MM/yy"}} </td>
+          </ng-container>
+
+          
+
+          <!-- ultimo pago proveedor Column -->
+          <ng-container matColumnDef="ultimoPago">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Último Pago </th>
+            <td mat-cell *matCellDef="let row"> 
+              <!-- {{row.fechaUltimoPago | date:"dd/MM/yy, h:mm a"}}  -->
+              {{ row.fechaUltimoPago ? (row.fechaUltimoPago | date:"dd/MM/yy, h:mm a") : 'Sin pago' }}
+            </td>
+          </ng-container>
+
+          <!-- deudaInicial proveedor Column -->
+          <ng-container matColumnDef="deudaInicial">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Deuda Inicial </th>
+            <td mat-cell *matCellDef="let row"> {{row.deudaInicial}} </td>
+          </ng-container>
+
+          <!-- deudaActual proveedor Column -->
+          <ng-container matColumnDef="deudaActual">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Deuda Actual </th>
+            <td mat-cell *matCellDef="let row"> {{row.deudaActual}} </td>
+          </ng-container>
+
+          <!-- estadoProvider  Column -->
+          <ng-container matColumnDef="estadoProvider">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Estado </th>
+            <td mat-cell *matCellDef="let row"> 
+              <span class="estado-chip" [ngClass]="row.estadoProvider === 'PENDIENTE' ? 'pendiente' : 'pagado'">
+                {{row.estadoProvider}}
+              </span> 
+            </td>
+          </ng-container>
+
+          <!-- actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Acciones</th>
+            <td mat-cell *matCellDef="let row">
+              <div class="btn-actions">
+                <!-- <button [disabled]="this.permissions == 0" (click)="openDialogInfoSale(row)"><mat-icon fontIcon="visibility" ></mat-icon></button> -->
+                <button [disabled]="this.permissions == 0" (click)="openDialogPinPay(row)"><mat-icon fontIcon="credit_card" ></mat-icon></button>
+                <button [disabled]="this.permissions == 0" (click)="openDialogPinUpdate(row)"><mat-icon fontIcon="edit" ></mat-icon></button>
+                <button [disabled]="this.permissions == 0" (click)="openDeleteProviderSwal(row.id)"><mat-icon fontIcon="delete" ></mat-icon></button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      
+          <!-- Row shown when there is no matching data. -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
+          </tr>
+        </table>
+      
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
     </div>
 
 </div>

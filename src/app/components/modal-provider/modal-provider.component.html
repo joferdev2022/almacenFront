@@ -1,0 +1,30 @@
+<h2 *ngIf="data.operation == 'create'" mat-dialog-title>Crear Nuevo Proveedor:</h2>
+<h2 *ngIf="data.operation == 'update'" mat-dialog-title>Actualizar Proveedor:</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="example-container" >
+    <form class="example-form" [formGroup]="providerForm">
+      <mat-form-field class="example-full-width">
+        <mat-label>Proveedor:</mat-label>
+        <input matInput type="text" placeholder="" formControlName="nombreProvider" required>
+      </mat-form-field>
+    
+       <mat-form-field class="example-full-width">
+        <mat-label>Celular:</mat-label>
+        <input matInput placeholder="" formControlName="numeroProvider">
+      </mat-form-field>
+    
+       <mat-form-field class="example-full-width">
+        <mat-label>Deuda INICIAL:</mat-label>
+        <input matInput placeholder="" formControlName="deudaInicial" required>
+      </mat-form-field>
+    
+       
+
+    </form> 
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button class="btn-cancel" mat-button mat-dialog-close>Cancelar</button>
+  <button *ngIf="data.operation == 'create'" mat-button (click)="onCreate()" [mat-dialog-close]="true" cdkFocusInitial>Guardar</button>
+  <button *ngIf="data.operation == 'update'" mat-button (click)="onUpdate()" [mat-dialog-close]="true" cdkFocusInitial>Guardar</button>
+</mat-dialog-actions>

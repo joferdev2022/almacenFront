@@ -98,19 +98,6 @@ export class ModalCreditEditComponent implements OnInit {
         })
       }
     });
-
-    // this.dataService.updatStateSaleById(val.id, this.stateBand).subscribe({
-    //                 next: (res) => {
-    //                   Swal.fire({
-    //                     title: "Hecho!",
-    //                     text: "El estado de esta venta ha sido cambiado.",
-    //                     icon: "success"
-    //                   });
-    //                   timer(1000).subscribe(() => {
-    //                     this.loadCreditSales();
-    //                   });
-    //                 }
-    //               })
   }
 
 }

@@ -13,6 +13,35 @@
     align-items: center;
 }
 
+
+.btn-add {
+    height: 35px;
+    background: #7380ec;
+    color: #fff;
+    border: #7380ec;
+    border-radius: 40px;
+    padding: 0 2rem;
+}
+
+.mat-mdc-form-field {
+    font-size: 14px;
+    width: 50%;
+  }
+
+.btn-actions {
+    display: flex;
+    
+}
+.btn-actions button {
+    border: none;
+    outline: none;
+    background-color: #fff;
+}
+.btn-actions mat-icon {
+    color: #7d8da1;;
+    // color: #7380ec;
+}
+
 .summary-card {
   background: #e9fdf2;
   border-radius: 12px;
@@ -80,4 +109,60 @@
   color: #1a7f37;
   font-size: 2rem;
   align-self: flex-end;
+}
+
+.estado-chip {
+  // display: inline-block;
+  // padding: 8px 24px;
+  // border-radius: 24px;
+  // color: #fff;
+  // // font-weight: 600;
+  // font-size: 1rem;
+  // text-align: center;
+  // background: #f44336; // Rojo por defecto
+  min-width: 90px;
+  box-shadow: 0 1px 4px #0002;
+  
+  color: white;
+  border: none;
+  background-color: #f44336;
+  border-radius: 30px;
+  padding: 5px 15px;
+  text-transform: capitalize;
+    // height: 50px;
+  width: 126px;
+  margin: -15px;
+}
+
+// Si tienes otros estados, puedes personalizarlos así:
+
+.estado-chip.pagado {
+  background: #4caf50;
+}
+.estado-chip.pendiente {
+  background: #f44336;
+}
+
+
+.state-cancelled  {
+    color: white;
+    border: none;
+    background-color: #f44336;
+    border-radius: 30px;
+    padding: 5px 15px;
+    text-transform: capitalize;
+    // height: 50px;
+    width: 126px;
+}
+
+.state-accepted {
+    color: white;
+    background-color: #4caf50;
+    border: none;
+    border-radius: 30px;
+    padding: 5px 30px;
+    // margin: 0 10px;
+    text-transform: capitalize;
+    // padding-left: 10px;
+    // margin-right: 30px;
 }
