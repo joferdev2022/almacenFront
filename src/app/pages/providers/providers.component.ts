@@ -6,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { timer } from 'rxjs';
 import { ModalPayProviderComponent } from 'src/app/components/modal-pay-provider/modal-pay-provider.component';
 import { ModalPinProviderComponent } from 'src/app/components/modal-pin-provider/modal-pin-provider.component';
+import { ModalViewProviderComponent } from 'src/app/components/modal-view-provider/modal-view-provider.component';
 import { ProviderModel } from 'src/app/models/internal/provider.model';
 import { DataService } from 'src/app/services/data.service';
 import Swal from 'sweetalert2';
@@ -154,6 +155,21 @@ export class ProvidersComponent implements OnInit {
 
   openDialogPinPay(provider: any) {
     const dialogRef = this.dialog.open(ModalPayProviderComponent, {
+      data: {info: 'pay', provider: provider }
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      if( result== true) {
+        timer(1000).subscribe(() => {
+        this.loadAllProviders();
+      });
+    }
+        // console.log(result);
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+  openDialogProviderView(provider: any) {
+    const dialogRef = this.dialog.open(ModalViewProviderComponent, {
       data: {info: 'pay', provider: provider }
     });
   

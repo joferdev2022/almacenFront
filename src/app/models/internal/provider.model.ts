@@ -9,6 +9,7 @@ export class ProviderModel {
     estadoProvider!: string;
     fechaCreacion!: string;
     fechaUltimoPago!: string;
+    pagos: Array<{ [key: string]: any }> = [];
     // local!: number;
     // direccionCliente?: string;
     // dateSale!: string;
@@ -29,6 +30,7 @@ export class ProviderModel {
         newObj.estadoProvider = obj.estadoProvider;
         newObj.fechaCreacion = obj.fechaCreacion;
         newObj.fechaUltimoPago = obj.fechaUltimoPago;
+        newObj.pagos = obj.pagos || []; 
         // newObj.clientName = obj.nombreCliente;
         // newObj.direccionCliente = obj.direccionCliente;
         // newObj.dateSale = obj.fechaVenta;

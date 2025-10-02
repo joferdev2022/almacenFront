@@ -1,0 +1,90 @@
+<!-- <div *ngIf="data" class="modal-info-sale">
+  <div class="header">
+    <div>
+      <h2>{{data.provider.nombreProvider ? data.provider.nombreProvider : 'Sin Nombre'}}</h2>
+      <div class="subtitle">{{data.provider.numeroProvider ? data.provider.numeroProvider : 'Sin Celular'}} - {{data.provider.fechaCreacion | date:'dd/MM/yyyy'}}</div>
+    </div>
+    <div>
+      <span class="status completed">
+        <svg width="16" height="16" fill="currentColor" style="vertical-align:middle;margin-right:4px;">
+          <circle cx="8" cy="8" r="8" fill="#d1f7d6"/>
+          <path d="M5 8.5l2 2 4-4" stroke="#34c759" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+        {{data.provider.estadoProvider}}
+      </span>
+    </div>
+  </div>
+
+  <div class="section-title">Pagos Realizados</div>
+  <div class="product-list">
+    <div class="product-item" *ngFor="let prod of data.provider.pagos">
+      <div>
+        <div class="product-name">{{prod.fecha}}</div>
+        <div class="product-desc">Unidad: {{prod.cantidad}} - S/. {{prod.precioUnitario | number:'1.2-2'}}</div>
+      </div>
+      <div class="product-price">S/.{{prod.cantidad * prod.precioUnitario | number:'1.2-2'}}</div>
+    </div>
+  </div>
+  <div class="summary">
+
+    <hr>
+    <div class="summary-row total">
+      <span>Total:</span>
+      <span class="summary-total">S/.{{data.data.totalPrice | number:'1.2-2'}}</span>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="close-btn" mat-button mat-dialog-close>Cerrar</button>
+  </div>
+</div>
+ -->
+
+
+ <h2 mat-dialog-title class="dialog-title">
+  {{data.provider.nombreProvider ? data.provider.nombreProvider : 'Sin Nombre'}}
+  <span class="estado">{{data.provider.estadoProvider}}</span>
+</h2>
+
+<mat-dialog-content class="dialog-content">
+
+  <p class="subtitulo">Monto: S/.{{data.provider.deudaInicial}} - Fecha: {{data.provider.fechaCreacion | date:'dd/MM/yyyy'}}</p>
+
+  <!-- <span class="estado">{{data.provider.estadoProvider}}</span> -->
+
+  <h3>Historial de Pagos</h3>
+
+  <div *ngIf="data.provider.pagos.length === 0">
+      <span>Aun no has realizado ningún pago</span>
+  </div>
+
+  <div class="pago-card" *ngFor="let cuota of data.provider.pagos; let i = index">
+    
+    <div>
+      <strong>Cuota #{{i + 1}}</strong><br />
+      {{ cuota.fecha | date:"dd/MM/yy, h:mm a" }}
+    </div>
+    <div class="monto">
+      S/.{{ cuota.monto | number:'1.2-2' }}
+    </div>
+    
+  </div>
+
+  <hr />
+
+  <div class="totales">
+    <div class="total-pagado-container">
+      <strong>Total Pagado:</strong>
+      <span class="total-pagado"></span>
+      <span class="total-pagado">S/.{{ monto_pagado| number:'1.2-2' }}</span>
+    </div>
+    <div class="deuda-pendiente-container">
+      <strong>Deuda Pendiente:</strong>
+      <span class="deuda-pendiente">S/.{{ data.provider.deudaActual | number:'1.2-2' }}</span>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button class="button-cerrar" mat-stroked-button mat-dialog-close>Cerrar</button>
+</mat-dialog-actions>

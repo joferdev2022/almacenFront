@@ -124,9 +124,9 @@ export class DataService {
     return this.http.put<any>( url, {} ).pipe(map(res => console.log(res)));
   }
 
-  updateProviderDebtById(providerId: any, deuda: number): Observable<any> {
+  updateProviderDebtById(providerId: any, deuda: number, monto: number): Observable<any> {
   const url = `${base_url}/providers/${providerId}/debt`;
-  return this.http.put<any>(url, { deuda }).pipe(map(res => console.log(res)));
+  return this.http.put<any>(url, { deuda, monto }).pipe(map(res => console.log(res)));
 }
 
   deleteProductById(productId: any):Observable<any> {

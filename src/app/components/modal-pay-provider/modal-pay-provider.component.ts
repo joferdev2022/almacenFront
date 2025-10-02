@@ -86,7 +86,7 @@ export class ModalPayProviderComponent {
       
       const finalAmountPaymentValue = this.data.provider.deudaActual - this.payProviderForm.value.amountPayment
     
-      this.dataService.updateProviderDebtById(this.data.provider.id, finalAmountPaymentValue).subscribe({
+      this.dataService.updateProviderDebtById(this.data.provider.id, finalAmountPaymentValue, this.payProviderForm.value.amountPayment).subscribe({
         next: (res) => {
           console.log(res);
           this.dialogRef.close();

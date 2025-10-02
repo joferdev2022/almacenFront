@@ -92,6 +92,7 @@
               <div class="btn-actions">
                 <!-- <button [disabled]="this.permissions == 0" (click)="openDialogInfoSale(row)"><mat-icon fontIcon="visibility" ></mat-icon></button> -->
                 <button [disabled]="this.permissions == 0" (click)="openDialogPinPay(row)"><mat-icon fontIcon="credit_card" ></mat-icon></button>
+                <button [disabled]="this.permissions == 0" (click)="openDialogProviderView(row)"><mat-icon fontIcon="visibility" ></mat-icon></button>
                 <button [disabled]="this.permissions == 0" (click)="openDialogPinUpdate(row)"><mat-icon fontIcon="edit" ></mat-icon></button>
                 <button [disabled]="this.permissions == 0" (click)="openDeleteProviderSwal(row.id)"><mat-icon fontIcon="delete" ></mat-icon></button>
               </div>
