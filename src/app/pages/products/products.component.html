@@ -7,7 +7,8 @@
             <mat-label>Buscar</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="" #input>
         </mat-form-field>
-        <button *ngIf="this.permissions == 1 ? true : false"  class="btn-add" (click)="openDialogPin()">
+        <!-- <button *ngIf="this.permissions == 1 ? true : false"  class="btn-add" (click)="openDialogPin()"> -->
+        <button *ngIf="this.permissions == 1 ? true : false"  class="btn-add" (click)="openDialogCreate()">
             Agregar Producto
         </button>
     </div>

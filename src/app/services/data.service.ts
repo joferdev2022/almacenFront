@@ -15,8 +15,8 @@ import { ProviderRequest } from '../models/request/provider.request';
 
 
 
-// const base_url = "http://localhost:8000/api";
-const base_url = "https://almacenback.onrender.com/api";
+const base_url = "http://localhost:8000/api";
+// const base_url = "https://almacenback.onrender.com/api";
 
 @Injectable({
   providedIn: 'root'
