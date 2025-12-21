@@ -7,6 +7,7 @@ export class DashboardModel {
     lowProducts!: Array<LowProduct>;
     totalProducts!: number;
     AmountSales!: number;
+    monthlyProfit!: number;
 
 
     static createFromObject(obj: any): DashboardModel {
@@ -17,6 +18,7 @@ export class DashboardModel {
         newObj.lowProducts = LowProduct.createFromObjects(obj.lowProducts);
         newObj.totalProducts = obj.totalProducts;
         newObj.AmountSales = obj.AmountSales;
+        newObj.monthlyProfit = obj.monthlyProfit;
         return newObj;
       }
     

@@ -26,10 +26,15 @@ export class HomeComponent implements OnInit {
   totalProducts: number = 0;
   totalSales: number = 0;
   amountSales: number = 0;
+  monthlyProfit: number = 0;
   productsTop!:Array<TopProduct>;
   productsLow!:Array<LowProduct>;
   local!: any;
   permissions!: any;
+
+  currentMonth!: string;
+
+  
   
   dataSource = new MatTableDataSource<TopProduct>;
   dataSource2 = new MatTableDataSource<LowProduct>;
@@ -48,7 +53,15 @@ export class HomeComponent implements OnInit {
 
               }
   ngOnInit(): void {
+
     this.loadDashboardData();
+    const meses = [
+      'enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio',
+      'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'
+    ];
+    const fecha = new Date();
+    this.currentMonth = meses[fecha.getMonth()];
+
   }
 
   loadDashboardData(fechaInicio?: Date, fechaFin?: Date) {
@@ -63,6 +76,8 @@ export class HomeComponent implements OnInit {
         this.totalProducts = res.data.totalProducts;
         this.totalSales = res.data.totalSales;
         this.amountSales = res.data.AmountSales;
+        this.monthlyProfit = res.data.monthlyProfit;
+        
         // this.dataSource = new MatTableDataSource(this.res);
         
         // console.log(res);
