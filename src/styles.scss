@@ -76,7 +76,47 @@ b {
     color: #ffbb55;
 }
 
+.mat-mdc-radio-checked.mat-accent .mat-radio-ripple .mat-ripple-element {
+  opacity: 0.03 !important;
+  background-color: #136E32 !important;
+}
+
+// .mat-mdc-radio-checked.mat-accent .mdc-radio__background,
+// .mat-radio-indeterminate.mat-accent .mdc-radio__background {
+//   background-color: #136E32 !important;
+// }
+.mat-radio-ripple .mat-ripple-element,
+.mat-mdc-radio-checked.mat-accent .mdc-radio__background .mdc-radio__outer-circle {
+  border-color: #136E32 !important;
+}
+// .mat-radio-ripple .mat-ripple-element,
+// .mat-mdc-radio-checked.mat-accent .mdc-radio__background .mdc-radio__inner-circle {
+//   background-color: #136E32 !important;
+// }
+
+.mat-mdc-radio-button 
+.mdc-radio .mdc-radio__native-control:enabled+.mdc-radio__background .mdc-radio__inner-circle {
+border-color: #136E32 !important;
+}
+
+.mat-mdc-radio-button.mat-accent {
+    --mat-radio-checked-ripple-color: #136E32 !important;
+}
+
 
 // .mat-progress-spinner circle, .mat-spinner circle {
 //     stroke: #2A79FF!important;
 // }
+
+
+
+// Forzar colores del radio button
+// ::ng-deep {
+//   .metodo-pago .mat-mdc-radio-checked .mdc-radio__inner-circle {
+//     background-color: #63e581 !important;
+//   }
+// }
+
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

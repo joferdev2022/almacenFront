@@ -10,6 +10,7 @@ export class SaleRequest {
     nombreVendedor!: string;
     nombreCliente!: string;
     direccionCliente!: string;
+    paymentMethod!: string;
     precioTotal!: number;
     estado!: string;
     productos!: ProductoVenta[];
@@ -21,6 +22,7 @@ export class SaleRequest {
       newObj.nombreVendedor = sale.nombreVendedor;
       newObj.nombreCliente = sale.nombreCliente;
       newObj.direccionCliente = sale.direccionCliente;
+      newObj.paymentMethod = sale.paymentMhetod;
       newObj.precioTotal = sale.precioTotal;
       newObj.estado = sale.estado;
       newObj.local = sale.local;

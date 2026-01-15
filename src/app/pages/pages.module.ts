@@ -15,6 +15,7 @@ import { ProvidersComponent } from './providers/providers.component';
 @NgModule({
   declarations: [
     PagesComponent,
+    
       
     
   ],

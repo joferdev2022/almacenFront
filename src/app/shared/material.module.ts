@@ -13,6 +13,10 @@ import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatSelectModule} from '@angular/material/select';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatNativeDateModule, MatRippleModule} from '@angular/material/core';
+
+
 
 
 
@@ -33,7 +37,13 @@ import {MatMenuModule} from '@angular/material/menu';
     MatPaginatorModule,
     MatDialogModule,
     MatSelectModule,
-    MatMenuModule
+    MatMenuModule,
+    MatRadioModule,
+    MatNativeDateModule,    
+    MatRippleModule,
+
+    
+    
   ]
 })
 export class MaterialModule { }

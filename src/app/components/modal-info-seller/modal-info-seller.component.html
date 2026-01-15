@@ -1,0 +1,98 @@
+<div *ngIf="data" class="modal-info-sale">
+  <div class="header">
+    <div>
+      <h2>{{data.data.nombreVendedor ? data.data.nombreVendedor : 'Sin Nombre'}}</h2>
+      <div class="subtitle">{{selectedMonthLabel ? selectedMonthLabel : ''}}</div>
+    </div>
+    <!-- <div>
+      <span class="status completed">
+        <svg width="16" height="16" fill="currentColor" style="vertical-align:middle;margin-right:4px;">
+          <circle cx="8" cy="8" r="8" fill="#d1f7d6"/>
+          <path d="M5 8.5l2 2 4-4" stroke="#34c759" stroke-width="2" fill="none" stroke-linecap="round"/>
+        </svg>
+        ACTIVO
+      </span>
+    </div> -->
+  </div>
+
+  <div class="filters">
+    <button 
+      class="filter-btn"
+      [class.active]="currentFilter === 'thisMonth'"
+      (click)="setFilter('thisMonth')">
+      Este Mes
+    </button>
+    <button 
+      class="filter-btn"
+      [class.active]="currentFilter === 'previousMonth'"
+      (click)="setFilter('previousMonth')">
+      Mes Anterior
+    </button>
+    
+    <mat-form-field>
+        <mat-label>Mes y Año</mat-label>
+        <input matInput [matDatepicker]="dp" [formControl]="date">
+        <!-- <mat-hint>Mes/Año</mat-hint> -->
+        <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+        <mat-datepicker #dp
+                    startView="multi-year",
+                    (yearSelected)="chosenYearHandler($event)"
+                    (monthSelected)="chosenMonthHandler($event, dp)"
+                    panelClass="example-month-picker">
+        </mat-datepicker>
+    </mat-form-field>
+
+  </div>
+
+  <div class="section-title">Métrica de Ventas</div>
+  <div class="metrics">
+    <div class="metric-card">
+      <div class="metric-label">Número de Ventas</div>
+      <div class="metric-value">{{this.monthlyStats.totalVentas}}</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Total de Ventas</div>
+      <div class="metric-value">S/.{{this.monthlyStats.montoTotal | number:'1.2-2'}}</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Comisión Estimada</div>
+      <div class="metric-value">S/.{{this.monthlyStats.comisionTotalEstimada | number:'1.2-2'}}</div>
+    </div>
+  </div>
+
+  <div class="section-title">Historial de ventas</div>
+  <div *ngIf="!monthlyStats?.ventas || monthlyStats.ventas.length === 0">
+      <span>Aun no has realizado ninguna venta</span>
+  </div>
+  <div class="pago-card" *ngFor="let venta of monthlyStats?.ventas; let i = index">
+    
+    <div>
+      <strong>Venta #{{i + 1}}</strong><br />
+      {{ venta.fechaVenta | date:"dd/MM/yy, h:mm a" }}
+    </div>
+    <div class="monto">
+      S/.{{ venta.precioTotal | number:'1.2-2' }}
+    </div>
+    
+  </div>
+
+  <hr />
+
+  <!-- <div class="totales">
+    <div class="total-pagado-container">
+      <strong>Total Ventas:</strong>
+      <span class="total-pagado"></span>
+      <span class="total-pagado">S/.{{ 500| number:'1.2-2' }}</span>
+    </div>
+    <div class="deuda-pendiente-container">
+      <strong>Comisión calculada:</strong>
+      <span class="deuda-pendiente">S/.{{ data.provider.deudaActual | number:'1.2-2' }}</span>
+    </div>
+  </div> -->
+
+  <div class="actions">
+    <!-- <button class="close-btn">Cerrar</button> -->
+    <button class="close-btn" mat-button mat-dialog-close>Cerrar</button>
+  </div>
+</div>
+

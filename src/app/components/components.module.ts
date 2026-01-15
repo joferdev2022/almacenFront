@@ -18,6 +18,7 @@ import { ModalPinProviderComponent } from './modal-pin-provider/modal-pin-provid
 import { ModalProviderComponent } from './modal-provider/modal-provider.component';
 import { ModalPayProviderComponent } from './modal-pay-provider/modal-pay-provider.component';
 import { ModalViewProviderComponent } from './modal-view-provider/modal-view-provider.component';
+import { ModalInfoSellerComponent } from './modal-info-seller/modal-info-seller.component';
 
 
 
@@ -36,7 +37,8 @@ import { ModalViewProviderComponent } from './modal-view-provider/modal-view-pro
     ModalPinProviderComponent,
     ModalProviderComponent,
     ModalPayProviderComponent,
-    ModalViewProviderComponent
+    ModalViewProviderComponent,
+    ModalInfoSellerComponent
     
   ],
   exports: [
@@ -51,7 +53,8 @@ import { ModalViewProviderComponent } from './modal-view-provider/modal-view-pro
     ModalPinProviderComponent,
     ModalProviderComponent,
     ModalPayProviderComponent,
-    ModalViewProviderComponent
+    ModalViewProviderComponent,
+    ModalInfoSellerComponent
   ],
   imports: [
     CommonModule,

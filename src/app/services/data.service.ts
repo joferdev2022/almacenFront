@@ -12,6 +12,7 @@ import { SellerResponse } from '../models/response/seller.response';
 import { SellerRequest } from '../models/request/seller.request';
 import { ProviderResponse } from '../models/response/provider.response';
 import { ProviderRequest } from '../models/request/provider.request';
+import { SellerMonthlyStatsResponse } from '../models/request/seller_monthly_stats.response';
 
 
 
@@ -142,6 +143,12 @@ export class DataService {
   deleteProviderById(providerId: any):Observable<any> {
     const url = `${ base_url }/providers/${providerId}`;
     return this.http.delete<any>(url).pipe(map(res => console.log(res)));
+  }
+
+  getSellerMonthlyStats(sellerName: string, month: number, year: number, local: any): Observable<SellerMonthlyStatsResponse> {
+      const url = `${base_url}/sellers/${encodeURIComponent(sellerName)}/monthly-stats?local=${local}&year=${year}&month=${month}`;
+      return this.http.get<SellerMonthlyStatsResponse>(url)
+          .pipe(map(res => SellerMonthlyStatsResponse.createFromObject(res)));
   }
 
   

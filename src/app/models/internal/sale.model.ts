@@ -5,6 +5,7 @@ export class SaleModel {
     nombreVendedor?: string;
     clientName!: string;
     direccionCliente?: string;
+    paymentMethod?: string;
     dateSale!: string;
     products!: [];
     totalPrice!: number;
@@ -19,6 +20,7 @@ export class SaleModel {
         newObj.nombreVendedor = obj.nombreVendedor;
         newObj.clientName = obj.nombreCliente;
         newObj.direccionCliente = obj.direccionCliente;
+        newObj.paymentMethod = obj.paymentMhetod;
         newObj.dateSale = obj.fechaVenta;
         newObj.products = obj.productos;
         newObj.totalPrice = obj.precioTotal;

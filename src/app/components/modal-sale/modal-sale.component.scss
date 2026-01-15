@@ -1,6 +1,6 @@
 .example-form {
     min-width: 150px;
-    max-width: 500px;
+    // max-width: 500px;
     width: 100%;
   }
   
@@ -12,16 +12,82 @@ mat-radio-button {
     margin: 0px 20px;
   }
 
+
+.metodo-pago {
+  margin: 15px 0;
+
+
+
+}
+
+.metodo-pago mat-radio-button {
+  margin-right: 15px;
+}
+
+
+// // Colores sin seleccionar - círculo exterior
+// ::ng-deep .metodo-pago .mdc-radio__outer-circle {
+//   border-color: #324c05 !important;
+// }
+
+// // Colores cuando está seleccionado - círculo interior
+// ::ng-deep .metodo-pago .mat-mdc-radio-checked .mdc-radio__inner-circle {
+//   background-color: #63e581 !important;
+// }
+
+// // Mantener el color del borde también cuando está checkeado
+// ::ng-deep .metodo-pago .mat-mdc-radio-checked .mdc-radio__outer-circle {
+//   border-color: #8fcd24 !important;
+// }
+
+// // Sobrescribir mat-accent
+// ::ng-deep .metodo-pago .mat-accent.mat-mdc-radio-checked .mdc-radio__inner-circle {
+//   background-color: #63e581 !important;
+// }
+
+// // Target adicional para forzar el color
+// ::ng-deep .metodo-pago .mat-mdc-radio-checked {
+//   .mdc-radio__inner-circle {
+//     background-color: #63e581 !important;
+//     fill: #63e581 !important;
+//   }
+// }
+
+// :host ::ng-deep .mat-radio-button .mdc-radio__inner-circle {
+//   background-color: red !important; /* Cambia a tu color deseado */
+// }
 .state-radio-button {
     margin-top: 20px;
     margin-bottom: 30px;
 }
+
+
 .select-div {
     display: flex;
     justify-content: space-around;
     // gap: 2rem;
     // margin-left: 1rem;
 }
+
+
+// ::ng-deep {
+//   .metodo-pago .mat-mdc-radio-button .mdc-radio--checked {
+    
+//     background-color: #7380ec !important;
+//   }
+
+//   .metodo-pago .mdc-radio__native-control:checked {
+//     border-color: #63e581 !important;
+//   }
+
+//   .metodo-pago .mdc-radio__outer-circle {
+//     border-color: #324c05 !important;
+//     // vilagro-color: #324c05 !important;
+//   }
+
+
+// }
+
 
 .input-div {
     display: flex;

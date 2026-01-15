@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import {MatPaginator, MatPaginatorIntl} from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
@@ -52,7 +53,9 @@ export class SalesComponent implements OnInit {
 
   constructor(private dataService: DataService,
               private paginatorIntl: MatPaginatorIntl,
-              public dialog: MatDialog,) {
+              public dialog: MatDialog,
+              private router: Router,
+              ) {
 
             paginatorIntl.itemsPerPageLabel = 'items por página'; 
             this.local = JSON.parse(localStorage.getItem('local')!) ? JSON.parse(localStorage.getItem('local')!) : '';
@@ -107,6 +110,8 @@ export class SalesComponent implements OnInit {
 
   }
 
+
+
   openDialogCreate(){
     const dialogRef = this.dialog.open(ModalSaleComponent, {
       data: {customer: '', operation: "create"},
@@ -129,6 +134,7 @@ export class SalesComponent implements OnInit {
       console.log(`Dialog result: ${result}`);
     });
   }
+
   openDialogUpdate(sale: any) {
 
   }

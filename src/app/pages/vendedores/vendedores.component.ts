@@ -4,6 +4,7 @@ import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { timer } from 'rxjs';
+import { ModalInfoSellerComponent } from 'src/app/components/modal-info-seller/modal-info-seller.component';
 import { ModalPinSellerComponent } from 'src/app/components/modal-pin-seller/modal-pin-seller.component';
 import { ModalPinComponent } from 'src/app/components/modal-pin/modal-pin.component';
 import { ModalSellerComponent } from 'src/app/components/modal-seller/modal-seller.component';
@@ -129,6 +130,29 @@ export class VendedoresComponent implements OnInit{
       // console.log(result);
       console.log(`Dialog result: ${result}`);
     });
+  }
+
+  openDialogInfoSeller(seller: any) {
+    const dialogRef = this.dialog.open(ModalInfoSellerComponent, {
+          data: {data: seller, operation: "info"},
+          width: '550px',
+          height: '600px'
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+      console.log(result);
+
+      // if( result== true) {
+
+      //   timer(1000).subscribe(() => {
+
+      //     this.loadAllSales();
+      //   });
+        
+      // }
+      console.log(`Dialog result: ${result}`);
+    });
+    
   }
   
   openDeleteSellerSwal(sellerId:any) {

@@ -6,7 +6,7 @@
       </div>
       <div class="summary-content">
         <div class="summary-item">
-          <div class="item-title">Ganancia Neta</div>
+          <div class="item-title">Ingreso Neto</div>
           <div class="item-value net">S/ {{ netProfit | number:'1.2-2' }}</div>
           <!-- <mat-icon class="item-icon">trending_up</mat-icon> -->
         </div>
@@ -40,6 +40,7 @@
                 <mat-date-range-picker #picker></mat-date-range-picker>
             </mat-form-field> -->
             <button *ngIf="this.permissions == 1 ? true : false" class="btn-add" (click)="openDialogCreate()">Nueva venta</button> 
+            <!-- <button *ngIf="this.permissions == 1 ? true : false" class="btn-add" (click)="openWindowSale()">Nueva venta</button>  -->
         </div>
     </div>
     <div class="mat-elevation-z8">
