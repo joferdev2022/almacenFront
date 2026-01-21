@@ -3,6 +3,7 @@
     <div>
       <h2>{{data.data.clientName ? data.data.clientName : 'Sin Nombre'}}</h2>
       <div class="subtitle">{{data.data.direccionCliente ? data.data.direccionCliente : 'Sin Direccion'}} - {{data.data.dateSale | date:'dd/MM/yyyy'}}</div>
+      <div class="subtitle">Método de Pago: {{data.data.paymentMethod}}</div>
     </div>
     <div>
       <span class="status completed">
@@ -14,7 +15,7 @@
       </span>
     </div>
   </div>
-
+  
   <div class="section-title">Productos Vendidos</div>
   <div class="product-list">
     <div class="product-item" *ngFor="let prod of data.data.products">
