@@ -19,6 +19,7 @@ import { ModalProviderComponent } from './modal-provider/modal-provider.componen
 import { ModalPayProviderComponent } from './modal-pay-provider/modal-pay-provider.component';
 import { ModalViewProviderComponent } from './modal-view-provider/modal-view-provider.component';
 import { ModalInfoSellerComponent } from './modal-info-seller/modal-info-seller.component';
+import { ModalProductExcelComponent } from './modal-product-excel/modal-product-excel.component';
 
 
 
@@ -38,7 +39,8 @@ import { ModalInfoSellerComponent } from './modal-info-seller/modal-info-seller.
     ModalProviderComponent,
     ModalPayProviderComponent,
     ModalViewProviderComponent,
-    ModalInfoSellerComponent
+    ModalInfoSellerComponent,
+    ModalProductExcelComponent
     
   ],
   exports: [
@@ -54,7 +56,8 @@ import { ModalInfoSellerComponent } from './modal-info-seller/modal-info-seller.
     ModalProviderComponent,
     ModalPayProviderComponent,
     ModalViewProviderComponent,
-    ModalInfoSellerComponent
+    ModalInfoSellerComponent,
+    ModalProductExcelComponent
   ],
   imports: [
     CommonModule,

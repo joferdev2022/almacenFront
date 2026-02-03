@@ -1,0 +1,124 @@
+.dialog-content {
+  padding: 0 24px 24px 24px;
+}
+
+.drop-zone {
+  border: 2px dashed #5c6bc0;
+  border-radius: 8px;
+  padding: 40px 24px;
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  background-color: #f5f5f5;
+  margin-bottom: 16px;
+
+  p {
+    margin: 16px 0;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
+  }
+}
+
+.drop-zone.dragging {
+  background-color: #e8eaf6;
+  border-color: #3f51b5;
+}
+
+.excel-icon {
+  font-size: 64px;
+  color: #4caf50;
+  margin: 0 auto 16px;
+}
+
+.file-name {
+  display: block;
+  margin-top: 12px;
+  font-weight: 500;
+  color: #333;
+  font-size: 13px;
+}
+
+.progress-container {
+  margin: 16px 0;
+  margin-bottom: 12px;
+
+  small {
+    display: block;
+    margin-top: 8px;
+    color: #666;
+    font-size: 12px;
+  }
+}
+
+.info-text {
+  font-size: 12px;
+  color: #666;
+  margin-top: 16px;
+  line-height: 1.6;
+
+  p {
+    margin: 0;
+  }
+
+  b {
+    color: #333;
+    font-weight: 600;
+  }
+}
+
+.dialog-actions {
+  padding: 16px 24px;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+
+button {
+    height: 35px;
+    background: #7380ec;
+    color: #fff;
+    border: #7380ec;
+    border-radius: 40px;
+    padding: 0 2rem;
+    margin: 0.25rem;
+    border-color: #7380ec;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #5c6bc0;
+    border: #5c6bc0;
+}
+
+.btn-cancel {
+    height: 35px;
+    // line-height: 40px;
+    background: #fff;
+    color: black;
+    border: 2px solid rgb(176, 176, 176);
+    border-radius: 40px;
+    padding: 0 2rem;
+    cursor: pointer;
+}
+
+// .btn-cancel {
+//   background-color: #9e9e9e;
+//   color: white;
+//   min-width: 120px;
+// }
+
+// .btn-cancel:hover {
+//   background-color: #757575;
+// }
+
+// .btn-upload {
+//   background-color: #5c6bc0;
+//   color: white;
+//   min-width: 120px;
+// }
+
+// .btn-upload:hover {
+//   background-color: #3f51b5;
+// }

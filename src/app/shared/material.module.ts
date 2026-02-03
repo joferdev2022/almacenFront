@@ -15,7 +15,7 @@ import {MatSelectModule} from '@angular/material/select';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatNativeDateModule, MatRippleModule} from '@angular/material/core';
-
+import {MatProgressBarModule} from '@angular/material/progress-bar';
 
 
 
@@ -41,6 +41,7 @@ import {MatNativeDateModule, MatRippleModule} from '@angular/material/core';
     MatRadioModule,
     MatNativeDateModule,    
     MatRippleModule,
+    MatProgressBarModule
 
     
     

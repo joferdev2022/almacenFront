@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, map } from 'rxjs';
+import { Observable, Subject, map } from 'rxjs';
 
 
 import { ProductResponse } from '../models/response/product.response';
@@ -23,6 +23,8 @@ const base_url = "https://almacenback.onrender.com/api";
   providedIn: 'root'
 })
 export class DataService {
+
+  excelUploadResponse$ = new Subject<any>();
 
   constructor(private http: HttpClient) { }
 
@@ -169,5 +171,14 @@ export class DataService {
     // localhost:8000/api/sales/summary/daily
     const url = `${ base_url }/sales/summary/daily?local=${local}`;
     return this.http.get<any>(url).pipe(map(res => {return res;}));
+  }
+
+  uploadProductsExcel(file: File, local: any): Observable<any> {
+    const url = `${base_url}/products/upload-excel`;
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('local', local);
+    
+    return this.http.post<any>(url, formData);
   }
 }

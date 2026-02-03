@@ -1,6 +1,7 @@
 import { Component, Inject} from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ModalProductComponentComponent } from '../modal-product.component/modal-product.component.component';
+import { ModalProductExcelComponent } from '../modal-product-excel/modal-product-excel.component';
 
 
 @Component({
@@ -32,6 +33,10 @@ export class ModalPinComponent {
       } else if (this.data.info === 'update') {
         dialogRefProduct = this.dialog.open(ModalProductComponentComponent, {
           data: { product: this.data.product, operation: "update" }
+        });
+      } else if (this.data.info === 'excel') {
+        dialogRefProduct = this.dialog.open(ModalProductExcelComponent, {
+          data: { operation: "excel" }
         });
       }
       if (dialogRefProduct) {
