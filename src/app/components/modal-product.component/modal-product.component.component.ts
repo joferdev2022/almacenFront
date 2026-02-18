@@ -30,7 +30,17 @@ export class ModalProductComponentComponent implements OnInit {
 
   measure = [
     {value: 'Unidad', viewValue: 'Unidad'},
-    {value: 'Caja', viewValue: 'Caja'}
+    {value: 'Caja', viewValue: 'Caja'},
+    {value: '100 GRAMOS', viewValue: '100 GR'},
+    {value: '500 GRAMOS', viewValue: '500 GR'},
+    {value: 'KILOGRAMO', viewValue: 'KG'},
+    {value: '10 KILOGRAMOS', viewValue: '10 KG'},
+    {value: '25 KILOGRAMOS', viewValue: '25 KG'},
+    {value: '50 KILOGRAMOS', viewValue: '50 KG'},
+    {value: '125 MILILITROS', viewValue: '125 ML'},
+    {value: '250 MILILITROS', viewValue: '250 ML'},
+    {value: 'LITRO', viewValue: 'LT'},
+    {value: '4 LITROS', viewValue: '4 LT'},
   ]
 
   constructor(public dialogRef: MatDialogRef<ModalProductComponentComponent>,

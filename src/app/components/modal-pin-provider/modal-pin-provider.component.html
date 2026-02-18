@@ -9,6 +9,7 @@
       maxlength="4"
      [(ngModel)]="pin"
       placeholder="****"
+      (keyup.enter)="onConfirm()"
     />
   </mat-form-field>
 
