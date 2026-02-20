@@ -7,10 +7,16 @@
             <mat-label>Buscar</mat-label>
             <input matInput (keyup)="applyFilter($event)" placeholder="" #input>
         </mat-form-field>
-        <button *ngIf="this.permissions == 1 ? true : false"  class="btn-add-excel"  (click)="openDialogPinUploadExcel()">
+
+        <button title="Subir Excel" *ngIf="this.permissions == 1 ? true : false"  class="btn-add-excel"  (click)="openDialogPinUploadExcel()" >
         <!-- <button *ngIf="this.permissions == 1 ? true : false"  class="btn-add" (click)="openDialogCreate()"> -->
-            Subir Excel
+            <mat-icon fontIcon="upload_file"></mat-icon>
         </button>
+        <button title="Descargar Excel" *ngIf="this.permissions == 1 ? true : false"  class="btn-download-excel"  >
+        <!-- <button *ngIf="this.permissions == 1 ? true : false"  class="btn-add" (click)="openDialogCreate()"> -->
+            <mat-icon fontIcon="download_2"></mat-icon>
+        </button>
+        
         <button *ngIf="this.permissions == 1 ? true : false"  class="btn-add"  (click)="openDialogPin()">
         <!-- <button *ngIf="this.permissions == 1 ? true : false"  class="btn-add" (click)="openDialogCreate()"> -->
             Agregar Producto

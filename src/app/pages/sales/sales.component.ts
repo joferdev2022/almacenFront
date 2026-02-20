@@ -263,6 +263,7 @@ export class SalesComponent implements OnInit {
               });
               timer(1000).subscribe(() => {
                 this.loadAllSales();
+                this.loadSalesReportDayly();
               });
             }
           })
