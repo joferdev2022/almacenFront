@@ -268,4 +268,22 @@ export class ProductsComponent implements OnInit {
       this.dataSource.paginator.firstPage();
     }
   }
+
+  downloadExcel() {
+  Swal.fire({
+    title: "Descargando...",
+    text: "Por favor espera mientras se descarga el archivo.",
+    icon: "info",
+    allowOutsideClick: false,
+    didOpen: () => {
+      Swal.showLoading();
+    }
+  });
+
+  this.dataService.DownloadProductsExcel(this.local);
+  
+  timer(2000).subscribe(() => {
+    Swal.close();
+  });
+}
 }

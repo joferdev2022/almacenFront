@@ -12,7 +12,7 @@
         <!-- <button *ngIf="this.permissions == 1 ? true : false"  class="btn-add" (click)="openDialogCreate()"> -->
             <mat-icon fontIcon="upload_file"></mat-icon>
         </button>
-        <button title="Descargar Excel" *ngIf="this.permissions == 1 ? true : false"  class="btn-download-excel"  >
+        <button title="Descargar Excel" *ngIf="this.permissions == 1 ? true : false"  class="btn-download-excel"  (click)="downloadExcel()">
         <!-- <button *ngIf="this.permissions == 1 ? true : false"  class="btn-add" (click)="openDialogCreate()"> -->
             <mat-icon fontIcon="download_2"></mat-icon>
         </button>

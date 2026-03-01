@@ -181,4 +181,17 @@ export class DataService {
     
     return this.http.post<any>(url, formData);
   }
+
+  DownloadProductsExcel(local: any){
+    const url = `${base_url}/products/download-excel?local=${local}`;
+
+    this.http.get(url, { responseType: 'blob' }).subscribe((data: Blob) => {
+      const objectUrl = window.URL.createObjectURL(data);
+      const link = document.createElement('a');
+      link.href = objectUrl;
+      link.download = `productos_local_${local}.xlsx`;
+      link.click();
+      window.URL.revokeObjectURL(objectUrl);
+    });
+  }
 }
