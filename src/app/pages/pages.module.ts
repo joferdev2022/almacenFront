@@ -16,6 +16,7 @@ import { ProvidersComponent } from './providers/providers.component';
   declarations: [
     PagesComponent,
     
+    
       
     
   ],

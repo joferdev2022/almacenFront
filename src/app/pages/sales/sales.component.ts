@@ -42,6 +42,7 @@ export class SalesComponent implements OnInit {
   @Input() margin: number = 0;
   @Input() salesCount: number = 0;
   @Input() avgSale: number = 0;
+  @Input() partialPayment: number = 0;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -79,6 +80,7 @@ export class SalesComponent implements OnInit {
                   this.netProfit = res.ganancia_neta;
                   this.totalSales2 = res.ventas_totales;
                   this.salesCount = res.numero_ventas;
+                  this.partialPayment = res.pagos_parciales_hoy;
                 },
                 error: (e) => {
                   console.log(e);
