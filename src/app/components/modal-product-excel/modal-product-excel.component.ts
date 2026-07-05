@@ -78,8 +78,10 @@ export class ModalProductExcelComponent implements OnInit {
 
     this.dataService.uploadProductsExcel(this.file, this.local).subscribe(
       (response: any) => {
+        console.log(response);
+        
         this.progress = 100;
-        this.status = `Completado - ${response.inserted_count} insertados, ${response.updated_count} actualizados`;
+        this.status = `Completado - ${response.inserted_count} insertados, ${response.deleted_count} eliminados`;
 
 
         this.dataService.excelUploadResponse$.next(response);

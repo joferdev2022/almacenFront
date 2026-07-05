@@ -136,7 +136,7 @@ export class ProductsComponent implements OnInit {
         this.dataService.excelUploadResponse$.subscribe((response: any) => {
           Swal.fire({
             title: "Hecho!",
-            text: `Los productos se han agregado correctamente.\n${response.inserted_count} insertados, ${response.updated_count} actualizados`,
+            text: `Los productos se han agregado correctamente.\n${response.inserted_count} insertados, ${response.deleted_count} eliminados`,
             icon: "success"
           });
           timer(1000).subscribe(() => {
