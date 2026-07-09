@@ -10,7 +10,7 @@ import { ModalSellerComponent } from '../modal-seller/modal-seller.component';
 export class ModalPinSellerComponent {
 
   pin: string = '';
-  correctPin: string = '2103';
+  correctPin: string = '1901';
 
   constructor(
                   public dialogRef: MatDialogRef<ModalPinSellerComponent>,

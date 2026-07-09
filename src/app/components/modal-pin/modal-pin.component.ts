@@ -12,7 +12,7 @@ import { ModalProductExcelComponent } from '../modal-product-excel/modal-product
 export class ModalPinComponent {
 
   pin: string = '';
-  correctPin: string = '2103';
+  correctPin: string = '1901';
 
   constructor(
               public dialogRef: MatDialogRef<ModalPinComponent>,
