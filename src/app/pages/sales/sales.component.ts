@@ -117,8 +117,13 @@ export class SalesComponent implements OnInit {
   openDialogCreate(){
     const dialogRef = this.dialog.open(ModalSaleComponent, {
       data: {customer: '', operation: "create"},
-      width: '800px',
-      height: '600px'
+      // width: '800px',
+      // height: '600px'
+      width: '1180px',
+      maxWidth: '96vw',
+      height: '88vh',
+      maxHeight: '94vh',
+      panelClass: 'sale-dialog-panel'
     });
 
     dialogRef.afterClosed().subscribe(result => {

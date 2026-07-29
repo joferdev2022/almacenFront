@@ -126,18 +126,36 @@ export class ModalSaleComponent implements OnInit{
       alert("No hay stock disponible");
       return;
     }
+
+
+    const existingProductIndex = this.productos.controls.findIndex(
+      (control) => control.get('productoId')!.value === productItem.id,
+    );
+
+
+
+    if (existingProductIndex >= 0) {
+      this.incrementCantidad(existingProductIndex);
+      return;
+    }
+
+
+
     const productoForm = this.fb.group({
       productoId: [productItem ? productItem.id : '' , Validators.required],
       cantidad: [1, [Validators.required, Validators.min(1)]],
       precioBuy: [productItem ? productItem.priceBuy : 0, [Validators.required, Validators.min(0)]],
       precioUnitario: [productItem ? productItem.priceSale : 0, [Validators.required, Validators.min(0)]],
       productName: [productItem ? productItem.name : '', Validators.required],
-
+      measure: [productItem ? productItem.measure : ''],
     });
+
 
     this.productos.push(productoForm);
     this.updatePrecioTotal();
     console.log(this.productos.value);
+    console.log(productItem);
+    
     
   }
 
@@ -147,7 +165,7 @@ export class ModalSaleComponent implements OnInit{
   }
 
   incrementCantidad(index: number) {
-    console.log(this.productos.at(index));
+    
     
     const control = this.productos.at(index).get('cantidad')!;
     const productoId = this.productos.at(index).get('productoId')!.value;
@@ -174,9 +192,6 @@ export class ModalSaleComponent implements OnInit{
   }
 
   updatePrecioTotal() {
-    console.log("updateprecio");
-    console.log(this.productos.controls);
-    // console.log(productoForm);
     
     
     
