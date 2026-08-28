@@ -23,7 +23,11 @@ export class ModalPinComponent {
 
   onConfirm(): void {
     if (this.pin === this.correctPin) {
-      // this.dialogRef.close(true); // Pin is correct
+      if (this.data.info === 'verify') {
+        this.dialogRef.close(true);
+        return;
+      }
+
       let dialogRefProduct;
       if (this.data.info === 'create') {
 

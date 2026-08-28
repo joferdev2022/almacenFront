@@ -64,6 +64,43 @@ mat-icon{
 //     width: 25%;
 //   }
 
+.purchase-price-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.purchase-price-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #7380ec;
+    cursor: pointer;
+
+    mat-icon {
+        margin: 0;
+        width: 20px;
+        height: 20px;
+        font-size: 20px;
+    }
+
+    &:hover {
+        background: rgba(132, 139, 200, 0.18);
+    }
+
+    &:focus-visible {
+        outline: 2px solid #7380ec;
+        outline-offset: 2px;
+    }
+}
+
 .btn-actions {
     display: flex;
     

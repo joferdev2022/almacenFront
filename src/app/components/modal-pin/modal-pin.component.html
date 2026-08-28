@@ -30,7 +30,10 @@
       matInput
       type="password"
       maxlength="4"
-     [(ngModel)]="pin"
+      inputmode="numeric"
+      autocomplete="off"
+      aria-label="PIN de 4 dígitos"
+      [(ngModel)]="pin"
       placeholder="****"
       (keyup.enter)="onConfirm()"
     />

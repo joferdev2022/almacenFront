@@ -14,6 +14,7 @@ import { timer } from 'rxjs';
 import { ModalChoiceComponentComponent } from 'src/app/components/modal-choice.component/modal-choice.component.component';
 import Swal from 'sweetalert2';
 import { ModalInfoSaleComponent } from 'src/app/components/modal-info-sale/modal-info-sale.component';
+import { ModalPinComponent } from 'src/app/components/modal-pin/modal-pin.component';
 
 
 @Component({
@@ -44,6 +45,8 @@ export class SalesComponent implements OnInit {
   @Input() avgSale: number = 0;
   @Input() partialPayment: number = 0;
 
+  isNetProfitVisible: boolean = false;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -73,10 +76,24 @@ export class SalesComponent implements OnInit {
     this.loadSalesReportDayly();
   }
 
+  toggleNetProfitVisibility(): void {
+    if (this.isNetProfitVisible) {
+      this.isNetProfitVisible = false;
+      return;
+    }
+
+    const dialogRef = this.dialog.open(ModalPinComponent, {
+      data: { info: 'verify' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.isNetProfitVisible = result === true;
+    });
+  }
+
   loadSalesReportDayly() {
     this.dataService.dayliSalesByLocal(this.local).subscribe({
                 next: (res) => {
-                  console.log(res);
                   this.netProfit = res.ganancia_neta;
                   this.totalSales2 = res.ventas_totales;
                   this.salesCount = res.numero_ventas;

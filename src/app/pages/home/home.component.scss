@@ -44,6 +44,36 @@
     transition: all 300ms ease;
 }
 
+.dashboard .insights .net-profit-item {
+    position: relative;
+}
+
+.net-profit-toggle {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #7380ec;
+    cursor: pointer;
+
+    &:hover {
+        background: rgba(132, 139, 200, 0.18);
+    }
+
+    &:focus-visible {
+        outline: 2px solid #7380ec;
+        outline-offset: 2px;
+    }
+}
+
 .dashboard .insights > div:hover {
     box-shadow: none;
 }

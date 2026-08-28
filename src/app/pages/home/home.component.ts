@@ -4,6 +4,8 @@ import { ThemePalette } from '@angular/material/core';
 import { ProgressSpinnerMode } from '@angular/material/progress-spinner';
 import { MatSort, Sort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalPinComponent } from 'src/app/components/modal-pin/modal-pin.component';
 import {LiveAnnouncer} from '@angular/cdk/a11y';
 import { DataService } from 'src/app/services/data.service';
 import { DashboardModel, LowProduct, TopProduct } from 'src/app/models/internal/dashboard.model';
@@ -27,6 +29,7 @@ export class HomeComponent implements OnInit {
   totalSales: number = 0;
   amountSales: number = 0;
   monthlyProfit: number = 0;
+  isNetProfitVisible: boolean = false;
   productsTop!:Array<TopProduct>;
   productsLow!:Array<LowProduct>;
   local!: any;
@@ -45,7 +48,8 @@ export class HomeComponent implements OnInit {
   });
 
   constructor(private _liveAnnouncer: LiveAnnouncer,
-              private dataService: DataService, ) {
+              private dataService: DataService,
+              private dialog: MatDialog) {
 
 
                 this.local = JSON.parse(localStorage.getItem('local')!) ? JSON.parse(localStorage.getItem('local')!) : ''; 
@@ -64,11 +68,24 @@ export class HomeComponent implements OnInit {
 
   }
 
+  toggleNetProfitVisibility(): void {
+    if (this.isNetProfitVisible) {
+      this.isNetProfitVisible = false;
+      return;
+    }
+
+    const dialogRef = this.dialog.open(ModalPinComponent, {
+      data: { info: 'verify' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.isNetProfitVisible = result === true;
+    });
+  }
+
   loadDashboardData(fechaInicio?: Date, fechaFin?: Date) {
     this.dataService.loadDashboard(fechaInicio, fechaFin, this.local).subscribe({
       next: (res) => {
-        console.log(res);
-        
         this.productsTop = res.data.topProducts;
         this.productsLow = res.data.lowProducts;
         this.dataSource = new MatTableDataSource(this.productsTop);

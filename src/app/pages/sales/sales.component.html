@@ -5,9 +5,23 @@
         <span class="summary-date"><mat-icon>calendar_today</mat-icon> {{ today | date:'d/M/yyyy' }}</span>
       </div>
       <div class="summary-content">
-        <div class="summary-item">
+        <div class="summary-item net-profit-item">
           <div class="item-title">Ingreso Neto</div>
-          <div class="item-value net">S/ {{ netProfit | number:'1.2-2' }}</div>
+          <button
+            type="button"
+            class="net-profit-toggle"
+            (click)="toggleNetProfitVisibility()"
+            [attr.aria-label]="isNetProfitVisible ? 'Ocultar ingreso neto' : 'Mostrar ingreso neto'"
+            [attr.aria-pressed]="isNetProfitVisible"
+            [title]="isNetProfitVisible ? 'Ocultar ingreso neto' : 'Mostrar ingreso neto'"
+            aria-controls="net-profit-value"
+          >
+            <mat-icon>{{ isNetProfitVisible ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+          <div id="net-profit-value" class="item-value net" aria-live="polite">
+            <ng-container *ngIf="isNetProfitVisible; else hiddenNetProfit">S/ {{ netProfit | number:'1.2-2' }}</ng-container>
+            <ng-template #hiddenNetProfit><span aria-label="Ingreso neto oculto">S/ ****</span></ng-template>
+          </div>
           <!-- <mat-icon class="item-icon">trending_up</mat-icon> -->
         </div>
         <div class="summary-item">

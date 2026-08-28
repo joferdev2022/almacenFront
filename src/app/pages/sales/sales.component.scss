@@ -115,6 +115,38 @@
   color: #1a7f37;
   font-weight: 500;
 }
+.net-profit-item {
+  position: relative;
+
+  .item-title {
+    padding-right: 32px;
+  }
+}
+.net-profit-toggle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: #1a7f37;
+  cursor: pointer;
+
+  &:hover {
+    background: #e9fdf2;
+  }
+
+  &:focus-visible {
+    outline: 2px solid #1a7f37;
+    outline-offset: 2px;
+  }
+}
 .item-value {
   font-size: 1.5rem;
   font-weight: 700;

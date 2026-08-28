@@ -34,6 +34,7 @@ export class ProductsComponent implements OnInit {
   itemsPerPage?: number;
   local!: any;
   permissions!: any;
+  isPurchasePriceVisible: boolean = false;
 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -63,8 +64,6 @@ export class ProductsComponent implements OnInit {
   loadAllProducts() {
     this.dataService.loadProducts(this.currentPage, this.itemsPerPage, this.local).subscribe({
       next: (res) => {
-        console.log(res);
-
         this.products = res.data;
         this.dataSource = new MatTableDataSource(this.products);
         this.dataSource.paginator = this.paginator;
@@ -80,6 +79,21 @@ export class ProductsComponent implements OnInit {
       }
     })
 
+  }
+
+  togglePurchasePriceVisibility(): void {
+    if (this.isPurchasePriceVisible) {
+      this.isPurchasePriceVisible = false;
+      return;
+    }
+
+    const dialogRef = this.dialog.open(ModalPinComponent, {
+      data: { info: 'verify' }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.isPurchasePriceVisible = result === true;
+    });
   }
 
   openDialogPin() {
