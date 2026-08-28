@@ -1,3 +1,6 @@
+import { ModalExpenseComponent } from './modal-expense/modal-expense.component';
+import { ModalPayExpenseComponent } from './modal-pay-expense/modal-pay-expense.component';
+import { ModalInfoExpenseComponent } from './modal-info-expense/modal-info-expense.component';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -25,6 +28,7 @@ import { ModalProductExcelComponent } from './modal-product-excel/modal-product-
 
 @NgModule({
   declarations: [
+    ModalExpenseComponent, ModalPayExpenseComponent, ModalInfoExpenseComponent,
     SidebarComponent,
     NavbarComponent,
     ModalProductComponentComponent,

@@ -1,4 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { ExpenseModel, ExpenseOptions, ExpenseProviderPage } from '../models/internal/expense.model';
+import { ExpenseFilters, ExpensePaymentRequest, ExpenseRequest } from '../models/request/expense.request';
+import { ExpenseApiResponse, ExpenseListApiResponse, ExpenseResponse } from '../models/response/expense.response';
 import { Injectable } from '@angular/core';
 import { Observable, Subject, map } from 'rxjs';
 
@@ -23,6 +26,45 @@ const base_url = "https://almacenback.onrender.com/api";
   providedIn: 'root'
 })
 export class DataService {
+
+
+  loadExpenseOptions(): Observable<ExpenseApiResponse<ExpenseOptions>> {
+    return this.http.get<ExpenseApiResponse<ExpenseOptions>>(`${base_url}/expenses/options`);
+  }
+
+  loadExpenseProviders(search = '', page = 1): Observable<ExpenseApiResponse<ExpenseProviderPage>> {
+    const params = new HttpParams().set('search', search).set('page', page).set('xpage', 20);
+    return this.http.get<ExpenseApiResponse<ExpenseProviderPage>>(`${base_url}/expenses/providers`, { params });
+  }
+
+  loadExpenses(page = 1, xpage = 10, filters: ExpenseFilters = {}): Observable<ExpenseResponse> {
+    let params = new HttpParams().set('page', page).set('xpage', xpage);
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) { params = params.set(key, value); }
+    });
+    return this.http.get<ExpenseListApiResponse>(`${base_url}/expenses`, { params })
+      .pipe(map(response => ExpenseResponse.createFromObject(response)));
+  }
+
+  getExpense(id: string): Observable<ExpenseApiResponse<ExpenseModel>> {
+    return this.http.get<ExpenseApiResponse<ExpenseModel>>(`${base_url}/expenses/${id}`);
+  }
+
+  saveExpense(data: ExpenseRequest): Observable<ExpenseApiResponse<ExpenseModel>> {
+    return this.http.post<ExpenseApiResponse<ExpenseModel>>(`${base_url}/expenses`, data);
+  }
+
+  updateExpense(id: string, data: ExpenseRequest): Observable<ExpenseApiResponse<ExpenseModel>> {
+    return this.http.put<ExpenseApiResponse<ExpenseModel>>(`${base_url}/expenses/${id}`, data);
+  }
+
+  payExpense(id: string, data: ExpensePaymentRequest): Observable<ExpenseApiResponse<ExpenseModel>> {
+    return this.http.put<ExpenseApiResponse<ExpenseModel>>(`${base_url}/expenses/${id}/pay`, data);
+  }
+
+  deleteExpense(id: string): Observable<ExpenseApiResponse<ExpenseModel>> {
+    return this.http.delete<ExpenseApiResponse<ExpenseModel>>(`${base_url}/expenses/${id}`);
+  }
 
   excelUploadResponse$ = new Subject<any>();
 

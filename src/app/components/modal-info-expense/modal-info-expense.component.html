@@ -1,0 +1,30 @@
+<header class="dialog-header">
+  <span class="header-icon" aria-hidden="true"><mat-icon>receipt_long</mat-icon></span>
+  <h2 mat-dialog-title>Detalle del gasto</h2>
+  <button type="button" class="icon-button" aria-label="Cerrar detalle" (click)="dialogRef.close()"><mat-icon>close</mat-icon></button>
+</header>
+<mat-dialog-content class="dialog-content">
+  <div class="expense-summary">
+    <span class="status-badge" [class.amber]="expense.estado === 'PENDIENTE'"><span class="state-dot" aria-hidden="true"></span>{{ expense.estado | titlecase }}</span>
+    <p class="amount">S/. {{ expense.monto | number:'1.2-2' }}</p>
+  </div>
+  <dl class="detail-grid">
+    <div><dt>Fecha</dt><dd>{{ expense.fecha | date:'dd/MM/yyyy':'-0500' }}</dd></div>
+    <div><dt>Categoría</dt><dd>{{ expense.categoria }}</dd></div>
+    <div class="full-width"><dt>Descripción</dt><dd>{{ expense.descripcion || 'Sin descripción' }}</dd></div>
+    <div><dt>Método de pago</dt><dd>{{ expense.metodoPago ? (expense.metodoPago | titlecase) : 'Sin definir' }}</dd></div>
+    <div><dt>Fecha de pago</dt><dd>{{ expense.fechaPago ? (expense.fechaPago | date:'dd/MM/yyyy':'-0500') : 'Sin pago registrado' }}</dd></div>
+    <div><dt>Proveedor</dt><dd>{{ expense.proveedorNombre || 'Sin proveedor' }}</dd></div>
+    <div><dt>Tipo de comprobante</dt><dd>{{ expense.tipoComprobante === 'SIN_COMPROBANTE' ? 'Sin comprobante' : (expense.tipoComprobante | titlecase) }}</dd></div>
+    <div><dt>Número de comprobante</dt><dd>{{ expense.numeroComprobante || '—' }}</dd></div>
+    <div class="full-width"><dt>Observaciones</dt><dd>{{ expense.observaciones || 'Sin observaciones' }}</dd></div>
+    <div><dt>Registrado</dt><dd>{{ expense.created_at | date:'dd/MM/yyyy HH:mm':'-0500' }}</dd></div>
+    <div><dt>Última actualización</dt><dd>{{ expense.updated_at | date:'dd/MM/yyyy HH:mm':'-0500' }}</dd></div>
+    <div><dt>Local</dt><dd>{{ expense.local }}</dd></div>
+    <div><dt>Usuario que registró (ID)</dt><dd>{{ expense.usuarioId }}</dd></div>
+    <div class="full-width"><dt>ID del gasto</dt><dd>{{ expense.id }}</dd></div>
+  </dl>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions" align="end">
+  <button type="button" class="btn-secondary" (click)="dialogRef.close()"><mat-icon aria-hidden="true">close</mat-icon>Cerrar</button>
+</mat-dialog-actions>

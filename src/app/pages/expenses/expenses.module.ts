@@ -1,3 +1,4 @@
+import { ComponentsModule } from 'src/app/components/components.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -18,6 +19,7 @@ import { ExpensesRoutingModule } from './expenses-routing.module';
   ],
   imports: [
     CommonModule,
+    ComponentsModule,
     ExpensesRoutingModule,
     MaterialModule,
     FormsModule,

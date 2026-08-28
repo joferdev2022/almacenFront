@@ -1,0 +1,40 @@
+<header class="dialog-header">
+  <span class="header-icon" aria-hidden="true"><mat-icon>payments</mat-icon></span>
+  <h2 mat-dialog-title>Marcar como pagado</h2>
+  <button type="button" class="icon-button" aria-label="Cerrar formulario" [disabled]="saving" (click)="dialogRef.close()"><mat-icon>close</mat-icon></button>
+</header>
+<mat-dialog-content class="dialog-content">
+  <div class="expense-summary">
+    <span class="summary-label">{{ data.expense.descripcion || data.expense.categoria }}</span>
+    <p class="amount">S/. {{ data.expense.monto | number:'1.2-2' }}</p>
+  </div>
+  <div *ngIf="error" class="error-message" role="alert"><mat-icon aria-hidden="true">error_outline</mat-icon><span>{{ error }}</span></div>
+  <form id="expense-payment-form" [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <fieldset class="payment-fields" [disabled]="saving">
+      <div class="field">
+        <label id="payment-method-label" class="field-label">Método de pago <span class="required">*</span></label>
+        <div class="control" [class.invalid]="form.controls.metodoPago.touched && form.controls.metodoPago.invalid">
+          <span class="field-icon" aria-hidden="true"><mat-icon>payments</mat-icon></span>
+          <mat-select formControlName="metodoPago" required aria-labelledby="payment-method-label" aria-describedby="payment-method-help" placeholder="Selecciona un método" panelClass="expense-select-panel">
+            <mat-option *ngFor="let method of data.options.metodosPago" [value]="method">{{ method | titlecase }}</mat-option>
+          </mat-select>
+        </div>
+        <p id="payment-method-help" class="hint" [class.field-error]="form.controls.metodoPago.touched && form.controls.metodoPago.invalid">{{ form.controls.metodoPago.touched && form.controls.metodoPago.invalid ? 'Selecciona el método de pago.' : 'Medio con el que se realizó el pago.' }}</p>
+      </div>
+      <div class="field">
+        <label class="field-label" for="payment-date">Fecha de pago <span class="required">*</span></label>
+        <div class="control" [class.invalid]="form.controls.fechaPago.touched && form.controls.fechaPago.invalid">
+          <mat-icon class="muted-icon" aria-hidden="true">calendar_today</mat-icon>
+          <input id="payment-date" type="date" formControlName="fechaPago" required aria-describedby="payment-date-help" [attr.aria-invalid]="form.controls.fechaPago.touched && form.controls.fechaPago.invalid">
+        </div>
+        <p id="payment-date-help" class="hint" [class.field-error]="form.controls.fechaPago.touched && form.controls.fechaPago.invalid">{{ form.controls.fechaPago.touched && form.controls.fechaPago.invalid ? 'Ingresa una fecha válida.' : 'El gasto quedará registrado como pagado.' }}</p>
+      </div>
+    </fieldset>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions" align="end">
+  <button type="button" class="btn-secondary" [disabled]="saving" (click)="dialogRef.close()"><mat-icon aria-hidden="true">close</mat-icon>Cancelar</button>
+  <button type="submit" form="expense-payment-form" class="btn-primary" [disabled]="saving || form.invalid">
+    <mat-icon aria-hidden="true">{{ saving ? 'hourglass_top' : 'check' }}</mat-icon>{{ saving ? 'Guardando…' : 'Confirmar pago' }}
+  </button>
+</mat-dialog-actions>

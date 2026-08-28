@@ -1,3 +1,152 @@
-<div class="expenses">
-    
-</div>
+<section class="expenses">
+  <header class="page-header">
+    <div class="page-title">
+      <span class="page-icon" aria-hidden="true"><mat-icon>receipt_long</mat-icon></span>
+      <div><h1>Gastos</h1><p>Controla los gastos de tu local y sus pagos.</p></div>
+    </div>
+    <button *ngIf="canWrite" class="btn-primary" type="button" (click)="create()" [disabled]="!options || loading">
+      <mat-icon aria-hidden="true">add</mat-icon>Nuevo gasto
+    </button>
+  </header>
+
+  <div class="summary-grid" aria-label="Resumen de gastos" [attr.aria-busy]="loading">
+    <article>
+      <div class="stat-heading"><span>Gastos registrados</span><span class="stat-icon" aria-hidden="true"><mat-icon>receipt_long</mat-icon></span></div>
+      <strong>{{ loading ? '…' : error ? '—' : ('S/. ' + (summary.registrados | number:'1.2-2')) }}</strong>
+    </article>
+    <article class="paid-total">
+      <div class="stat-heading"><span>Pagados</span><span class="stat-icon" aria-hidden="true"><mat-icon>check_circle_outline</mat-icon></span></div>
+      <strong>{{ loading ? '…' : error ? '—' : ('S/. ' + (summary.pagados | number:'1.2-2')) }}</strong>
+    </article>
+    <article class="pending-total">
+      <div class="stat-heading"><span>Pendientes</span><span class="stat-icon" aria-hidden="true"><mat-icon>schedule</mat-icon></span></div>
+      <strong>{{ loading ? '…' : error ? '—' : ('S/. ' + (summary.pendientes | number:'1.2-2')) }}</strong>
+    </article>
+    <article class="cash-total">
+      <div class="stat-heading"><span>Pagados en efectivo</span><span class="stat-icon" aria-hidden="true"><mat-icon>payments</mat-icon></span></div>
+      <strong>{{ loading ? '…' : error ? '—' : ('S/. ' + (summary.pagadosEfectivo | number:'1.2-2')) }}</strong>
+    </article>
+  </div>
+  <p class="summary-caption"><mat-icon aria-hidden="true">info_outline</mat-icon>Los totales incluyen todos los gastos que coinciden con los filtros, no solo esta página.</p>
+
+  <div *ngIf="optionsError" class="error-message" role="alert">
+    <mat-icon aria-hidden="true">error_outline</mat-icon><span>{{ optionsError }}</span><button type="button" (click)="loadOptions()">Reintentar opciones</button>
+  </div>
+  <section class="filter-card" aria-labelledby="expense-filters-title">
+    <div class="section-heading">
+      <h2 id="expense-filters-title"><mat-icon aria-hidden="true">tune</mat-icon>Filtrar gastos</h2>
+      <button class="clear-filters" type="button" (click)="clearFilters()" [disabled]="!hasActiveFilters"><mat-icon aria-hidden="true">filter_alt_off</mat-icon>Limpiar filtros</button>
+    </div>
+    <form class="filters" [formGroup]="filters" (ngSubmit)="reload()">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="search-field">
+        <mat-label>Buscar gasto</mat-label>
+        <input matInput formControlName="search" placeholder="Descripción, proveedor o comprobante" maxlength="100">
+        <mat-icon matPrefix aria-hidden="true">search</mat-icon>
+      </mat-form-field>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Fecha desde</mat-label>
+        <input matInput type="date" formControlName="fecha_desde">
+        <mat-error>Ingresa una fecha válida.</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Fecha hasta</mat-label>
+        <input matInput type="date" formControlName="fecha_hasta">
+        <mat-error>Ingresa una fecha válida.</mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Categoría</mat-label>
+        <mat-select formControlName="categoria" panelClass="expense-select-panel">
+          <mat-option value="">Todas</mat-option>
+          <mat-option *ngFor="let category of options?.categorias" [value]="category">{{ category }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Estado</mat-label>
+        <mat-select formControlName="estado" panelClass="expense-select-panel">
+          <mat-option value="">Todos</mat-option>
+          <mat-option *ngFor="let state of options?.estados" [value]="state">{{ state | titlecase }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="method-filter">
+        <mat-label>Método de pago</mat-label>
+        <mat-select formControlName="metodo_pago" panelClass="expense-select-panel">
+          <mat-option value="">Todos</mat-option>
+          <mat-option *ngFor="let method of options?.metodosPago" [value]="method">{{ method | titlecase }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <p *ngIf="filters.hasError('range')" class="filter-error" role="alert">La fecha desde no puede superar la fecha hasta.</p>
+    </form>
+  </section>
+
+  <div *ngIf="error" class="error-message" role="alert">
+    <mat-icon aria-hidden="true">error_outline</mat-icon><span>{{ error }}</span><button type="button" (click)="reload()">Reintentar</button>
+  </div>
+  <section class="table-card" [attr.aria-busy]="loading" aria-labelledby="expense-list-title">
+    <div class="section-heading table-heading">
+      <h2 id="expense-list-title">Listado de gastos <span class="record-count">{{ loading ? '…' : error ? '—' : total }}</span></h2>
+      <span class="list-caption">{{ hasActiveFilters ? 'Resultados filtrados' : 'Todos los gastos' }}</span>
+    </div>
+    <mat-progress-bar *ngIf="loading || busyId" mode="indeterminate" aria-label="Cargando gastos"></mat-progress-bar>
+    <p *ngIf="expenses.length" class="scroll-hint"><mat-icon aria-hidden="true">swipe</mat-icon>Desliza la tabla para ver más información.</p>
+    <div class="table-scroll" tabindex="0" role="region" aria-label="Tabla de gastos; desplázate horizontalmente para ver todas las columnas">
+      <table mat-table [dataSource]="expenses">
+        <ng-container matColumnDef="fecha">
+          <th mat-header-cell *matHeaderCellDef>Fecha</th>
+          <td mat-cell *matCellDef="let row" class="date-cell">{{ row.fecha | date:'dd/MM/yyyy':'-0500' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="descripcion">
+          <th mat-header-cell *matHeaderCellDef>Descripción</th>
+          <td mat-cell *matCellDef="let row" class="description">
+            <span>{{ row.descripcion || 'Sin descripción' }}</span>
+            <small *ngIf="row.numeroComprobante">{{ row.numeroComprobante }}</small>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="categoria">
+          <th mat-header-cell *matHeaderCellDef>Categoría</th>
+          <td mat-cell *matCellDef="let row"><span class="category-tag">{{ row.categoria }}</span></td>
+        </ng-container>
+        <ng-container matColumnDef="proveedor">
+          <th mat-header-cell *matHeaderCellDef>Proveedor</th>
+          <td mat-cell *matCellDef="let row" class="provider-cell">{{ row.proveedorNombre || '—' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="estado">
+          <th mat-header-cell *matHeaderCellDef>Estado</th>
+          <td mat-cell *matCellDef="let row"><span class="state" [class.paid]="row.estado === 'PAGADO'" [class.pending]="row.estado === 'PENDIENTE'">{{ row.estado | titlecase }}</span></td>
+        </ng-container>
+        <ng-container matColumnDef="metodo">
+          <th mat-header-cell *matHeaderCellDef>Método de pago</th>
+          <td mat-cell *matCellDef="let row" class="method-cell">{{ row.metodoPago ? (row.metodoPago | titlecase) : 'Sin definir' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="monto">
+          <th mat-header-cell *matHeaderCellDef class="amount">Monto</th>
+          <td mat-cell *matCellDef="let row" class="amount">S/. {{ row.monto | number:'1.2-2' }}</td>
+        </ng-container>
+        <ng-container matColumnDef="acciones">
+          <th mat-header-cell *matHeaderCellDef class="actions-heading">Acciones</th>
+          <td mat-cell *matCellDef="let row">
+            <div class="actions">
+              <button type="button" title="Ver detalle" aria-label="Ver gasto" (click)="open(row, 'view')" [disabled]="loading || busyId"><mat-icon aria-hidden="true">visibility</mat-icon></button>
+              <button *ngIf="canWrite" type="button" title="Editar gasto" aria-label="Editar gasto" (click)="open(row, 'edit')" [disabled]="loading || busyId || !options"><mat-icon aria-hidden="true">edit</mat-icon></button>
+              <button *ngIf="canWrite && row.estado === 'PENDIENTE'" type="button" class="pay-action" title="Marcar como pagado" aria-label="Marcar como pagado" (click)="open(row, 'pay')" [disabled]="loading || busyId || !options"><mat-icon aria-hidden="true">check_circle_outline</mat-icon></button>
+              <button *ngIf="canWrite" type="button" class="delete-action" title="Eliminar gasto" aria-label="Eliminar gasto" (click)="remove(row)" [disabled]="loading || busyId"><mat-icon aria-hidden="true">delete_outline</mat-icon></button>
+            </div>
+          </td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns" [class.empty-header]="!expenses.length"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="empty-state" [attr.colspan]="displayedColumns.length">
+            <span class="empty-icon" aria-hidden="true"><mat-icon>{{ loading ? 'hourglass_empty' : error ? 'cloud_off' : hasActiveFilters ? 'search_off' : 'receipt_long' }}</mat-icon></span>
+            <h3>{{ loading ? 'Cargando gastos…' : error ? 'No se pudieron cargar los gastos' : hasActiveFilters ? 'No encontramos coincidencias' : 'Todavía no hay gastos registrados' }}</h3>
+            <p>{{ loading ? 'Estamos consultando la información.' : error ? 'Reintenta la consulta para ver tus gastos.' : hasActiveFilters ? 'Prueba con otra búsqueda o ajusta los filtros.' : 'Registra tu primer gasto y lleva el control de tus pagos.' }}</p>
+            <button *ngIf="!loading && !error && hasActiveFilters" type="button" class="btn-secondary" (click)="clearFilters()">Limpiar filtros</button>
+            <button *ngIf="!loading && !error && !hasActiveFilters && canWrite" type="button" class="btn-primary" (click)="create()" [disabled]="!options"><mat-icon aria-hidden="true">add</mat-icon>Registrar gasto</button>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <mat-paginator [length]="total" [pageIndex]="pageIndex" [pageSize]="pageSize"
+      [pageSizeOptions]="[10, 25, 50]" [disabled]="loading || filters.invalid"
+      (page)="changePage($event)" showFirstLastButtons aria-label="Paginación de gastos"></mat-paginator>
+  </section>
+</section>

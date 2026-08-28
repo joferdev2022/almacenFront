@@ -1,3 +1,6 @@
+@use '@angular/material' as mat;
+@use './app/shared/expense-dialog';
+
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
@@ -120,3 +123,14 @@ border-color: #136E32 !important;
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+
+// Filtros compactos; estilos limitados a la vista de Gastos.
+app-expenses .filters {
+  @include mat.form-field-density(-2);
+  --mdc-outlined-text-field-outline-color: #d8e1ea;
+  --mdc-outlined-text-field-hover-outline-color: #9db6a7;
+  --mdc-outlined-text-field-focus-outline-color: #16a34a;
+  --mdc-outlined-text-field-focus-label-text-color: #15803d;
+  .mat-mdc-form-field-icon-prefix { color: #8695a8; }
+}

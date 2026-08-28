@@ -1,0 +1,38 @@
+.table-card { overflow: hidden; }
+.table-heading { padding: 18px 20px; margin: 0; }
+.record-count { padding: 3px 9px; border-radius: 20px; background: #edf7f0; color: #238146; font-size: 12px; }
+.list-caption { color: #8591a1; font-size: 12px; }
+.table-scroll { overflow-x: auto; }
+table { width: 100%; }
+th.mat-mdc-header-cell { background: #f7f9fb; color: #708096; font-size: 12px; font-weight: 500; white-space: nowrap; }
+td.mat-mdc-cell, th.mat-mdc-header-cell { border-bottom-color: #edf0f4; padding: 12px 16px; }
+td { font-size: 13px; }
+tr.mat-mdc-row:hover { background: #fafcfb; }
+.description { min-width: 160px; max-width: 260px; overflow-wrap: anywhere; font-weight: 500; }
+.description small { display: block; margin-top: 4px; font-size: 11px; color: #8793a4; font-weight: 400; }
+.provider-cell { color: #748297; max-width: 180px; overflow-wrap: anywhere; }
+.date-cell, .method-cell { color: #596b81; white-space: nowrap; }
+.amount { text-align: right; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.category-tag { display: inline-block; padding: 4px 8px; border-radius: 5px; background: #f3f5f8; color: #62748a; font-size: 12px; }
+.state { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 20px; font-size: 12px; white-space: nowrap; }
+.state::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+.paid { color: #218245; background: #eaf7ee; }
+.pending { color: #a06c10; background: #fff3d8; }
+.actions { display: flex; justify-content: flex-end; gap: 4px; }
+.actions-heading { text-align: right; }
+.actions button { width: 32px; height: 32px; flex-shrink: 0; border: 0; border-radius: 7px; background: transparent; color: #7d8ba0; }
+.actions button:hover:not(:disabled) { background: #edf2f8; color: #355578; }
+.actions .pay-action { color: #178344; background: #edf8f0; }
+.actions .delete-action:hover:not(:disabled) { color: #c3444e; background: #fff0f1; }
+.empty-header { display: none; }
+.empty-state { text-align: center; padding: 35px 20px; }
+.empty-icon { width: 52px; height: 52px; border-radius: 16px; margin-bottom: 12px; background: #f1f7f4; }
+.empty-state h3 { margin: 0 0 6px; font-size: 15px; font-weight: 500; }
+.empty-state p { margin: 0 0 18px; font-size: 13px; color: #8591a1; }
+.scroll-hint { display: none; }
+@media (max-width: 600px) {
+  .table-heading { padding: 16px 12px; }
+  .list-caption { display: none; }
+  .scroll-hint { display: flex; margin: 10px 12px; }
+  .empty-state { padding: 28px 16px; }
+}

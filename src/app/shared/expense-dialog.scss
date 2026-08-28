@@ -1,0 +1,52 @@
+// Estilos compartidos exclusivamente por los diálogos de Gastos.
+.expense-dialog-panel .mat-mdc-dialog-container .mdc-dialog__surface {
+  border-radius: 14px;
+  box-shadow: 0 20px 70px #18233526;
+}
+.expense-select-panel .mat-mdc-option { min-height: 42px; font-size: 14px; }
+.expense-select-panel .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+  color: #15803d;
+  background: #edf8f0;
+}
+.expense-select-panel .mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after { color: #15803d; }
+
+app-modal-expense, app-modal-pay-expense, app-modal-info-expense {
+  display: flex;
+  flex-direction: column;
+  max-height: 94vh;
+  max-height: 94dvh;
+  color: #182335;
+  background: #fff;
+  font: 14px/1.45 Roboto, sans-serif;
+
+  .dialog-header { display: flex; align-items: center; gap: 12px; padding: 18px 24px; border-bottom: 1px solid #e5eaf0; flex-shrink: 0; }
+  .dialog-header h2 { margin: 0; padding: 0; color: inherit; font: 600 19px/1.3 Roboto, sans-serif; letter-spacing: -.3px; }
+  .dialog-header h2::before { display: none; }
+  .header-icon { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 38px; height: 38px; border-radius: 11px; color: #159447; background: #e0f8e9; }
+  .dialog-content.mat-mdc-dialog-content { min-height: 0; max-height: none; padding: 22px 24px; color: inherit; font: inherit; }
+  .dialog-actions.mat-mdc-dialog-actions { flex-shrink: 0; min-height: 76px; padding: 16px 24px; gap: 10px; border-top: 1px solid #e5eaf0; }
+  button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 18px; border: 1px solid transparent; border-radius: 7px; font: 500 13px Roboto, sans-serif; cursor: pointer; }
+  button mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  button:focus-visible, summary:focus-visible { outline: 2px solid #16a34a; outline-offset: 3px; }
+  .btn-primary { background: #16a34a; border-color: #159342; color: #fff; box-shadow: 0 3px 8px #15934226; }
+  .btn-primary:hover:not(:disabled) { background: #15803d; }
+  .btn-secondary { background: #fff; border-color: #cbd5e3; color: #26354b; }
+  .btn-secondary:hover:not(:disabled) { background: #f5f8fb; }
+  .icon-button { margin-left: auto; padding: 0; min-height: 32px; width: 32px; background: transparent; color: #526176; }
+  .text-button { padding: 0; background: none; color: #187f3f; }
+  .error-message { display: flex; gap: 10px; padding: 12px; margin-bottom: 18px; background: #fff1f1; color: #b32430; border-radius: 8px; }
+  .error-message mat-icon { flex-shrink: 0; }
+  .expense-summary { padding: 16px 18px; margin-bottom: 22px; border-radius: 10px; background: #f5faf7; }
+  .summary-label { color: #607166; }
+  .amount { color: #182335; font-size: 28px; font-weight: 700; margin: 6px 0 0; }
+  .status-badge { display: inline-flex; align-items: center; gap: 7px; border-radius: 20px; padding: 4px 10px; color: #15803d; background: #e0f8e9; font-size: 12px; }
+  .payment-fields { display: grid; gap: 20px; }
+  @media (max-width: 600px) {
+    .dialog-header, .dialog-content.mat-mdc-dialog-content, .dialog-actions.mat-mdc-dialog-actions { padding: 16px; }
+    .dialog-actions button { flex: 1; padding: 0 12px; }
+  }
+  @media (max-width: 360px) {
+    .dialog-actions button { padding: 0 8px; gap: 6px; font-size: 12px; white-space: nowrap; }
+  }
+}

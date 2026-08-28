@@ -1,0 +1,125 @@
+<header class="dialog-header">
+  <span class="header-icon" aria-hidden="true"><mat-icon>receipt_long</mat-icon></span>
+  <h2 mat-dialog-title>{{ data.expense ? 'Editar gasto' : 'Nuevo gasto' }}</h2>
+  <button type="button" class="icon-button" aria-label="Cerrar formulario" [disabled]="saving" (click)="dialogRef.close()"><mat-icon>close</mat-icon></button>
+</header>
+<mat-dialog-content class="dialog-content">
+  <div *ngIf="error" class="error-message" role="alert"><mat-icon aria-hidden="true">error_outline</mat-icon><span>{{ error }}</span></div>
+  <form id="expense-form" [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <fieldset [disabled]="saving">
+      <div class="form-grid">
+        <div class="field">
+          <label class="field-label" for="expense-date">Fecha <span class="required">*</span></label>
+          <div class="control" [class.invalid]="invalid('fecha')">
+            <mat-icon class="muted-icon" aria-hidden="true">calendar_today</mat-icon>
+            <input id="expense-date" type="date" formControlName="fecha" required aria-describedby="expense-date-help" [attr.aria-invalid]="invalid('fecha')">
+          </div>
+          <p id="expense-date-help" class="hint" [class.field-error]="invalid('fecha')">{{ invalid('fecha') ? 'Ingresa una fecha válida.' : 'Fecha en la que se generó el gasto.' }}</p>
+        </div>
+        <div class="field">
+          <label id="expense-category-label" class="field-label">Categoría <span class="required">*</span></label>
+          <div class="control" [class.invalid]="invalid('categoria')">
+            <span class="field-icon blue" aria-hidden="true"><mat-icon>category</mat-icon></span>
+            <mat-select formControlName="categoria" required aria-labelledby="expense-category-label" aria-describedby="expense-category-help" placeholder="Selecciona una categoría" panelClass="expense-select-panel">
+              <mat-option *ngFor="let category of data.options.categorias" [value]="category">{{ category }}</mat-option>
+            </mat-select>
+          </div>
+          <p id="expense-category-help" class="hint" [class.field-error]="invalid('categoria')">{{ invalid('categoria') ? 'Selecciona una categoría.' : 'Organiza tus gastos por tipo.' }}</p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="expense-description">Descripción <span class="optional">(opcional)</span></label>
+          <div class="control"><input id="expense-description" formControlName="descripcion" placeholder="¿Qué se pagó?" maxlength="250" aria-describedby="expense-description-help"></div>
+          <p id="expense-description-help" class="hint">Ej. Pago de internet o compra de bolsas.</p>
+        </div>
+        <div class="field">
+          <label id="expense-state-label" class="field-label">Estado <span class="required">*</span></label>
+          <div class="control">
+            <span class="field-icon" [class.amber]="!isPaid" aria-hidden="true"><span class="state-dot"></span></span>
+            <mat-select formControlName="estado" required aria-labelledby="expense-state-label" aria-describedby="expense-state-help" panelClass="expense-select-panel">
+              <mat-option *ngFor="let state of data.options.estados" [value]="state">{{ state | titlecase }}</mat-option>
+            </mat-select>
+          </div>
+          <p id="expense-state-help" class="hint">Indica si el gasto ya fue pagado.</p>
+        </div>
+        <div class="field">
+          <label class="field-label" for="expense-amount">Monto <span class="required">*</span></label>
+          <div class="control amount-control" [class.invalid]="invalid('monto')">
+            <span class="currency" aria-hidden="true">S/.</span>
+            <input id="expense-amount" type="text" inputmode="decimal" formControlName="monto" placeholder="0.00" required aria-describedby="expense-amount-help" [attr.aria-invalid]="invalid('monto')">
+          </div>
+          <p id="expense-amount-help" class="hint" [class.field-error]="invalid('monto')">{{ invalid('monto') ? 'Ingresa un monto mayor a cero, con hasta 2 decimales.' : 'Importe del gasto en soles.' }}</p>
+        </div>
+        <div class="field">
+          <label id="expense-method-label" class="field-label">Método de pago <span *ngIf="isPaid" class="required">*</span><span *ngIf="!isPaid" class="optional"> (opcional)</span></label>
+          <div class="control" [class.invalid]="invalid('metodoPago')">
+            <span class="field-icon" aria-hidden="true"><mat-icon>payments</mat-icon></span>
+            <mat-select formControlName="metodoPago" [required]="isPaid" aria-labelledby="expense-method-label" aria-describedby="expense-method-help" placeholder="Selecciona un método" panelClass="expense-select-panel">
+              <mat-option *ngIf="!isPaid" [value]="null">Sin definir</mat-option>
+              <mat-option *ngFor="let method of data.options.metodosPago" [value]="method">{{ method | titlecase }}</mat-option>
+            </mat-select>
+          </div>
+          <p id="expense-method-help" class="hint" [class.field-error]="invalid('metodoPago')">{{ invalid('metodoPago') ? 'Selecciona el método de pago.' : 'Cómo realizaste el pago de este gasto.' }}</p>
+        </div>
+      </div>
+      <div *ngIf="isPaid" class="payment-date">
+        <div class="payment-date-label"><mat-icon aria-hidden="true">event_available</mat-icon><label for="expense-payment-date">Fecha de pago <span class="required">*</span><small>Fecha en la que se realizó el pago.</small></label></div>
+        <div class="field">
+          <div class="control" [class.invalid]="invalid('fechaPago')"><input id="expense-payment-date" type="date" formControlName="fechaPago" required aria-describedby="expense-payment-date-error" [attr.aria-invalid]="invalid('fechaPago')"></div>
+          <p *ngIf="invalid('fechaPago')" id="expense-payment-date-error" class="hint field-error">Ingresa una fecha de pago válida.</p>
+        </div>
+      </div>
+      <p *ngIf="!isPaid" class="payment-note"><mat-icon aria-hidden="true">schedule</mat-icon><span>Este gasto aún no representa una salida de dinero. Podrás registrar su pago después.</span></p>
+
+      <details class="more-info" [open]="showMore" (toggle)="showMore = moreInfo.open" #moreInfo>
+        <summary>
+          <span><strong>Más información <span>(opcional)</span></strong><small>Proveedor, comprobante y observaciones.</small></span>
+          <mat-icon class="expand-icon" aria-hidden="true">expand_more</mat-icon>
+        </summary>
+        <div class="more-grid">
+          <div class="field">
+            <label id="expense-provider-label" class="field-label">Proveedor <span class="optional">(opcional)</span></label>
+            <div class="control">
+              <mat-icon class="muted-icon" aria-hidden="true">storefront</mat-icon>
+              <mat-select formControlName="proveedorId" aria-labelledby="expense-provider-label" placeholder="Selecciona un proveedor" panelClass="expense-select-panel">
+                <mat-option [value]="null">Sin proveedor</mat-option>
+                <mat-option *ngFor="let provider of providers" [value]="provider.id">{{ provider.nombreProvider }}</mat-option>
+              </mat-select>
+            </div>
+            <label for="expense-provider-search" class="hint search-label">Buscar en el catálogo de proveedores</label>
+            <div class="provider-search">
+              <div class="control"><input id="expense-provider-search" [formControl]="providerSearch" maxlength="100" placeholder="Nombre del proveedor" (keydown.enter)="$event.preventDefault(); loadProviders()"></div>
+              <button type="button" class="btn-secondary" (click)="loadProviders()" [disabled]="providersLoading || saving" aria-label="Buscar proveedor"><mat-icon aria-hidden="true">search</mat-icon></button>
+            </div>
+            <p *ngIf="providersLoading" class="hint" role="status">Buscando proveedores…</p>
+            <p *ngIf="providerError" class="hint field-error" role="alert">{{ providerError }}</p>
+            <button *ngIf="loadedProviderCount < providerTotal" type="button" class="text-button" (click)="loadProviders(true)" [disabled]="providersLoading || saving">Cargar más proveedores</button>
+          </div>
+          <div class="receipt-fields">
+            <div class="field">
+              <label id="expense-receipt-type-label" class="field-label">Comprobante <span class="optional">(opcional)</span></label>
+              <div class="control">
+                <mat-select formControlName="tipoComprobante" aria-labelledby="expense-receipt-type-label" panelClass="expense-select-panel">
+                  <mat-option *ngFor="let type of data.options.tiposComprobante" [value]="type">{{ type === 'SIN_COMPROBANTE' ? 'Sin comprobante' : (type | titlecase) }}</mat-option>
+                </mat-select>
+              </div>
+            </div>
+            <div class="field">
+              <label class="field-label" for="expense-receipt-number">Número de comprobante</label>
+              <div class="control"><input id="expense-receipt-number" formControlName="numeroComprobante" placeholder="Ej. F001-000123" maxlength="100"></div>
+            </div>
+          </div>
+          <div class="field full-width">
+            <label class="field-label" for="expense-notes">Observaciones <span class="optional">(opcional)</span></label>
+            <div class="control textarea-control"><textarea id="expense-notes" formControlName="observaciones" rows="3" maxlength="2000" placeholder="Agrega detalles internos del gasto"></textarea></div>
+          </div>
+        </div>
+      </details>
+    </fieldset>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions" align="end">
+  <button type="button" class="btn-secondary" [disabled]="saving" (click)="dialogRef.close()"><mat-icon aria-hidden="true">close</mat-icon>Cancelar</button>
+  <button type="submit" form="expense-form" class="btn-primary" [disabled]="saving || form.invalid">
+    <mat-icon aria-hidden="true">{{ saving ? 'hourglass_top' : 'save' }}</mat-icon>{{ saving ? 'Guardando…' : 'Guardar gasto' }}
+  </button>
+</mat-dialog-actions>
