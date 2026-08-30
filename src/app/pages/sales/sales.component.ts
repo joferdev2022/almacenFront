@@ -1,3 +1,6 @@
+import { firstValueFrom } from 'rxjs';
+import { newOperationId, operationError } from 'src/app/shared/cash.utils';
+import { ModalCreditEditComponent } from 'src/app/components/modal-credit-edit/modal-credit-edit.component';
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -199,38 +202,23 @@ export class SalesComponent implements OnInit {
     })
   }
 
-  openDeleteSaleSwal(saleId: any) {
-    Swal.fire({
-      // title: 'deseas cambiar el estado de esta venta?',
-      text: '¿Deseas eliminar esta venta?',
-      // text: `deseas cambiar el estado de ${val}`,
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Si',
-      cancelButtonText: 'No'
-    }).then((result) => {
-      console.log(result);
-      
-      if (result.isConfirmed) {
-        // this.changeState(val);
-
-        this.dataService.deleteSaleById(saleId).subscribe({
-          next: (res) => {
-            Swal.fire({
-              title: "Hecho!",
-              text: "La venta se ha eliminado correctamente.",
-              icon: "success"
-            });
-            timer(1000).subscribe(() => {
-              this.loadAllSales();
-              this.loadSalesReportDayly();
-            });
-          }
-        })
-        
+  async openDeleteSaleSwal(saleId: string) {
+    const key = newOperationId();
+    const result = await Swal.fire({
+      title: 'Anular venta', input: 'textarea', inputLabel: 'Motivo de anulación',
+      text: 'Se conservará la venta y se devolverá su stock. El efectivo registrado se revertirá en la caja abierta actual.',
+      inputValidator: value => value.trim().length >= 3 ? null : 'Escribe un motivo de al menos 3 caracteres.',
+      icon: 'warning', showCancelButton: true, confirmButtonText: 'Anular venta', cancelButtonText: 'Cancelar',
+      showLoaderOnConfirm: true, allowOutsideClick: () => !Swal.isLoading(),
+      preConfirm: async motivo => {
+        try { return await firstValueFrom(this.dataService.deleteSaleById(saleId, motivo, key)); }
+        catch (error) { Swal.showValidationMessage(operationError(error as any)); return false; }
       }
-
-    })
+    });
+    if (result.isConfirmed) {
+      this.loadAllSales(); this.loadSalesReportDayly();
+      void Swal.fire({ title: 'Venta anulada', icon: 'success', timer: 1400, showConfirmButton: false });
+    }
   }
 
   // openDeleteModal(saleId:any) {
@@ -257,45 +245,25 @@ export class SalesComponent implements OnInit {
     }
   }
 
-  openSwal(val: any) {
-      console.log(val);
-      this.stateBand = val.state === 'cancelado' ? 'credito' : 'cancelado';
-       
-      console.log(this.stateBand);
-      
-      
-      Swal.fire({
-        // title: 'deseas cambiar el estado de esta venta?',
-        text: '¿Deseas cambiar el estado de esta venta?',
-        // text: `deseas cambiar el estado de ${val}`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Si',
-        cancelButtonText: 'No'
-      }).then((result) => {
-        console.log(result);
-        
-        if (result.isConfirmed) {
-          // this.changeState(val);
-
-          this.dataService.updatStateSaleById(val.id, this.stateBand).subscribe({
-            next: (res) => {
-              Swal.fire({
-                title: "Hecho!",
-                text: "El estado de esta venta ha sido cambiado.",
-                icon: "success"
-              });
-              timer(1000).subscribe(() => {
-                this.loadAllSales();
-                this.loadSalesReportDayly();
-              });
-            }
-          })
-          
-        }
-
-      })
+  async openSwal(sale: SaleModel) {
+    if (sale.state !== 'cancelado') {
+      this.dialog.open(ModalCreditEditComponent, {
+        data: { saleCredit: sale }, width: '540px', maxWidth: '95vw', panelClass: 'expense-dialog-panel'
+      }).afterClosed().subscribe(saved => { if (saved) { this.loadAllSales(); this.loadSalesReportDayly(); } });
+      return;
+    }
+    const key = newOperationId();
+    const result = await Swal.fire({
+      title: 'Corregir venta no cobrada', input: 'textarea', inputLabel: 'Motivo de la corrección',
+      text: 'La venta quedará a crédito por su importe total. Esta acción declara que no se cobró; no registra una devolución de efectivo.',
+      inputValidator: value => value.trim().length >= 3 ? null : 'Escribe un motivo de al menos 3 caracteres.',
+      icon: 'warning', showCancelButton: true, confirmButtonText: 'Corregir a crédito', cancelButtonText: 'Cancelar',
+      showLoaderOnConfirm: true, allowOutsideClick: () => !Swal.isLoading(),
+      preConfirm: async motivo => {
+        try { return await firstValueFrom(this.dataService.updatStateSaleById(sale.id, 'credito', motivo, key)); }
+        catch (error) { Swal.showValidationMessage(operationError(error as any)); return false; }
       }
+    });
+    if (result.isConfirmed) { this.loadAllSales(); this.loadSalesReportDayly(); }
+  }
 }
-
-

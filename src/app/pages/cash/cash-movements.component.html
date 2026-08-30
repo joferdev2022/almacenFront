@@ -1,0 +1,35 @@
+<section class="panel movements-panel">
+  <div class="section-heading"><div><h2>Movimientos de la jornada</h2><p class="muted">Cada ingreso y salida, con su origen.</p></div><span class="muted">{{ total }} registros</span></div>
+  <form class="cash-filters" [formGroup]="filters">
+    <mat-form-field appearance="outline"><mat-label>Fecha desde</mat-label><input matInput type="date" formControlName="fecha_desde"></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Fecha hasta</mat-label><input matInput type="date" formControlName="fecha_hasta"></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Tipo</mat-label><mat-select formControlName="tipo"><mat-option value="">Todos</mat-option><mat-option *ngFor="let type of types | keyvalue" [value]="type.key">{{ type.value }}</mat-option></mat-select></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Naturaleza</mat-label><mat-select formControlName="naturaleza"><mat-option value="">Todas</mat-option><mat-option value="INGRESO">Ingresos</mat-option><mat-option value="EGRESO">Egresos</mat-option></mat-select></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Origen</mat-label><mat-select formControlName="origen_tipo"><mat-option value="">Todos</mat-option><mat-option value="VENTA">Ventas</mat-option><mat-option value="GASTO">Gastos</mat-option><mat-option value="MANUAL">Manual</mat-option><mat-option value="CIERRE">Cierre</mat-option></mat-select></mat-form-field>
+    <button class="button secondary" type="button" (click)="clearFilters()">Limpiar</button>
+  </form>
+  <p *ngIf="filters.invalid" class="filter-error">Revisa el rango de fechas.</p>
+  <mat-progress-bar *ngIf="loading" mode="indeterminate" aria-label="Cargando movimientos"></mat-progress-bar>
+  <div *ngIf="error" class="error-panel" role="alert">{{ error }} <button type="button" (click)="reload()">Reintentar</button></div>
+  <div class="table-scroll">
+    <table mat-table [dataSource]="rows">
+      <ng-container matColumnDef="fecha"><th mat-header-cell *matHeaderCellDef>Fecha / hora</th><td mat-cell *matCellDef="let row"><strong>{{ row.fecha | date:'dd/MM/yyyy':'-0500' }}</strong><small>{{ row.fecha | date:'HH:mm':'-0500' }}</small></td></ng-container>
+      <ng-container matColumnDef="descripcion"><th mat-header-cell *matHeaderCellDef>Movimiento</th><td mat-cell *matCellDef="let row" class="description-cell"><strong>{{ types[row.tipo] || row.tipo }}</strong><span>{{ row.descripcion }}</span><small *ngIf="row.observaciones">{{ row.observaciones }}</small></td></ng-container>
+      <ng-container matColumnDef="origen"><th mat-header-cell *matHeaderCellDef>Origen</th><td mat-cell *matCellDef="let row">
+        <button class="source-link" *ngIf="row.origenId && (row.origenTipo === 'VENTA' || row.origenTipo === 'GASTO'); else manualOrigin"
+          type="button" [disabled]="!!sourceBusy" (click)="openSource.emit(row)" [attr.aria-label]="'Ver ' + row.origenTipo.toLowerCase()">
+          {{ row.origenTipo | titlecase }} · {{ row.origenId.slice(-8) }}<mat-icon>open_in_new</mat-icon>
+        </button>
+        <ng-template #manualOrigin><span class="muted">{{ row.origenTipo === 'CIERRE' ? 'Cierre de jornada' : 'Registro manual' }}</span></ng-template>
+        <small *ngIf="row.origenAnulado" class="origin-note">Origen anulado</small>
+        <small *ngIf="row.correccionPosterior" class="origin-note">Corregido después del cierre</small>
+      </td></ng-container>
+      <ng-container matColumnDef="ingreso"><th mat-header-cell *matHeaderCellDef>Ingreso</th><td mat-cell *matCellDef="let row" class="positive">{{ row.naturaleza === 'INGRESO' ? '+ S/. ' + (row.monto | number:'1.2-2') : '—' }}</td></ng-container>
+      <ng-container matColumnDef="egreso"><th mat-header-cell *matHeaderCellDef>Egreso</th><td mat-cell *matCellDef="let row">{{ row.naturaleza === 'EGRESO' ? '− S/. ' + (row.monto | number:'1.2-2') : '—' }}</td></ng-container>
+      <ng-container matColumnDef="usuario"><th mat-header-cell *matHeaderCellDef>Usuario</th><td mat-cell *matCellDef="let row">{{ row.usuarioNombre }}</td></ng-container>
+      <tr mat-header-row *matHeaderRowDef="columns"></tr><tr mat-row *matRowDef="let row; columns: columns"></tr>
+      <tr *matNoDataRow><td class="empty-table" [attr.colspan]="columns.length"><mat-icon>receipt_long</mat-icon><strong>{{ loading ? 'Cargando movimientos…' : error ? 'No se pudieron cargar los movimientos' : 'No hay movimientos para mostrar' }}</strong><span *ngIf="!loading && !error">Las operaciones en efectivo aparecerán aquí automáticamente.</span></td></tr>
+    </table>
+  </div>
+  <mat-paginator [length]="total" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[10, 25, 50]" (page)="page($event)" aria-label="Paginación de movimientos"></mat-paginator>
+</section>

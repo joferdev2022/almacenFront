@@ -1,8 +1,12 @@
+import { OperationAudit } from './cash.model';
 export type ExpenseState = 'PAGADO' | 'PENDIENTE';
 export type ExpensePaymentMethod = 'EFECTIVO' | 'YAPE' | 'PLIN' | 'TRANSFERENCIA' | 'TARJETA' | 'OTRO';
 export type ExpenseReceiptType = 'BOLETA' | 'FACTURA' | 'RECIBO' | 'SIN_COMPROBANTE' | 'OTRO';
 
 export interface ExpenseModel {
+  anulado?: boolean;
+  motivoAnulacion?: string;
+  auditoria?: OperationAudit[];
   id: string;
   fecha: string;
   categoria: string;

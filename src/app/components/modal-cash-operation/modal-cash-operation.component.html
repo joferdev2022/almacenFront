@@ -1,0 +1,81 @@
+<header class="dialog-header">
+  <span class="header-icon"><mat-icon>{{ data.mode === 'close' ? 'lock_outline' : 'point_of_sale' }}</mat-icon></span>
+  <h2 mat-dialog-title>{{ title }}</h2>
+  <button type="button" class="icon-button" aria-label="Cerrar formulario" [disabled]="saving" (click)="dialogRef.close()"><mat-icon>close</mat-icon></button>
+</header>
+<mat-dialog-content class="dialog-content">
+  <div *ngIf="error" class="error-message" role="alert">{{ error }}</div>
+  <div *ngIf="data.mode === 'open'" class="cash-note">
+    {{ data.hasPrevious ? 'Confirma el efectivo que quedó del último cierre.' : 'Esta apertura inicia el control de efectivo. No se cargarán ventas ni gastos anteriores.' }}
+    <strong *ngIf="data.hasPrevious">Fondo anterior: S/. {{ data.suggested | number:'1.2-2' }}</strong>
+  </div>
+  <div *ngIf="data.mode === 'close'" class="close-summary">
+    <span>Saldo esperado antes del retiro final</span>
+    <strong>S/. {{ expected | number:'1.2-2' }}</strong>
+    <button type="button" class="text-button" [disabled]="saving || refreshing" (click)="refreshSummary()">
+      <mat-icon>refresh</mat-icon>{{ refreshing ? 'Actualizando…' : 'Actualizar saldo' }}
+    </button>
+  </div>
+  <details *ngIf="data.mode === 'close' && data.journal as day" class="balance-breakdown">
+    <summary>Cómo se calcula el saldo</summary>
+    <dl>
+      <dt>Apertura</dt><dd>S/. {{ day.montoApertura | number:'1.2-2' }}</dd>
+      <dt>Ventas en efectivo</dt><dd>+ S/. {{ day.resumen.ventasEfectivo | number:'1.2-2' }}</dd>
+      <dt>Otros ingresos</dt><dd>+ S/. {{ day.resumen.otrosIngresos | number:'1.2-2' }}</dd>
+      <dt>Gastos en efectivo</dt><dd>− S/. {{ day.resumen.gastosEfectivo | number:'1.2-2' }}</dd>
+      <dt>Retiros</dt><dd>− S/. {{ day.resumen.retiros | number:'1.2-2' }}</dd>
+      <dt>Ajustes de entrada</dt><dd>+ S/. {{ day.resumen.ajustesEntrada | number:'1.2-2' }}</dd>
+      <dt>Ajustes de salida</dt><dd>− S/. {{ day.resumen.ajustesSalida | number:'1.2-2' }}</dd>
+    </dl>
+  </details>
+  <p *ngIf="isManual" class="hint">{{ data.mode === 'income' ? 'Registra un fondo adicional u otro ingreso propio de Caja.' : 'Un retiro reduce el efectivo físico; no crea un gasto comercial.' }}</p>
+  <form id="cash-operation-form" [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <fieldset class="payment-fields" [disabled]="saving">
+      <div class="field" *ngIf="data.mode !== 'close'">
+        <label class="field-label" for="cash-amount">{{ data.mode === 'open' ? 'Monto de apertura' : 'Monto' }} <span class="required">*</span></label>
+        <div class="control"><span>S/.</span><input id="cash-amount" inputmode="decimal" formControlName="monto" placeholder="0.00"></div>
+        <p class="hint field-error" *ngIf="form.controls.monto.touched && form.controls.monto.invalid">Ingresa un importe válido con hasta dos decimales{{ isManual ? ', mayor a cero' : '' }}.</p>
+        <p class="cash-note" *ngIf="data.mode === 'open' && data.hasPrevious && openingDifference !== 0">
+          Diferencia con el fondo anterior: <strong>S/. {{ openingDifference | number:'1.2-2' }}</strong>. Se guardará sin alterar el cierre anterior.
+        </p>
+      </div>
+      <div class="field" *ngIf="isManual">
+        <label class="field-label" for="cash-reason">Motivo <span class="required">*</span></label>
+        <div class="control"><input id="cash-reason" formControlName="motivo" maxlength="250" placeholder="Ej. Fondo adicional / retiro para depósito"></div>
+        <p class="hint field-error" *ngIf="form.controls.motivo.touched && form.controls.motivo.invalid">Describe el motivo con al menos 3 caracteres.</p>
+      </div>
+      <ng-container *ngIf="data.mode === 'close'">
+        <div class="field">
+          <label class="field-label" for="cash-counted">¿Cuánto efectivo contaste? <span class="required">*</span></label>
+          <div class="control"><span>S/.</span><input id="cash-counted" inputmode="decimal" formControlName="contado" placeholder="0.00"></div>
+          <p class="hint field-error" *ngIf="form.controls.contado.touched && form.controls.contado.invalid">Ingresa el efectivo contado, con hasta dos decimales.</p>
+        </div>
+        <div class="difference" *ngIf="form.controls.contado.value && form.controls.contado.valid" [class.negative]="difference !== 0">
+          <span>Diferencia del conteo</span><strong>S/. {{ difference | number:'1.2-2' }}</strong>
+          <small>{{ difference === 0 ? 'El efectivo contado coincide con el esperado.' : 'Se guardará esta diferencia; no se modificarán movimientos para cuadrar.' }}</small>
+        </div>
+        <div class="field">
+          <label class="field-label" for="cash-fund">Fondo para la siguiente apertura <span class="required">*</span></label>
+          <div class="control"><span>S/.</span><input id="cash-fund" inputmode="decimal" formControlName="fondo" placeholder="0.00"></div>
+          <p class="hint">Efectivo que quedará físicamente en la caja.</p>
+          <p class="hint field-error" *ngIf="form.hasError('fund')">El fondo no puede superar el efectivo contado.</p>
+          <p class="hint field-error" *ngIf="form.controls.fondo.touched && form.controls.fondo.invalid">Ingresa un fondo válido, igual o mayor a cero.</p>
+        </div>
+        <div class="cash-note" *ngIf="form.controls.fondo.value && form.controls.contado.value && withdrawal >= 0">
+          Retiro al cierre: <strong>S/. {{ withdrawal | number:'1.2-2' }}</strong>
+          <span>Se registrará automáticamente como RETIRO DE CIERRE.</span>
+        </div>
+      </ng-container>
+      <div class="field">
+        <label class="field-label" for="cash-notes">Observaciones <span class="optional">(opcional)</span></label>
+        <div class="control"><textarea id="cash-notes" formControlName="observaciones" rows="3" maxlength="1000" placeholder="Agrega un detalle para el historial"></textarea></div>
+      </div>
+    </fieldset>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions class="dialog-actions" align="end">
+  <button type="button" class="btn-secondary" [disabled]="saving" (click)="dialogRef.close()">Cancelar</button>
+  <button type="submit" form="cash-operation-form" class="btn-primary" [disabled]="saving || refreshing || form.invalid || closedElsewhere">
+    <mat-icon>{{ saving ? 'hourglass_top' : 'check' }}</mat-icon>{{ saving ? 'Guardando…' : title }}
+  </button>
+</mat-dialog-actions>

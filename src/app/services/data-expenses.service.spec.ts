@@ -42,4 +42,35 @@ describe('DataService Gastos', () => {
     expect(status).toBe(403);
     expect(auth.refreshToken).not.toHaveBeenCalled();
   });
+
+  it('mantiene permisos de Caja y Ventas sin renovar el login', () => {
+    for (const request of [
+      { url: '/cash/current', call: () => service.getCurrentCash() },
+      { url: '/sales/venta', call: () => service.getSale('venta') }
+    ]) {
+      request.call().subscribe({ error: error => expect(error.status).toBe(403) });
+      http.expectOne(req => req.url.endsWith(request.url))
+        .flush({ detail: 'Sin permiso' }, { status: 403, statusText: 'Forbidden' });
+    }
+    expect(auth.refreshToken).not.toHaveBeenCalled();
+  });
+
+  it('envía el identificador estable y el motivo al anular', () => {
+    service.deleteSaleById('venta', 'Devolución acordada', 'operacion-prueba').subscribe();
+    const request = http.expectOne(req => req.url.endsWith('/sales/venta'));
+    expect(request.request.method).toBe('DELETE');
+    expect(request.request.body).toEqual({ motivo: 'Devolución acordada' });
+    expect(request.request.headers.get('Idempotency-Key')).toBe('operacion-prueba');
+    request.flush({data:{anulado:true},code:200});
+  });
+
+  it('pide movimientos paginados y no acepta un local elegido por el cliente', () => {
+    service.loadCashMovements('jornada', 2, 25, { tipo:'GASTO_EFECTIVO', fecha_desde:'2026-08-28', naturaleza:'' }).subscribe();
+    const request = http.expectOne(req => req.url.endsWith('/cash/jornada/movements'));
+    expect(request.request.params.get('page')).toBe('2');
+    expect(request.request.params.get('xpage')).toBe('25');
+    expect(request.request.params.get('tipo')).toBe('GASTO_EFECTIVO');
+    expect(request.request.params.has('local')).toBeFalse();
+    request.flush({data:{items:[],total:0,page:2,xpage:25},code:200});
+  });
 });

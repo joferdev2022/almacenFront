@@ -6,6 +6,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { of, Subject } from 'rxjs';
 import { DataService } from 'src/app/services/data.service';
 import { MaterialModule } from 'src/app/shared/material.module';
+import Swal from 'sweetalert2';
 import { ExpenseDialogData, ModalExpenseComponent } from './modal-expense.component';
 
 describe('ModalExpenseComponent', () => {
@@ -99,6 +100,22 @@ describe('ModalExpenseComponent', () => {
     expect(dialog.disableClose).toBeFalse();
     expect(dialog.close).not.toHaveBeenCalled();
     expect(fixture.nativeElement.querySelector('[role="alert"]').textContent).toContain('El proveedor no existe');
+  });
+
+  it('avisa claramente cuando un gasto en efectivo encuentra la Caja cerrada', () => {
+    const alert = spyOn(Swal, 'fire').and.returnValue(Promise.resolve({ isConfirmed: true } as any));
+    validPaid();
+    component.save();
+    operation.error(new HttpErrorResponse({ status: 409,
+      error: { detail: 'No existe una caja abierta para registrar esta operación en efectivo.' } }));
+    fixture.detectChanges();
+    expect(component.saving).toBeFalse();
+    expect(component.form.enabled).toBeTrue();
+    expect(component.form.controls['monto'].value).toBe('50');
+    expect(component.error).toContain('No existe una caja abierta');
+    expect(alert).toHaveBeenCalledWith(jasmine.objectContaining({
+      title: 'Caja cerrada', icon: 'warning', confirmButtonText: 'Entendido'
+    }));
   });
 
   it('reports invalid access without incorrectly claiming that the session expired', () => {

@@ -1,3 +1,6 @@
+import { HttpErrorResponse } from '@angular/common/http';
+import Swal from 'sweetalert2';
+import { CASH_CLOSED_ALERT, isCashClosedError, newOperationId } from 'src/app/shared/cash.utils';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -21,6 +24,7 @@ export class ModalExpenseComponent implements OnInit, OnDestroy {
   readonly form: FormGroup;
   readonly providerSearch = this.fb.nonNullable.control('');
   private readonly destroy$ = new Subject<void>();
+  readonly operationId = newOperationId();
   saving = false;
   error = '';
   providers: ExpenseProvider[] = [];
@@ -110,6 +114,15 @@ export class ModalExpenseComponent implements OnInit, OnDestroy {
     });
   }
 
+  private handleSaveError(error: HttpErrorResponse): void {
+    this.error = expenseError(error);
+    if (!isCashClosedError(error)) { return; }
+    void Swal.fire({
+      title: 'Caja cerrada', text: CASH_CLOSED_ALERT, icon: 'warning',
+      confirmButtonText: 'Entendido', confirmButtonColor: '#26874a'
+    });
+  }
+
   save(): void {
     if (this.saving) { return; }
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
@@ -127,15 +140,15 @@ export class ModalExpenseComponent implements OnInit, OnDestroy {
     this.error = '';
     this.dialogRef.disableClose = true;
     const operation = this.data.expense
-      ? this.dataService.updateExpense(this.data.expense.id, request)
-      : this.dataService.saveExpense(request);
+      ? this.dataService.updateExpense(this.data.expense.id, request, this.operationId)
+      : this.dataService.saveExpense(request, this.operationId);
     operation.pipe(takeUntil(this.destroy$), finalize(() => {
       this.saving = false;
       this.form.enable({ emitEvent: false });
       this.dialogRef.disableClose = false;
     })).subscribe({
       next: () => this.dialogRef.close(true),
-      error: error => this.error = expenseError(error)
+      error: error => this.handleSaveError(error)
     });
   }
 

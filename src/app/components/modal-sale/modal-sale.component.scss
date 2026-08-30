@@ -59,36 +59,6 @@
   box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
 }
 
-.metodo-pago {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  padding: 16px 18px;
-}
-
-.metodo-pago label {
-  flex: 0 0 auto;
-  color: #1f2937;
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.payment-options {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(120px, 1fr));
-  gap: 8px 12px;
-  width: 100%;
-}
-
-.metodo-pago mat-radio-button {
-  min-height: 38px;
-  margin: 0;
-  padding: 3px 8px;
-  border: 1px solid #eef2f7;
-  border-radius: 8px;
-  background: #f9fafb;
-}
-
 button {
   height: 36px;
   margin: 0.25rem;

@@ -38,8 +38,8 @@ export class TokenInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       // catchError(this.manageError)
       catchError((error: HttpErrorResponse) => {
-        // Gastos devuelve 403 por permisos; debe llegar al formulario, sin renovar el login.
-        if(error.status === 403 && !/\/expenses(?:\/|\?|$)/.test(req.url)) {
+        // Ventas, Gastos y Caja devuelven 403 por permisos; debe llegar al formulario, sin renovar el login.
+        if(error.status === 403 && !/\/(?:expenses|cash|sales)(?:\/|\?|$)/.test(req.url)) {
           return this.handle403Error(req, next);
         }
         return throwError(() => error);

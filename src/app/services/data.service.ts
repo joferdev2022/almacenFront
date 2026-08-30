@@ -1,3 +1,5 @@
+import { newOperationId } from '../shared/cash.utils';
+import { CashCurrent, CashJournal, CashMovement, CashPage, CashResponse, CashOpeningRequest, CashMovementRequest, CashClosingRequest } from '../models/internal/cash.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ExpenseModel, ExpenseOptions, ExpenseProviderPage } from '../models/internal/expense.model';
 import { ExpenseFilters, ExpensePaymentRequest, ExpenseRequest } from '../models/request/expense.request';
@@ -50,20 +52,20 @@ export class DataService {
     return this.http.get<ExpenseApiResponse<ExpenseModel>>(`${base_url}/expenses/${id}`);
   }
 
-  saveExpense(data: ExpenseRequest): Observable<ExpenseApiResponse<ExpenseModel>> {
-    return this.http.post<ExpenseApiResponse<ExpenseModel>>(`${base_url}/expenses`, data);
+  saveExpense(data: ExpenseRequest, key = newOperationId()): Observable<ExpenseApiResponse<ExpenseModel>> {
+    return this.http.post<ExpenseApiResponse<ExpenseModel>>(`${base_url}/expenses`, data, this.operationOptions(key));
   }
 
-  updateExpense(id: string, data: ExpenseRequest): Observable<ExpenseApiResponse<ExpenseModel>> {
-    return this.http.put<ExpenseApiResponse<ExpenseModel>>(`${base_url}/expenses/${id}`, data);
+  updateExpense(id: string, data: ExpenseRequest, key = newOperationId()): Observable<ExpenseApiResponse<ExpenseModel>> {
+    return this.http.put<ExpenseApiResponse<ExpenseModel>>(`${base_url}/expenses/${id}`, data, this.operationOptions(key));
   }
 
-  payExpense(id: string, data: ExpensePaymentRequest): Observable<ExpenseApiResponse<ExpenseModel>> {
-    return this.http.put<ExpenseApiResponse<ExpenseModel>>(`${base_url}/expenses/${id}/pay`, data);
+  payExpense(id: string, data: ExpensePaymentRequest, key = newOperationId()): Observable<ExpenseApiResponse<ExpenseModel>> {
+    return this.http.put<ExpenseApiResponse<ExpenseModel>>(`${base_url}/expenses/${id}/pay`, data, this.operationOptions(key));
   }
 
-  deleteExpense(id: string): Observable<ExpenseApiResponse<ExpenseModel>> {
-    return this.http.delete<ExpenseApiResponse<ExpenseModel>>(`${base_url}/expenses/${id}`);
+  deleteExpense(id: string, motivo = "Anulación solicitada", key = newOperationId()): Observable<ExpenseApiResponse<ExpenseModel>> {
+    return this.http.delete<ExpenseApiResponse<ExpenseModel>>(`${base_url}/expenses/${id}`, { ...this.operationOptions(key), body: { motivo } });
   }
 
   excelUploadResponse$ = new Subject<any>();
@@ -159,14 +161,20 @@ export class DataService {
     return this.http.put<any>( url, providerData ).pipe(map(res => console.log(res)));
   }
 
-  updatStateSaleById(saleId: any , state: any):Observable<any> {
-    const url = `${ base_url }/sales/state/${saleId}?state=${state}`;
-    return this.http.put<any>( url, {} ).pipe(map(res => console.log(res)));
+  private operationOptions(key: string) { return { headers: { 'Idempotency-Key': key } }; }
+
+  updatStateSaleById(id: string, state: string, motivo = 'Corrección de cobro', key = newOperationId()): Observable<any> {
+    return this.http.put<any>(`${base_url}/sales/state/${id}?state=${state}`, { motivo }, this.operationOptions(key));
   }
 
-  updatePaymentSaleById(saleId: any , payment: any):Observable<any> {
-    const url = `${ base_url }/sales/payment/${saleId}?payment=${payment}`;
-    return this.http.put<any>( url, {} ).pipe(map(res => console.log(res)));
+  updatePaymentSaleById(id: string, payment: { monto: number; metodoPago: string; fechaPago: string }, key = newOperationId()): Observable<any> {
+    return this.http.put<any>(`${base_url}/sales/payment/${id}`, payment, this.operationOptions(key));
+  }
+
+  getSale(id: string): Observable<any> { return this.http.get<any>(`${base_url}/sales/${id}`); }
+
+  updateSale(id: string, data: SaleRequest, key = newOperationId()): Observable<any> {
+    return this.http.put<any>(`${base_url}/sales/${id}`, data, this.operationOptions(key));
   }
 
   updateProviderDebtById(providerId: any, deuda: number, monto: number): Observable<any> {
@@ -196,17 +204,48 @@ export class DataService {
   }
 
   
-  saveSale(saleData: SaleRequest):Observable<any> {
-
-    const url = `${ base_url }/sales`;
-    console.log(saleData);
-    
-    // return this.http.post<any>( url, productData ).pipe(map(res => ResponseCustomer.createFromObject(res)));
-    return this.http.post<any>( url, saleData ).pipe(map(res => console.log(res)));
+  saveSale(data: SaleRequest, key = newOperationId()): Observable<any> {
+    return this.http.post<any>(`${base_url}/sales`, data, this.operationOptions(key));
   }
-  deleteSaleById(saleId: any):Observable<any> {
-    const url = `${ base_url }/sales/${saleId}`;
-    return this.http.delete<any>(url).pipe(map(res => console.log(res)));
+
+  deleteSaleById(id: string, motivo = 'Anulación solicitada', key = newOperationId()): Observable<any> {
+    return this.http.delete<any>(`${base_url}/sales/${id}`, { ...this.operationOptions(key), body: { motivo } });
+  }
+
+  getCurrentCash(): Observable<CashResponse<CashCurrent>> {
+    return this.http.get<CashResponse<CashCurrent>>(`${base_url}/cash/current`);
+  }
+
+  getCashJournal(id: string): Observable<CashResponse<CashJournal>> {
+    return this.http.get<CashResponse<CashJournal>>(`${base_url}/cash/${id}`);
+  }
+
+  loadCashHistory(page = 1, xpage = 10, filters: Record<string, string> = {}): Observable<CashResponse<CashPage<CashJournal>>> {
+    return this.http.get<CashResponse<CashPage<CashJournal>>>(`${base_url}/cash/history`,
+      { params: this.cashParams(page, xpage, filters) });
+  }
+
+  loadCashMovements(id: string, page = 1, xpage = 10, filters: Record<string, string> = {}): Observable<CashResponse<CashPage<CashMovement>>> {
+    return this.http.get<CashResponse<CashPage<CashMovement>>>(`${base_url}/cash/${id}/movements`,
+      { params: this.cashParams(page, xpage, filters) });
+  }
+
+  openCash(data: CashOpeningRequest): Observable<CashResponse<CashJournal>> {
+    return this.http.post<CashResponse<CashJournal>>(`${base_url}/cash/open`, data);
+  }
+
+  closeCash(id: string, data: CashClosingRequest): Observable<CashResponse<CashJournal>> {
+    return this.http.post<CashResponse<CashJournal>>(`${base_url}/cash/${id}/close`, data);
+  }
+
+  cashMovement(id: string, type: 'income' | 'withdrawal', data: CashMovementRequest): Observable<CashResponse<CashMovement>> {
+    return this.http.post<CashResponse<CashMovement>>(`${base_url}/cash/${id}/${type}`, data);
+  }
+
+  private cashParams(page: number, size: number, filters: Record<string, string>): HttpParams {
+    let params = new HttpParams().set('page', page).set('xpage', size);
+    Object.entries(filters).forEach(([key, value]) => { if (value) { params = params.set(key, value); } });
+    return params;
   }
 
   dayliSalesByLocal(local: any):Observable<any> {

@@ -40,6 +40,7 @@ const routes: Routes = [
         // component: 
         loadChildren: () => import('./credits/credits.module').then(m => m.CreditsModule)
       },
+      { path: 'caja', loadChildren: () => import('./cash/cash.module').then(m => m.CashModule) },
       {
         path: 'gastos',
         // component: 

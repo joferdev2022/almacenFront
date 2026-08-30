@@ -1,24 +1,42 @@
-<h2 mat-dialog-title>Actualizar Estado de Credito:</h2>
-<mat-dialog-content class="mat-typography">
-  <div class="div_container" >
-    <form class="form-container"  [formGroup]="creditSaleForm">
-      <mat-form-field class="monto_pagar">
-        <mat-label>Monto a pagar:</mat-label>
-        <input matInput type="number" placeholder="" formControlName="amountPayment" required>
-        <mat-error *ngIf="creditSaleForm.get('amountPayment')?.hasError('amountExceedsDebt')">
-          El monto a pagar no puede ser mayor que el total de la deuda.
-        </mat-error>
-      </mat-form-field>
-    
-       <mat-form-field class="credito_total">
-        <mat-label>Total Deuda:</mat-label>
-        <input matInput placeholder="" formControlName="totalPrice" [readOnly]="true" >
-        
-      </mat-form-field> 
-    </form> 
-  </div>
+<header class="dialog-header">
+  <span class="header-icon"><mat-icon>credit_score</mat-icon></span>
+  <h2 mat-dialog-title>Registrar cobro</h2>
+  <button type="button" class="icon-button" aria-label="Cerrar" [disabled]="saving" (click)="dialogRef.close()"><mat-icon>close</mat-icon></button>
+</header>
+<mat-dialog-content class="dialog-content">
+  <div class="expense-summary"><span class="summary-label">Saldo pendiente de la venta</span><p class="amount">S/. {{ debt | number:'1.2-2' }}</p></div>
+  <div *ngIf="error" class="error-message" role="alert">{{ error }}</div>
+  <div *ngIf="optionsError" class="error-message" role="alert">{{ optionsError }} <button type="button" class="text-button" (click)="loadMethods()">Reintentar</button></div>
+  <form id="credit-payment-form" [formGroup]="form" (ngSubmit)="save()" novalidate>
+    <fieldset class="payment-fields" [disabled]="saving">
+      <div class="field">
+        <label class="field-label" for="credit-amount">Monto a cobrar <span class="required">*</span></label>
+        <div class="control"><span>S/.</span><input id="credit-amount" formControlName="monto" inputmode="decimal" placeholder="0.00"></div>
+        <p class="hint" [class.field-error]="remaining < 0 || (form.controls.monto.touched && form.controls.monto.invalid)">
+          {{ remaining < 0 ? 'El monto supera la deuda pendiente.' : 'Ingresa un monto mayor a cero, con hasta dos decimales.' }}
+        </p>
+      </div>
+      <div class="field">
+        <label class="field-label" id="credit-method-label">Método de pago <span class="required">*</span></label>
+        <div class="control"><mat-icon>payments</mat-icon>
+          <mat-select formControlName="metodoPago" aria-labelledby="credit-method-label" placeholder="Selecciona un método">
+            <mat-option *ngFor="let method of methods" [value]="method">{{ method | titlecase }}</mat-option>
+          </mat-select>
+        </div>
+        <p class="hint">Solo el efectivo aumenta el saldo físico de Caja.</p>
+      </div>
+      <div class="field">
+        <label class="field-label" for="credit-date">Fecha de pago <span class="required">*</span></label>
+        <div class="control"><mat-icon>calendar_today</mat-icon><input id="credit-date" type="date" formControlName="fechaPago"></div>
+        <p class="hint field-error" *ngIf="form.controls.fechaPago.touched && form.controls.fechaPago.invalid">Ingresa una fecha válida.</p>
+      </div>
+      <p class="hint" *ngIf="remaining >= 0">Saldo después del cobro: <strong>S/. {{ remaining | number:'1.2-2' }}</strong></p>
+    </fieldset>
+  </form>
 </mat-dialog-content>
-<mat-dialog-actions align="end">
-  <button *ngIf="data.operation == 'update'" mat-button (click)="onUpdateCredit()" [mat-dialog-close]="true" cdkFocusInitial>Guardar</button>
-  <button class="btn-cancel" mat-button mat-dialog-close>Cancelar</button>
+<mat-dialog-actions class="dialog-actions" align="end">
+  <button class="btn-secondary" type="button" [disabled]="saving" (click)="dialogRef.close()">Cancelar</button>
+  <button class="btn-primary" type="submit" form="credit-payment-form" [disabled]="saving || form.invalid || remaining < 0 || !methods.length">
+    <mat-icon>{{ saving ? 'hourglass_top' : 'check' }}</mat-icon>{{ saving ? 'Guardando…' : 'Registrar cobro' }}
+  </button>
 </mat-dialog-actions>

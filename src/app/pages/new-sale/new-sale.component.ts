@@ -1,3 +1,6 @@
+import { HttpErrorResponse } from '@angular/common/http';
+import { finalize } from 'rxjs';
+import { CASH_CLOSED_ALERT, isCashClosedError, newOperationId, operationError } from 'src/app/shared/cash.utils';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { DataService } from '../../services/data.service';
@@ -19,6 +22,10 @@ export class NewSaleComponent implements OnInit {
 
   public saleForm!: FormGroup;
   public totalPriceView = 0;
+  readonly operationId = newOperationId();
+  saving = false;
+  error = '';
+  paymentMethods: string[] = [];
 
   displayedColumns: string[] = ['name', 'category', 'measure', 'priceSale', 'stock', 'actions'];
   dataSource!: MatTableDataSource<ProductModel>;
@@ -47,9 +54,10 @@ export class NewSaleComponent implements OnInit {
     paginatorIntl.itemsPerPageLabel = 'items por página';
 
     this.saleForm = this.fb.group({
-      nombreVendedor: ['', Validators.required],
+      nombreVendedor: [''],
       nombreCliente: [''],
       direccionCliente: [''],
+      paymentMhetod: ['efectivo', Validators.required],
       productos: this.fb.array([]),
       precioTotal: [0, Validators.min(0)],
       estado: ['cancelado', Validators.required],
@@ -58,6 +66,10 @@ export class NewSaleComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.dataService.loadExpenseOptions().subscribe({
+      next: response => this.paymentMethods = response.data.metodosPago.filter(method => method !== 'TARJETA'),
+      error: error => this.error = operationError(error)
+    });
     this.loadVendedores();
   }
 
@@ -96,6 +108,7 @@ export class NewSaleComponent implements OnInit {
   }
 
   addProducto(productItem: any) {
+    if (this.saving) { return; }
     console.log(productItem);
     console.log(productItem.stock);
     if (productItem.stock <= 0) {
@@ -117,11 +130,13 @@ export class NewSaleComponent implements OnInit {
   }
 
   removeProducto(index: number) {
+    if (this.saving) { return; }
     this.productos.removeAt(index);
     this.updatePrecioTotal();
   }
 
   incrementCantidad(index: number) {
+    if (this.saving) { return; }
     console.log(this.productos.at(index));
 
     const control = this.productos.at(index).get('cantidad')!;
@@ -138,6 +153,7 @@ export class NewSaleComponent implements OnInit {
   }
 
   decrementCantidad(index: number) {
+    if (this.saving) { return; }
     const control = this.productos.at(index).get('cantidad')!;
     if (control.value > 1) {
       control.setValue(control.value - 1);
@@ -159,34 +175,36 @@ export class NewSaleComponent implements OnInit {
     console.log(total);
   }
 
+  private handleSaveError(error: HttpErrorResponse): void {
+    this.error = operationError(error);
+    if (!isCashClosedError(error)) { return; }
+    void Swal.fire({
+      title: 'Caja cerrada', text: CASH_CLOSED_ALERT, icon: 'warning',
+      confirmButtonText: 'Entendido', confirmButtonColor: '#26874a'
+    });
+  }
+
   onCreate() {
-    console.log(this.saleForm.value);
-
-    if (true) {
-      const saleData = this.saleForm.value;
-      const saleRequest = SaleRequest.createFromObject(saleData);
-      console.log(saleRequest);
-
-      this.dataService.saveSale(saleRequest).subscribe({
-        next: (res) => {
-          console.log(res);
-          Swal.fire({
-            title: "Hecho!",
-            text: "La venta se ha realizado correctamente.",
-            icon: "success"
-          });
-          this.router.navigate(['/pages/ventas']);
-        },
-        error: (e) => {
-          console.log(e);
-          Swal.fire({
-            title: "ERROR!",
-            text: "La venta no se ha pudo realizar.",
-            icon: "error"
-          });
-        }
-      });
+    if (this.saving) { return; }
+    if (this.saleForm.invalid || !this.productos.length || this.totalPriceView <= 0) {
+      this.saleForm.markAllAsTouched();
+      this.error = 'Agrega al menos un producto con un importe válido.';
+      return;
     }
+    const request = SaleRequest.createFromObject(this.saleForm.getRawValue());
+    this.saving = true;
+    this.error = '';
+    this.saleForm.disable({ emitEvent: false });
+    this.dataService.saveSale(request, this.operationId).pipe(finalize(() => {
+      this.saving = false;
+      this.saleForm.enable({ emitEvent: false });
+    })).subscribe({
+      next: () => {
+        void Swal.fire({ title: 'Venta registrada', icon: 'success', timer: 1400, showConfirmButton: false });
+        this.router.navigate(['/almacen/ventas']);
+      },
+      error: error => this.handleSaveError(error)
+    });
   }
 
   applyFilter(event: Event) {

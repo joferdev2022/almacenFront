@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.spec.json",
+  "include": [
+    "src/app/components/modal-cash-operation/*.spec.ts",
+    "src/app/components/modal-credit-edit/*.spec.ts",
+    "src/app/pages/cash/*.spec.ts",
+    "src/app/services/data-expenses.service.spec.ts",
+    "src/app/components/modal-expense/*.spec.ts",
+    "src/app/components/modal-pay-expense/*.spec.ts",
+    "src/app/pages/expenses/*.spec.ts"
+  ]
+}

@@ -45,6 +45,6 @@ describe('ModalPayExpenseComponent', () => {
     component.form.patchValue({ fechaPago: '2026-08-29', metodoPago: 'YAPE' });
     component.save();
     component.save();
-    expect(service.payExpense).toHaveBeenCalledOnceWith('pending-id', { fechaPago: '2026-08-29', metodoPago: 'YAPE' });
+    expect(service.payExpense).toHaveBeenCalledOnceWith('pending-id', { fechaPago: '2026-08-29', metodoPago: 'YAPE' }, component.operationId);
   });
 });

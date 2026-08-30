@@ -10,7 +10,7 @@
 }
 .expense-select-panel .mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after { color: #15803d; }
 
-app-modal-expense, app-modal-pay-expense, app-modal-info-expense {
+app-modal-expense, app-modal-pay-expense, app-modal-info-expense, app-modal-credit-edit, app-modal-cash-operation {
   display: flex;
   flex-direction: column;
   max-height: 94vh;
@@ -50,3 +50,5 @@ app-modal-expense, app-modal-pay-expense, app-modal-info-expense {
     .dialog-actions button { padding: 0 8px; gap: 6px; font-size: 12px; white-space: nowrap; }
   }
 }
+
+app-modal-sale .sale-error, app-new-sale .sale-error { padding: 12px 16px; color: #a52532; background: #fff0f1; border-radius: 8px; }

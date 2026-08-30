@@ -156,22 +156,23 @@ export class ExpensesComponent implements OnInit, OnDestroy {
     if (!this.canWrite || this.busyId) { return; }
     const confirmation = await Swal.fire({
       title: '¿Eliminar este gasto?',
-      text: 'Se eliminará definitivamente el gasto de S/. ' + expense.monto.toFixed(2) +
-        '. Esta acción no se puede deshacer.',
+      text: 'Se conservará el gasto y su historial. El efectivo registrado se reintegrará a la caja abierta actual.',
+      input: 'textarea', inputLabel: 'Motivo de anulación',
+      inputValidator: value => value.trim().length >= 3 ? null : 'Escribe un motivo de al menos 3 caracteres.',
       icon: 'warning', showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar', cancelButtonText: 'Cancelar'
+      confirmButtonText: 'Sí, anular', cancelButtonText: 'Cancelar'
     });
     if (!confirmation.isConfirmed) { return; }
     this.busyId = expense.id;
-    this.dataService.deleteExpense(expense.id).pipe(
+    this.dataService.deleteExpense(expense.id, String(confirmation.value)).pipe(
       takeUntil(this.destroy$), finalize(() => this.busyId = null)
     ).subscribe({
       next: () => {
         if (this.expenses.length === 1 && this.pageIndex > 0) { this.pageIndex--; }
         this.reload();
-        this.success('Gasto eliminado.');
+        this.success('Gasto anulado.');
       },
-      error: error => { void Swal.fire('No se pudo eliminar', expenseError(error), 'error'); }
+      error: error => { void Swal.fire('No se pudo anular', expenseError(error), 'error'); }
     });
   }
 

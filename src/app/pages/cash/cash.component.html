@@ -1,0 +1,110 @@
+<section class="cash-page">
+  <header class="page-heading">
+    <div class="heading-title"><span class="page-icon"><mat-icon>point_of_sale</mat-icon></span><div>
+      <h1>{{ view === 'history' ? 'Historial de Caja' : view === 'detail' ? 'Detalle de jornada' : 'Caja' }}</h1>
+      <p>{{ view === 'history' ? 'Aperturas, cierres y diferencias de tu local.' : 'Control del efectivo físico de tu local.' }}</p>
+    </div></div>
+    <nav class="heading-actions" aria-label="Navegación de Caja">
+      <a class="button secondary" *ngIf="view !== 'current'" routerLink="/almacen/caja"><mat-icon>arrow_back</mat-icon>Caja actual</a>
+      <a class="button secondary" *ngIf="view !== 'history'" routerLink="/almacen/caja/historial"><mat-icon>history</mat-icon>Historial</a>
+      <button type="button" class="button secondary icon-only" [disabled]="loading" (click)="reload()" aria-label="Actualizar Caja"><mat-icon>refresh</mat-icon></button>
+    </nav>
+  </header>
+  <mat-progress-bar *ngIf="loading" mode="indeterminate" aria-label="Cargando caja"></mat-progress-bar>
+  <div *ngIf="error" class="error-panel" role="alert"><mat-icon>error_outline</mat-icon><span>{{ error }}</span><button (click)="reload()">Reintentar</button></div>
+
+  <ng-container *ngIf="view === 'history' || (!loading && !error)">
+    <section *ngIf="view === 'current' && current && !journal" class="closed-panel panel">
+      <span class="closed-icon"><mat-icon>lock_outline</mat-icon></span>
+      <span class="state closed">Caja cerrada</span>
+      <h2>No hay una jornada abierta</h2>
+      <p>{{ current.caja?.inicioControl ? 'Abre Caja antes de registrar ventas, cobros o gastos en efectivo.' : 'Abre tu primera jornada con el efectivo que tienes físicamente. Desde ese momento comenzará el control.' }}</p>
+      <div class="previous-fund" *ngIf="current.ultimoCierre">
+        <span>Fondo del último cierre · {{ current.ultimoCierre.fechaCierre | date:'dd/MM/yyyy HH:mm':'-0500' }}</span>
+        <strong>S/. {{ current.fondoSugerido | number:'1.2-2' }}</strong>
+        <a [routerLink]="['/almacen/caja/jornadas', current.ultimoCierre.id]">Ver último cierre <mat-icon>arrow_forward</mat-icon></a>
+      </div>
+      <button *ngIf="canWrite" class="button primary" (click)="operate('open')"><mat-icon>lock_open</mat-icon>Abrir caja</button>
+      <p *ngIf="!canWrite" class="muted">Tu usuario tiene acceso de consulta.</p>
+      <small>La jornada de Caja es independiente del login. No se cierra automáticamente.</small>
+    </section>
+
+    <ng-container *ngIf="journal as day">
+      <section class="balance-panel" [class.historical]="day.estado === 'CERRADA'">
+        <div class="balance-meta">
+          <div class="balance-title"><h2>{{ day.cajaNombre }}</h2><span class="state" [class.closed]="day.estado === 'CERRADA'">{{ day.estado | titlecase }}</span></div>
+          <div class="meta-line"><mat-icon>schedule</mat-icon><span>Apertura {{ day.fechaApertura | date:'dd/MM/yyyy HH:mm':'-0500' }}</span></div>
+          <div class="meta-line"><mat-icon>person_outline</mat-icon><span>{{ day.usuarioAperturaNombre }}</span></div>
+          <p>Saldo inicial <strong>S/. {{ day.montoApertura | number:'1.2-2' }}</strong></p>
+        </div>
+        <div class="main-balance">
+          <span>{{ day.estado === 'ABIERTA' ? 'Saldo actual esperado' : 'Saldo esperado al contar' }}</span>
+          <strong>S/. {{ day.resumen.saldoEsperado | number:'1.2-2' }}</strong>
+          <small>{{ day.estado === 'ABIERTA' ? 'Apertura + ingresos − egresos' : 'Antes del retiro de cierre' }}</small>
+        </div>
+      </section>
+
+      <div class="summary-grid">
+        <article class="summary-card"><span class="metric-icon"><mat-icon>receipt_long</mat-icon></span><div><span>Ventas en efectivo</span><strong class="positive">+ S/. {{ day.resumen.ventasEfectivo | number:'1.2-2' }}</strong></div></article>
+        <article class="summary-card"><span class="metric-icon"><mat-icon>south_west</mat-icon></span><div><span>Otros ingresos</span><strong class="positive">+ S/. {{ day.resumen.otrosIngresos | number:'1.2-2' }}</strong></div></article>
+        <article class="summary-card"><span class="metric-icon expense"><mat-icon>payments</mat-icon></span><div><span>Gastos en efectivo</span><strong>− S/. {{ day.resumen.gastosEfectivo | number:'1.2-2' }}</strong></div></article>
+        <article class="summary-card"><span class="metric-icon expense"><mat-icon>north_east</mat-icon></span><div><span>Retiros</span><strong>− S/. {{ day.resumen.retiros | number:'1.2-2' }}</strong></div></article>
+      </div>
+      <div class="adjustments" *ngIf="day.resumen.ajustesEntrada || day.resumen.ajustesSalida">
+        <mat-icon>swap_vert</mat-icon>Ajustes y anulaciones:
+        <strong>+ S/. {{ day.resumen.ajustesEntrada | number:'1.2-2' }}</strong>
+        <strong>− S/. {{ day.resumen.ajustesSalida | number:'1.2-2' }}</strong>
+      </div>
+      <div *ngIf="day.resumen.saldoEsperado < 0" class="notice">El saldo esperado es negativo. Revisa los movimientos y los fondos registrados.</div>
+      <div *ngIf="day.diferenciaApertura" class="notice">La apertura difirió del fondo anterior en S/. {{ day.diferenciaApertura | number:'1.2-2' }}. El cierre anterior permanece intacto.</div>
+      <div class="cash-actions" *ngIf="day.estado === 'ABIERTA' && canWrite">
+        <button class="button secondary" (click)="operate('income')"><mat-icon>add</mat-icon>Registrar ingreso</button>
+        <button class="button secondary" (click)="operate('withdrawal')"><mat-icon>remove</mat-icon>Registrar retiro</button>
+        <button class="button primary" (click)="operate('close')"><mat-icon>lock_outline</mat-icon>Cerrar caja</button>
+      </div>
+
+      <section *ngIf="day.estado === 'CERRADA'" class="closing-panel panel">
+        <div class="section-heading"><h2>Resultado del cierre</h2><span class="muted">Solo consulta</span></div>
+        <div class="closing-grid">
+          <div><span>Efectivo contado</span><strong>S/. {{ day.montoContado | number:'1.2-2' }}</strong></div>
+          <div [class.negative]="day.diferencia !== 0"><span>Diferencia del conteo</span><strong>S/. {{ day.diferencia | number:'1.2-2' }}</strong></div>
+          <div><span>Retiro al cierre</span><strong>S/. {{ day.retiroCierre | number:'1.2-2' }}</strong></div>
+          <div class="next-fund"><span>Fondo siguiente</span><strong>S/. {{ day.fondoSiguiente | number:'1.2-2' }}</strong></div>
+        </div>
+        <p class="muted">Cerrada por {{ day.usuarioCierreNombre }} · {{ day.fechaCierre | date:'dd/MM/yyyy HH:mm':'-0500' }}</p>
+        <p *ngIf="day.observacionCierre">{{ day.observacionCierre }}</p>
+      </section>
+      <p *ngIf="day.observacionApertura" class="muted">Observación de apertura: {{ day.observacionApertura }}</p>
+      <app-cash-movements [journalId]="day.id" [refresh]="movementsRefresh" [sourceBusy]="sourceBusy" (openSource)="openSource($event)"></app-cash-movements>
+    </ng-container>
+
+    <section *ngIf="view === 'history'" class="panel history-panel">
+      <div class="section-heading"><h2>Jornadas registradas</h2><span class="muted">{{ total }} registros</span></div>
+      <form class="cash-filters" [formGroup]="filters">
+        <mat-form-field appearance="outline"><mat-label>Fecha desde</mat-label><input matInput type="date" formControlName="fecha_desde"></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Fecha hasta</mat-label><input matInput type="date" formControlName="fecha_hasta"></mat-form-field>
+        <mat-form-field appearance="outline"><mat-label>Estado</mat-label><mat-select formControlName="estado"><mat-option value="">Todos</mat-option><mat-option value="ABIERTA">Abierta</mat-option><mat-option value="CERRADA">Cerrada</mat-option></mat-select></mat-form-field>
+        <button type="button" class="button secondary" (click)="clearFilters()">Limpiar filtros</button>
+      </form>
+      <p *ngIf="filters.invalid" class="negative">Revisa el rango de fechas.</p>
+      <div class="table-scroll">
+        <table mat-table [dataSource]="journals">
+          <ng-container matColumnDef="fecha"><th mat-header-cell *matHeaderCellDef>Jornada</th><td mat-cell *matCellDef="let row"><strong>{{ row.fechaApertura | date:'dd/MM/yyyy':'-0500' }}</strong><small>{{ row.fechaApertura | date:'HH:mm':'-0500' }} → {{ row.fechaCierre ? (row.fechaCierre | date:'HH:mm':'-0500') : 'En curso' }}</small></td></ng-container>
+          <ng-container matColumnDef="responsable"><th mat-header-cell *matHeaderCellDef>Responsable</th><td mat-cell *matCellDef="let row">{{ row.usuarioAperturaNombre }}</td></ng-container>
+          <ng-container matColumnDef="apertura"><th mat-header-cell *matHeaderCellDef>Apertura</th><td mat-cell *matCellDef="let row">S/. {{ row.montoApertura | number:'1.2-2' }}</td></ng-container>
+          <ng-container matColumnDef="ingresos"><th mat-header-cell *matHeaderCellDef>Ingresos</th><td mat-cell *matCellDef="let row" class="positive">S/. {{ row.resumen.ingresos | number:'1.2-2' }}</td></ng-container>
+          <ng-container matColumnDef="egresos"><th mat-header-cell *matHeaderCellDef>Egresos¹</th><td mat-cell *matCellDef="let row">S/. {{ row.resumen.egresos | number:'1.2-2' }}</td></ng-container>
+          <ng-container matColumnDef="esperado"><th mat-header-cell *matHeaderCellDef>Esperado</th><td mat-cell *matCellDef="let row">S/. {{ row.resumen.saldoEsperado | number:'1.2-2' }}</td></ng-container>
+          <ng-container matColumnDef="contado"><th mat-header-cell *matHeaderCellDef>Contado</th><td mat-cell *matCellDef="let row">{{ row.montoContado === null ? '—' : 'S/. ' + (row.montoContado | number:'1.2-2') }}</td></ng-container>
+          <ng-container matColumnDef="diferencia"><th mat-header-cell *matHeaderCellDef>Diferencia</th><td mat-cell *matCellDef="let row" [class.negative]="row.diferencia">{{ row.diferencia === null ? '—' : 'S/. ' + (row.diferencia | number:'1.2-2') }}</td></ng-container>
+          <ng-container matColumnDef="estado"><th mat-header-cell *matHeaderCellDef>Estado</th><td mat-cell *matCellDef="let row"><span class="state" [class.closed]="row.estado === 'CERRADA'">{{ row.estado | titlecase }}</span></td></ng-container>
+          <ng-container matColumnDef="acciones"><th mat-header-cell *matHeaderCellDef></th><td mat-cell *matCellDef="let row"><a class="source-link" [routerLink]="['/almacen/caja/jornadas', row.id]" aria-label="Ver detalle de jornada"><mat-icon>visibility</mat-icon></a></td></ng-container>
+          <tr mat-header-row *matHeaderRowDef="columns"></tr><tr mat-row *matRowDef="let row; columns: columns"></tr>
+          <tr *matNoDataRow><td class="empty-table" [attr.colspan]="columns.length"><mat-icon>history</mat-icon><strong>{{ loading ? 'Cargando jornadas…' : error ? 'No se pudieron cargar las jornadas' : 'No hay jornadas para mostrar' }}</strong><span>{{ filters.dirty ? 'Prueba con otro rango o limpia los filtros.' : 'Las jornadas aparecerán cuando abras Caja por primera vez.' }}</span></td></tr>
+        </table>
+      </div>
+      <p class="table-note">¹ Egresos antes del retiro final de cierre. Puedes consultar ese retiro en el detalle de cada jornada.</p>
+      <mat-paginator [length]="total" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[10, 25, 50]" (page)="page($event)" aria-label="Paginación de jornadas"></mat-paginator>
+    </section>
+  </ng-container>
+</section>

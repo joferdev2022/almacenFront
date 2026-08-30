@@ -1,0 +1,7 @@
+.cash-note{display:grid;gap:6px;padding:13px 15px;margin:0 0 18px;border:1px solid #d9e9df;border-radius:9px;background:#f4faf6;color:#486054;font-size:13px}.close-summary{display:grid;gap:10px;background:#eef7f1;padding:18px;border-radius:10px;margin-bottom:22px}.close-summary>strong{font-size:30px;color:#1b5137}.close-summary button{justify-self:start}.difference{display:grid;grid-template-columns:1fr auto;gap:8px;padding:13px;background:#edf8f0;border-radius:8px;color:#237b45}.difference small{grid-column:1/-1}.difference.negative{background:#fff5df;color:#916012}.payment-fields{border:0;margin:0;padding:0}textarea{resize:vertical;width:100%;font:inherit}.cash-note span{font-size:12px}
+
+.balance-breakdown { margin: 0 0 20px; color: #52657a; font-size: 13px;
+  summary { cursor: pointer; color: #14784b; font-weight: 600; }
+  dl { display: grid; grid-template-columns: 1fr auto; gap: 8px; }
+  dd { margin: 0; text-align: right; font-variant-numeric: tabular-nums; }
+}

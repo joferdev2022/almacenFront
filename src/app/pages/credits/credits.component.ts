@@ -70,50 +70,13 @@ export class CreditsComponent {
       })
   
     }
-    openSwal(val: any) {
-        console.log(val);
-          this.stateBand = val.state === 'cancelado' ? 'credito' : 'cancelado';
-           
-          console.log(this.stateBand);
-          
-          
-          Swal.fire({
-            // title: 'deseas cambiar el estado de esta venta?',
-            text: '¿Deseas cambiar el estado de esta venta?',
-            // text: `deseas cambiar el estado de ${val}`,
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Si',
-            cancelButtonText: 'No'
-          }).then((result) => {
-            console.log(result);
-            
-            if (result.isConfirmed) {
-              // this.changeState(val);
-    
-              this.dataService.updatStateSaleById(val.id, this.stateBand).subscribe({
-                next: (res) => {
-                  Swal.fire({
-                    title: "Hecho!",
-                    text: "El estado de esta venta ha sido cambiado.",
-                    icon: "success"
-                  });
-                  timer(1000).subscribe(() => {
-                    this.loadCreditSales();
-                  });
-                }
-              })
-              
-            }
-    
-          })
-  }
+  openSwal(sale: SaleModel) { this.openDialogUpdate(sale); }
 
   openDialogUpdate(saleCredit: any) {
       console.log(saleCredit);
       
       const dialogRef = this.dialog.open(ModalCreditEditComponent, {
-        data: {saleCredit: saleCredit, operation: "update"}
+        data: {saleCredit: saleCredit, operation: "update"}, width: "540px", maxWidth: "95vw", panelClass: "expense-dialog-panel"
       });
   
       dialogRef.afterClosed().subscribe(result => {

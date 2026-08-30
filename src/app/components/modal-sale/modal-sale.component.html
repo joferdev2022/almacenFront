@@ -1,16 +1,18 @@
 <h2 *ngIf="data.operation == 'create'" mat-dialog-title class="sale-dialog-title">Nueva Venta:</h2>
 <h2 *ngIf="data.operation == 'update'" mat-dialog-title class="sale-dialog-title">Actualizar Venta:</h2>
 <mat-dialog-content class="mat-typography sale-dialog-content">
+  <p *ngIf="error" role="alert" class="sale-error">{{ error }}</p>
   <div class="example-container" >
     <form class="example-form" [formGroup]="saleForm">
       <mat-form-field class="input-name">
-        <mat-label>Vendedor:</mat-label>
+        <mat-label>Vendedor (opcional)</mat-label>
         <mat-select formControlName="nombreVendedor">
-          <!-- <mat-option>None</mat-option> -->
+          <mat-option value="">Sin vendedor</mat-option>
           <mat-option *ngFor="let item of vendedores" [value]="item.aliasVendedor">
-          {{item.aliasVendedor}}
+            {{ item.aliasVendedor }}
           </mat-option>
         </mat-select>
+        <mat-hint>Podrás asignarlo más adelante cuando sea necesario.</mat-hint>
       </mat-form-field>
       <mat-form-field class="input-name">
         <mat-label>Nombre del cliente:</mat-label>
@@ -22,16 +24,48 @@
         <input matInput type="text" placeholder="Opcional" formControlName="direccionCliente">
       </mat-form-field>
       
-      <div class="metodo-pago">
-        <label>Método de Pago:</label>
-        <mat-radio-group formControlName="paymentMhetod" class="payment-options">
-          <mat-radio-button value="efectivo">💵 Efectivo</mat-radio-button>
-          <mat-radio-button value="transferencia">🏦 Transferencia</mat-radio-button>
-          <mat-radio-button value="yape">📱 Yape</mat-radio-button>
-          <mat-radio-button value="plin">📱 Plin</mat-radio-button>
-          <mat-radio-button value="tarjeta">💳 Tarjeta</mat-radio-button>
+      <section class="sale-options-block">
+        <div class="choice-heading">
+          <strong>Estado de la venta</strong>
+          <span>¿La venta se cobra ahora o queda pendiente?</span>
+        </div>
+        <mat-radio-group formControlName="estado" class="state-options" aria-label="Estado de la venta">
+          <mat-radio-button value="cancelado" class="state-card state-paid">
+            <span class="choice-content">
+              <span class="choice-icon" aria-hidden="true">✓</span>
+              <span class="choice-copy"><strong>Pagada</strong><small>Cobro realizado ahora</small></span>
+            </span>
+          </mat-radio-button>
+          <mat-radio-button value="credito" class="state-card state-credit">
+            <span class="choice-content">
+              <span class="choice-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <circle cx="12" cy="12" r="8.5"></circle>
+                  <path d="M12 7.5v5l3.4 2"></path>
+                </svg>
+              </span>
+              <span class="choice-copy"><strong>A crédito</strong><small>Queda pendiente de cobro</small></span>
+            </span>
+          </mat-radio-button>
         </mat-radio-group>
-      </div>
+      </section>
+      <section class="sale-options-block" *ngIf="saleForm.get('estado')?.value === 'cancelado'">
+        <div class="choice-heading">
+          <strong>Método de pago</strong>
+          <span>Solo efectivo afecta la Caja física.</span>
+        </div>
+        <mat-radio-group formControlName="paymentMhetod" class="payment-options" aria-label="Método de pago">
+          <mat-radio-button *ngFor="let method of paymentMethods" [value]="method.toLowerCase()"
+            [class]="'method-card method-' + method.toLowerCase()">
+            <span class="choice-content payment-choice">
+              <span class="payment-icon-frame" aria-hidden="true">
+                <img class="payment-icon" [src]="paymentIcon(method)" alt="" decoding="async">
+              </span>
+              <strong>{{ method | titlecase }}</strong>
+            </span>
+          </mat-radio-button>
+        </mat-radio-group>
+      </section>
       
 
 
@@ -135,7 +169,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions align="end" class="sale-dialog-actions">
-  <button class="btn-cancel" mat-button mat-dialog-close>Cancelar Venta</button>
-  <button *ngIf="data.operation == 'create'" mat-button (click)="onCreate()" [mat-dialog-close]="true" cdkFocusInitial>Guardar Venta</button>
-  <button *ngIf="data.operation == 'update'" mat-button (click)="onUpdate()" [mat-dialog-close]="true" cdkFocusInitial>Guardar Venta</button>
+  <button class="btn-cancel" mat-button mat-dialog-close [disabled]="saving">Cancelar Venta</button>
+  <button *ngIf="data.operation == 'create'" mat-button (click)="onCreate()" [disabled]="saving || saleForm.invalid || !productos.length" cdkFocusInitial>{{ saving ? 'Guardando…' : 'Guardar venta' }}</button>
+  <button *ngIf="data.operation == 'update'" mat-button (click)="onUpdate()" [disabled]="saving || saleForm.invalid || !productos.length" cdkFocusInitial>{{ saving ? 'Guardando…' : 'Guardar venta' }}</button>
 </mat-dialog-actions>

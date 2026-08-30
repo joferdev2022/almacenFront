@@ -128,7 +128,7 @@
               <button type="button" title="Ver detalle" aria-label="Ver gasto" (click)="open(row, 'view')" [disabled]="loading || busyId"><mat-icon aria-hidden="true">visibility</mat-icon></button>
               <button *ngIf="canWrite" type="button" title="Editar gasto" aria-label="Editar gasto" (click)="open(row, 'edit')" [disabled]="loading || busyId || !options"><mat-icon aria-hidden="true">edit</mat-icon></button>
               <button *ngIf="canWrite && row.estado === 'PENDIENTE'" type="button" class="pay-action" title="Marcar como pagado" aria-label="Marcar como pagado" (click)="open(row, 'pay')" [disabled]="loading || busyId || !options"><mat-icon aria-hidden="true">check_circle_outline</mat-icon></button>
-              <button *ngIf="canWrite" type="button" class="delete-action" title="Eliminar gasto" aria-label="Eliminar gasto" (click)="remove(row)" [disabled]="loading || busyId"><mat-icon aria-hidden="true">delete_outline</mat-icon></button>
+              <button *ngIf="canWrite" type="button" class="delete-action" title="Anular gasto" aria-label="Anular gasto" (click)="remove(row)" [disabled]="loading || busyId"><mat-icon aria-hidden="true">delete_outline</mat-icon></button>
             </div>
           </td>
         </ng-container>

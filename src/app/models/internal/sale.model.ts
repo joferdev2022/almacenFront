@@ -1,3 +1,10 @@
+import { OperationAudit } from './cash.model';
+
+
+export interface SalePayment {
+  id?: string; monto: number; metodoPago?: string; fecha: string; fechaPago?: string;
+  tipo?: string; anulado?: boolean;
+}
 
 export class SaleModel {
 
@@ -11,6 +18,19 @@ export class SaleModel {
     totalPrice!: number;
     precioTotalOriginal?: number;
     state!: string;
+    saldoPendiente?: number;
+    anulado = false;
+    motivoAnulacion?: string;
+    auditoria: OperationAudit[] = [];
+    pagos: SalePayment[] = [];
+    get paymentSummary(): string {
+      const receipts = this.pagos.filter(payment => !payment.anulado);
+      if (receipts.length) {
+        return [...new Set(receipts.map(payment => payment.metodoPago || 'Sin registrar'))].join(' / ');
+      }
+      return this.state === 'credito' ? 'Pendiente de cobro' : this.paymentMethod || 'Sin registrar';
+    }
+
     
 
 
@@ -28,6 +48,11 @@ export class SaleModel {
         newObj.totalPrice = obj.precioTotal;
         newObj.precioTotalOriginal = obj.precioTotalOriginal;
         newObj.state = obj.estado;
+        newObj.saldoPendiente = obj.saldoPendiente;
+        newObj.anulado = obj.anulado || false;
+        newObj.motivoAnulacion = obj.motivoAnulacion;
+        newObj.auditoria = obj.auditoria || [];
+        newObj.pagos = obj.pagos || [];
     
         return newObj;
       }

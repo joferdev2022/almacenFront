@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.spec.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/sales-spec"
+  },
+  "files": [
+    "src/app/components/modal-sale/modal-sale.component.spec.ts"
+  ],
+  "include": [
+    "src/**/*.d.ts"
+  ]
+}

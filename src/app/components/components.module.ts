@@ -1,3 +1,4 @@
+import { OperationAuditComponent } from './operation-audit/operation-audit.component';
 import { ModalExpenseComponent } from './modal-expense/modal-expense.component';
 import { ModalPayExpenseComponent } from './modal-pay-expense/modal-pay-expense.component';
 import { ModalInfoExpenseComponent } from './modal-info-expense/modal-info-expense.component';
@@ -28,6 +29,7 @@ import { ModalProductExcelComponent } from './modal-product-excel/modal-product-
 
 @NgModule({
   declarations: [
+    OperationAuditComponent,
     ModalExpenseComponent, ModalPayExpenseComponent, ModalInfoExpenseComponent,
     SidebarComponent,
     NavbarComponent,
@@ -48,6 +50,7 @@ import { ModalProductExcelComponent } from './modal-product-excel/modal-product-
     
   ],
   exports: [
+    OperationAuditComponent,
     SidebarComponent,
     NavbarComponent,
     ModalProductComponentComponent,

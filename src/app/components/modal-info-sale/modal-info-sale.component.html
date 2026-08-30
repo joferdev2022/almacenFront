@@ -3,7 +3,7 @@
     <div>
       <h2>{{data.data.clientName ? data.data.clientName : 'Sin Nombre'}}</h2>
       <div class="subtitle">{{data.data.direccionCliente ? data.data.direccionCliente : 'Sin Direccion'}} - {{data.data.dateSale | date:'dd/MM/yyyy'}}</div>
-      <div class="subtitle">Método de Pago: {{data.data.paymentMethod}}</div>
+      <div class="subtitle">Método de Pago: {{data.data.paymentSummary}}</div>
     </div>
     <div>
       <span class="status completed">
@@ -11,7 +11,7 @@
           <circle cx="8" cy="8" r="8" fill="#d1f7d6"/>
           <path d="M5 8.5l2 2 4-4" stroke="#34c759" stroke-width="2" fill="none" stroke-linecap="round"/>
         </svg>
-        {{data.data.state}}
+        {{ data.data.anulado ? 'Anulado' : data.data.state === 'cancelado' ? 'Pagado' : 'Crédito' }}
       </span>
     </div>
   </div>
@@ -38,10 +38,23 @@
     <hr>
     <div class="summary-row total">
       <span>Total:</span>
-      <span class="summary-total">S/.{{data.data.totalPrice | number:'1.2-2'}}</span>
+      <span class="summary-total">S/.{{(data.data.precioTotalOriginal || data.data.totalPrice) | number:'1.2-2'}}</span>
     </div>
   </div>
 
+  <p *ngIf="data.data.anulado">Venta anulada: {{ data.data.motivoAnulacion }}</p>
+
+  <section *ngIf="data.data.pagos?.length" class="payment-history">
+    <h3>Cobros registrados</h3>
+    <div *ngFor="let payment of data.data.pagos" class="payment-row" [class.voided]="payment.anulado">
+      <div><strong>{{ payment.metodoPago || 'Método sin registrar' | titlecase }}</strong>
+        <small>{{ (payment.fechaPago || payment.fecha) | date:'dd/MM/yyyy':'-0500' }}
+          <span *ngIf="payment.anulado"> · Anulado / corregido</span></small></div>
+      <strong>S/. {{ payment.monto | number:'1.2-2' }}</strong>
+    </div>
+  </section>
+
+  <app-operation-audit [entries]="data.data.auditoria || []"></app-operation-audit>
   <div class="actions">
     <!-- <button class="close-btn">Cerrar</button> -->
     <button class="close-btn" mat-button mat-dialog-close>Cerrar</button>

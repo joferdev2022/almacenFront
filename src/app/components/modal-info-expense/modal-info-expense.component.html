@@ -24,6 +24,8 @@
     <div><dt>Usuario que registró (ID)</dt><dd>{{ expense.usuarioId }}</dd></div>
     <div class="full-width"><dt>ID del gasto</dt><dd>{{ expense.id }}</dd></div>
   </dl>
+  <div *ngIf="expense.anulado" class="error-message">Gasto anulado: {{ expense.motivoAnulacion }}</div>
+  <app-operation-audit [entries]="expense.auditoria || []"></app-operation-audit>
 </mat-dialog-content>
 <mat-dialog-actions class="dialog-actions" align="end">
   <button type="button" class="btn-secondary" (click)="dialogRef.close()"><mat-icon aria-hidden="true">close</mat-icon>Cerrar</button>

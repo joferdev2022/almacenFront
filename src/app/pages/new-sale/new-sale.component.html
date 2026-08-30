@@ -3,11 +3,28 @@
   <mat-card>
     <mat-card-content class="mat-typography">
       <div class="example-container">
+        <p *ngIf="error" role="alert" class="sale-error">{{ error }}</p>
         <form class="example-form" [formGroup]="saleForm">
+          <mat-form-field>
+            <mat-label>Estado</mat-label>
+            <mat-select formControlName="estado">
+              <mat-option value="cancelado">Pagada</mat-option>
+              <mat-option value="credito">A crédito</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Método de pago</mat-label>
+            <mat-select formControlName="paymentMhetod">
+              <mat-option *ngFor="let method of paymentMethods" [value]="method.toLowerCase()">
+                {{ method | titlecase }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
           <!-- Vendedor -->
           <mat-form-field class="input-name">
-            <mat-label>Vendedor:*</mat-label>
+            <mat-label>Vendedor (opcional)</mat-label>
             <mat-select formControlName="nombreVendedor">
+              <mat-option value="">Sin vendedor</mat-option>
               <mat-option *ngFor="let item of vendedores" [value]="item.aliasVendedor">
                 {{item.aliasVendedor}}
               </mat-option>
@@ -156,7 +173,7 @@
 
     <mat-card-actions align="end">
       <button class="btn-cancel" mat-button routerLink="/pages/ventas">Cancelar Venta</button>
-      <button mat-button (click)="onCreate()" cdkFocusInitial class="btn-save">Guardar Venta</button>
+      <button mat-button (click)="onCreate()" [disabled]="saving || saleForm.invalid || !productos.length" cdkFocusInitial class="btn-save">Guardar Venta</button>
     </mat-card-actions>
   </mat-card>
 </div>

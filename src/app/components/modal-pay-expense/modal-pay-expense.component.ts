@@ -1,3 +1,6 @@
+import { HttpErrorResponse } from '@angular/common/http';
+import Swal from 'sweetalert2';
+import { CASH_CLOSED_ALERT, isCashClosedError, newOperationId } from 'src/app/shared/cash.utils';
 import { Component, Inject, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -17,12 +20,22 @@ export class ModalPayExpenseComponent implements OnDestroy {
     fechaPago: this.fb.nonNullable.control(expenseToday(), [Validators.required, expenseDateValidator])
   });
   private readonly destroy$ = new Subject<void>();
+  readonly operationId = newOperationId();
   saving = false;
   error = '';
 
   constructor(private fb: FormBuilder, private dataService: DataService,
     public dialogRef: MatDialogRef<ModalPayExpenseComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { expense: ExpenseModel; options: ExpenseOptions }) {}
+
+  private handleSaveError(error: HttpErrorResponse): void {
+    this.error = expenseError(error);
+    if (!isCashClosedError(error)) { return; }
+    void Swal.fire({
+      title: 'Caja cerrada', text: CASH_CLOSED_ALERT, icon: 'warning',
+      confirmButtonText: 'Entendido', confirmButtonColor: '#26874a'
+    });
+  }
 
   save(): void {
     if (this.saving) { return; }
@@ -34,13 +47,13 @@ export class ModalPayExpenseComponent implements OnDestroy {
     this.dialogRef.disableClose = true;
     this.dataService.payExpense(this.data.expense.id, {
       metodoPago: value.metodoPago!, fechaPago: value.fechaPago
-    }).pipe(takeUntil(this.destroy$), finalize(() => {
+    }, this.operationId).pipe(takeUntil(this.destroy$), finalize(() => {
       this.saving = false;
       this.form.enable({ emitEvent: false });
       this.dialogRef.disableClose = false;
     })).subscribe({
       next: () => this.dialogRef.close(true),
-      error: error => this.error = expenseError(error)
+      error: error => this.handleSaveError(error)
     });
   }
 

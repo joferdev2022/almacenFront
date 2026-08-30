@@ -1,3 +1,6 @@
+import { HttpErrorResponse } from '@angular/common/http';
+import { finalize } from 'rxjs';
+import { CASH_CLOSED_ALERT, isCashClosedError, newOperationId, operationError } from 'src/app/shared/cash.utils';
 import { Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -19,6 +22,10 @@ export class ModalSaleComponent implements OnInit{
   public saleForm!: FormGroup;
 
   public totalPriceView = 0;
+  readonly operationId = newOperationId();
+  saving = false;
+  error = '';
+  paymentMethods: string[] = [];
 
   // selected = 'option2';
 
@@ -58,7 +65,7 @@ export class ModalSaleComponent implements OnInit{
       paginatorIntl.itemsPerPageLabel = 'items por página';
 
       this.saleForm = this.fb.group({
-      nombreVendedor: ['', Validators.required],
+      nombreVendedor: [''],
       nombreCliente: ['',],
       direccionCliente: ['', ],
       paymentMhetod: ['efectivo', Validators.required],
@@ -67,10 +74,16 @@ export class ModalSaleComponent implements OnInit{
       estado: ['cancelado', Validators.required],
       local: [this.local]
     });
+    this.saleForm.controls['estado'].valueChanges.subscribe(state => this.configurePaymentMethod(state));
+    this.configurePaymentMethod(this.saleForm.controls['estado'].value);
               }
   
 
   ngOnInit(): void {
+    this.dataService.loadExpenseOptions().subscribe({
+      next: response => this.paymentMethods = response.data.metodosPago.filter(method => method !== 'TARJETA'),
+      error: error => this.error = operationError(error)
+    });
 
     // this.addProducto();
 
@@ -78,15 +91,37 @@ export class ModalSaleComponent implements OnInit{
 
   }
 
+  private readonly paymentIcons: Record<string, string> = {
+    EFECTIVO: 'assets/icons/payment-methods/efectivo.png',
+    YAPE: 'assets/icons/payment-methods/yape.png',
+    PLIN: 'assets/icons/payment-methods/plin.png',
+    TRANSFERENCIA: 'assets/icons/payment-methods/transferencia.png',
+    OTRO: 'assets/icons/payment-methods/otro.png'
+  };
+
+  paymentIcon(method: string): string {
+    return this.paymentIcons[method] || this.paymentIcons['OTRO'];
+  }
+
+  private configurePaymentMethod(state: string): void {
+    const method = this.saleForm.controls['paymentMhetod'];
+    if (state === 'cancelado') {
+      method.setValidators(Validators.required);
+      if (!method.value) { method.setValue('efectivo', { emitEvent: false }); }
+    } else {
+      method.clearValidators();
+      method.setValue(null, { emitEvent: false });
+    }
+    method.updateValueAndValidity({ emitEvent: false });
+  }
+
   loadVendedores() {
     this.dataService.loadAllSellers(1, 100, this.local).subscribe({
       next: (res:any) => {
-        console.log(res);
         this.vendedores = res.data;
         
       },
       error: (err) => {
-        console.log(err);
         
       }
     })
@@ -95,7 +130,6 @@ export class ModalSaleComponent implements OnInit{
   loadAllProducts() {
     this.dataService.loadProducts(this.currentPage, this.itemsPerPage, this.local).subscribe({
       next: (res) => {
-        console.log(res);
         
         this.products = res.data;
         this.dataSource = new MatTableDataSource(this.products);
@@ -104,11 +138,9 @@ export class ModalSaleComponent implements OnInit{
         this.totalProducts = res.total;
         this.itemsPerPage = res.xpage;
         this.currentPage = res.page! ;
-        // console.log(res);
       },
       error: (e) => {
         // this.openConfirmationModal(Default.CONFIRM_ERROR);
-        console.log(e);
       }
     })
 
@@ -119,10 +151,8 @@ export class ModalSaleComponent implements OnInit{
   }
 
   addProducto(productItem:any) {
-    console.log(productItem);
-    console.log(productItem.stock);
+    if (this.saving) { return; }
     if(productItem.stock <= 0) {
-      console.log("no hay stock");
       alert("No hay stock disponible");
       return;
     }
@@ -153,18 +183,18 @@ export class ModalSaleComponent implements OnInit{
 
     this.productos.push(productoForm);
     this.updatePrecioTotal();
-    console.log(this.productos.value);
-    console.log(productItem);
     
     
   }
 
   removeProducto(index: number) {
+    if (this.saving) { return; }
     this.productos.removeAt(index);
     this.updatePrecioTotal();
   }
 
   incrementCantidad(index: number) {
+    if (this.saving) { return; }
     
     
     const control = this.productos.at(index).get('cantidad')!;
@@ -184,6 +214,7 @@ export class ModalSaleComponent implements OnInit{
 
   // Disminuye la cantidad de un producto
   decrementCantidad(index: number) {
+    if (this.saving) { return; }
     const control = this.productos.at(index).get('cantidad')!;
     if (control.value > 1) {
       control.setValue(control.value - 1);
@@ -203,41 +234,41 @@ export class ModalSaleComponent implements OnInit{
 
     this.totalPriceView = total;
 
-    console.log(total);
     
   }
 
-  onCreate() {
+  private handleSaveError(error: HttpErrorResponse): void {
+    this.error = operationError(error);
+    if (!isCashClosedError(error)) { return; }
+    void Swal.fire({
+      title: 'Caja cerrada', text: CASH_CLOSED_ALERT, icon: 'warning',
+      confirmButtonText: 'Entendido', confirmButtonColor: '#26874a'
+    });
+  }
 
-    
-    // this.saleForm.patchValue({ local: this.local });
-    console.log(this.saleForm.value);
-    // console.log();
-    
-    if(true) {
-      const saleData = this.saleForm.value;
-      const saleRequest = SaleRequest.createFromObject(saleData);
-      console.log(saleRequest);
-      
-      this.dataService.saveSale(saleRequest).subscribe({
-        next: (res) => {
-          console.log(res);
-          Swal.fire({
-                        title: "Hecho!",
-                        text: "La venta se ha realizado correctamente.",
-                        icon: "success"
-                      });
-        },
-        error: (e) => {
-          console.log(e);
-          Swal.fire({
-                        title: "ERROR!",
-                        text: "La venta no se ha pudo realizar.",
-                        icon: "error"
-                      });
-        }
-      })
+  onCreate() {
+    if (this.saving) { return; }
+    if (this.saleForm.invalid || !this.productos.length || this.totalPriceView <= 0) {
+      this.saleForm.markAllAsTouched();
+      this.error = 'Agrega al menos un producto con un importe válido.';
+      return;
     }
+    const request = SaleRequest.createFromObject(this.saleForm.getRawValue());
+    this.saving = true;
+    this.error = '';
+    this.saleForm.disable({ emitEvent: false });
+    this.dialogRef.disableClose = true;
+    this.dataService.saveSale(request, this.operationId).pipe(finalize(() => {
+      this.saving = false;
+      this.saleForm.enable({ emitEvent: false });
+      this.dialogRef.disableClose = false;
+    })).subscribe({
+      next: () => {
+        void Swal.fire({ title: 'Venta registrada', icon: 'success', timer: 1400, showConfirmButton: false });
+        this.dialogRef.close(true);
+      },
+      error: error => this.handleSaveError(error)
+    });
   }
 
   onUpdate() {
