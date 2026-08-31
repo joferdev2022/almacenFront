@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -7,24 +7,31 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent {
-  @Output() sideNavToggled = new EventEmitter<boolean>();
-  menuStatus: boolean = false;
-  user: any;
+  @Input() navigationExpanded = true;
+  @Input() isMobile = false;
+  @Output() sideNavToggled = new EventEmitter<void>();
+  user = '';
 
-  constructor(private authService: AuthService) { 
-    this.user = JSON.parse(localStorage.getItem('user')!) ? JSON.parse(localStorage.getItem('user')!) : '';
+  constructor(private authService: AuthService) {
+    try {
+      const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
+      this.user = typeof storedUser === 'string' ? storedUser : '';
+    } catch {
+      this.user = '';
+    }
   }
 
-
-  sideNavToggle() {
-    this.menuStatus = !this.menuStatus;
-    this.sideNavToggled.emit(this.menuStatus);
-    console.log(this.menuStatus);
-    
+  get accountLabel(): string {
+    return this.user.replace(/^local\s*(\d+)$/i, 'Local $1') || 'Mi cuenta';
   }
 
-  logout() {
+  get toggleLabel(): string {
+    return this.isMobile
+      ? (this.navigationExpanded ? 'Cerrar menú' : 'Abrir menú')
+      : (this.navigationExpanded ? 'Contraer menú' : 'Expandir menú');
+  }
+
+  logout(): void {
     this.authService.logout();
   }
-
 }

@@ -1,35 +1,28 @@
-<!-- <nav class="navbar navbar-expand-lg bg-body-tertiary px-2"> -->
-<nav class="header">
-    <div class="logo">
-      <!-- <img src="../../../assets/ima/.png" alt=""> -->
-      <img src="../../../assets/images/logovilagronobg.png" alt="">
-      <h2><span class="">VIL</span><span class="danger">AGRO</span></h2>
-      <!-- <h2><span class="vilagro-softcolor">VIL</span><span class="vilagro-softcolor">AGRO</span></h2> -->
-      <div class="buton-toggle" (click)="sideNavToggle()">
-        <mat-icon>menu</mat-icon>
-      </div>
-    </div>
-    <!-- <div class="side-nav-button p-2 me-3 text-light" (click)="sideNavToggle()">
-        
-            <mat-icon>format_align_center</mat-icon>
-          
-    </div> -->
-    <div class="profile">
-      <div class="info">
-        <p class="text-muted"><b>{{user}}</b></p>
-        <!-- <small class="text-muted">Admin</small> -->
-      </div>
-      <!-- <mat-icon>person</mat-icon> -->
-      <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-        <mat-icon>person</mat-icon>
-      </button>
-      <mat-menu #menu="matMenu">
-        
-        <button mat-menu-item (click)="logout()">
-          <mat-icon>logout</mat-icon>
-          <span>Cerrar Sesión</span>
-        </button>
-      </mat-menu>
-    </div>
+<header class="header">
+  <div class="brand-controls">
+    <a class="logo" routerLink="/almacen/inicio" aria-label="VILAGRO, ir al inicio">
+      <img src="assets/images/logovilagronobg.png" alt="" width="40" height="40">
+      <span class="brand-name">VIL<span class="danger">AGRO</span></span>
+    </a>
+    <button class="toggle-button" type="button" (click)="sideNavToggled.emit()"
+      [attr.aria-label]="toggleLabel" [title]="toggleLabel"
+      [attr.aria-expanded]="navigationExpanded" aria-controls="primary-navigation">
+      <mat-icon>{{ isMobile && navigationExpanded ? 'close' : 'menu' }}</mat-icon>
+    </button>
+  </div>
 
-</nav>
+  <button type="button" class="account-button" [matMenuTriggerFor]="accountMenu"
+    #accountTrigger="matMenuTrigger" [class.is-open]="accountTrigger.menuOpen"
+    [attr.aria-label]="'Opciones de sesión de ' + accountLabel">
+    <span class="account-avatar"><mat-icon>storefront</mat-icon></span>
+    <span class="account-copy"><span class="account-caption">Sesión activa</span><strong>{{ accountLabel }}</strong></span>
+    <mat-icon class="account-chevron">expand_more</mat-icon>
+  </button>
+
+  <mat-menu #accountMenu="matMenu" xPosition="before">
+    <button mat-menu-item (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      <span>Cerrar sesión</span>
+    </button>
+  </mat-menu>
+</header>

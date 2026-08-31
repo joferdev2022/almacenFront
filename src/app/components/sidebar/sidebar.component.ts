@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { canReadReports } from '../../shared/report.utils';
 
 @Component({
   selector: 'app-sidebar',
@@ -6,13 +7,9 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./sidebar.component.scss']
 })
 export class SidebarComponent {
-
-  @Input() sideNavStatus: boolean = false;
-  collapse = false;
-  public user: any;
-  // public user: any;
-
-  constructor() { 
-    
-  }
+  get showReports(): boolean { return canReadReports(); }
+  @Input() sideNavStatus = false;
+  @Input() isMobile = false;
+  @Output() navigationSelected = new EventEmitter<void>();
+  @Output() closeRequested = new EventEmitter<void>();
 }

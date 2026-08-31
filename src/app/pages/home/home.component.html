@@ -91,6 +91,7 @@
     <div class="table-reports">
         <div class="recent-orders">
             <h2>PRODUCTOS MÁS VENDIDOS</h2>
+            <div class="table-scroll" role="region" tabindex="0" aria-label="Resumen de productos, tabla desplazable">
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 
                 <!--- Note that these columns can be defined in any order.
@@ -117,9 +118,11 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
             </table>
+            </div>
         </div>
         <div class="low-stock">
             <h2>BAJOS EN STOCK</h2>
+            <div class="table-scroll" role="region" tabindex="0" aria-label="Resumen de productos, tabla desplazable">
             <table mat-table [dataSource]="dataSource2" class="mat-elevation-z8">
 
                 <!--- Note that these columns can be defined in any order.
@@ -146,6 +149,7 @@
                 <tr mat-header-row *matHeaderRowDef="displayedColumns2"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns2;"></tr>
             </table>
+            </div>
         </div>
     </div>
 </div>

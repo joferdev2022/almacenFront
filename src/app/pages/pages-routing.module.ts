@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { PagesComponent } from './pages.component';
 import { SalesModule } from './sales/sales.module';
 import { authGuard } from '../guards/auth.guard';
+import { reportsGuard } from '../guards/reports.guard';
 
 
 const routes: Routes = [
@@ -22,8 +23,11 @@ const routes: Routes = [
       },
       {
         path: 'graficos',
-        // component: 
-        loadChildren: () => import('./charts/charts.module').then(m => m.ChartsModule)
+        redirectTo: 'reportes', pathMatch: 'full'
+      },
+      {
+        path: 'reportes', canActivate: [reportsGuard],
+        loadChildren: () => import('./reports/reports.module').then(m => m.ReportsModule)
       },
       {
         path: 'productos',

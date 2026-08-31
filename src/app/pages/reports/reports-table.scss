@@ -1,0 +1,22 @@
+.table-card { background: #fff; border: 1px solid #e1e8ee; border-radius: 12px; overflow: hidden; }
+.table-card .section-heading { padding: 20px 20px 0; }
+.table-scroll { overflow-x: auto; }
+.table-scroll:focus-visible { outline: 2px solid #168344; outline-offset: -2px; }
+table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+th,td { padding: 14px 16px; border-bottom: 1px solid #edf1f5; vertical-align: middle; }
+thead { background: #f7f9fc; color: #52657b; }
+th { font-weight: 600; white-space: nowrap; }
+th small { font-weight: 400; color: #7a8798; }
+.numeric { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.product-cell { min-width: 180px; max-width: 300px; overflow-wrap: anywhere; }
+.product-cell strong,.product-cell small { display: block; }
+.product-cell strong { font-weight: 500; }
+.product-cell small { font-size: 10px; margin-top: 5px; color: #7a8798; }
+.amount { color: #167740; font-weight: 600; }
+tbody tr:hover { background: #f8fbfa; }
+tfoot { background: #f1faf4; color: #166534; font-weight: 600; }
+.empty-state { padding: 45px 20px; text-align: center; }
+.empty-state mat-icon { color: #8596aa; width: 40px; height: 40px; font-size: 40px; }
+.empty-state h3 { font-size: 17px; margin: 10px 0; }
+.empty-state p { font-size: 13px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }

@@ -1,0 +1,68 @@
+<section class="reports" [attr.aria-busy]="loading">
+  <header class="page-header">
+    <div class="page-title"><span class="page-icon"><mat-icon>query_stats</mat-icon></span>
+      <div><h1>Reportes de ventas</h1><p>Productos vendidos, evolución mensual y descarga Excel.</p></div>
+    </div>
+    <button type="button" class="primary" (click)="download()" [disabled]="!canDownload">
+      <mat-icon>download</mat-icon>{{ exporting ? 'Generando Excel…' : 'Descargar Excel' }}
+    </button>
+  </header>
+
+  <form class="filter-card" [formGroup]="filters" (ngSubmit)="applyFilters()">
+    <div class="section-heading"><h2>Filtrar reporte</h2><button type="button" class="text-button" (click)="resetFilters()" [disabled]="exporting">Restablecer año actual</button></div>
+    <div class="filters">
+      <label>Desde<input type="date" formControlName="fecha_desde" min="1900-01-01" aria-describedby="report-filter-error"></label>
+      <label>Hasta<input type="date" formControlName="fecha_hasta" min="1900-01-01" aria-describedby="report-filter-error"></label>
+      <label class="product-filter">Producto<input type="search" formControlName="producto" maxlength="120" placeholder="Nombre o ID histórico" aria-describedby="report-filter-hint"></label>
+      <label>Categoría actual<select formControlName="categoria"><option value="">Todas las categorías</option>
+        <option *ngFor="let category of categories" [value]="category">{{ category }}</option>
+        <option value="__sin_categoria__">Sin categoría disponible</option></select></label>
+      <label>Ventas a considerar<select formControlName="ventas"><option value="todas">Todas (incluye crédito)</option><option value="pagadas">Solo pagadas</option></select></label>
+      <button type="submit" class="primary" [disabled]="filters.invalid || exporting"><mat-icon>filter_alt</mat-icon>Aplicar</button>
+    </div>
+    <p id="report-filter-hint" class="hint">Fechas inclusivas, hora de Lima. El producto se busca también en el historial de ventas. Máximo 60 meses.</p>
+    <p id="report-filter-error" class="form-error" *ngIf="filters.invalid && filters.touched" role="alert">
+      {{ filters.hasError('range') ? 'La fecha desde no puede ser posterior a la fecha hasta.' : filters.hasError('period') ? 'Selecciona hasta 60 meses, desde el año 1900.' : 'Completa ambas fechas con valores válidos.' }}
+    </p>
+    <p class="pending-note" *ngIf="pendingFilters" role="status">Tienes filtros sin aplicar. Pulsa Aplicar para actualizar el reporte y habilitar su descarga.</p>
+  </form>
+
+  <div *ngIf="error" class="error-message" role="alert"><mat-icon>error_outline</mat-icon><span>{{ error }}</span>
+    <button type="button" class="text-button" (click)="applyFilters()">Reintentar</button></div>
+  <div *ngIf="downloadError" class="error-message" role="alert">{{ downloadError }}</div>
+  <div class="loading" *ngIf="loading" role="status"><mat-progress-bar mode="indeterminate"></mat-progress-bar><span>Cargando reporte…</span></div>
+
+  <ng-container *ngIf="report as result">
+    <p class="period">Período aplicado: {{ result.filtros.fecha_desde | date:'dd/MM/yyyy' }} – {{ result.filtros.fecha_hasta | date:'dd/MM/yyyy' }} · Local {{ result.local }}</p>
+    <div class="summary-grid">
+      <article class="sales-total"><div><span>Importe vendido</span><mat-icon>payments</mat-icon></div><strong>S/ {{ result.resumen.importeVendido | number:'1.2-2' }}</strong><small>{{ result.filtros.ventas === 'pagadas' ? 'Solo ventas pagadas' : 'Incluye ventas a crédito' }}</small></article>
+      <article><div><span>Unidades vendidas</span><mat-icon>inventory_2</mat-icon></div><strong>{{ result.resumen.unidadesVendidas | number:'1.0-3' }}</strong><small>Cantidades del período</small></article>
+      <article><div><span>Número de ventas</span><mat-icon>receipt_long</mat-icon></div><strong>{{ result.resumen.numeroVentas | number:'1.0-0' }}</strong><small>Ventas con productos coincidentes</small></article>
+    </div>
+    <p class="hint" *ngFor="let notice of result.avisos">{{ notice }}</p>
+
+    <div class="charts-grid">
+      <article class="chart-card"><app-report-chart title="Importe vendido por mes" [data]="salesChart" type="line" [currency]="true"></app-report-chart></article>
+      <article class="chart-card"><app-report-chart title="Unidades vendidas por mes" [data]="unitsChart" type="bar"></app-report-chart></article>
+      <article class="chart-card ranking"><div class="ranking-filter"><label for="ranking-order">Ordenar productos por</label>
+        <select id="ranking-order" [value]="rankingMetric" (change)="rankingMetric = $any($event.target).value"><option value="cantidad">Cantidad vendida</option><option value="importe">Importe vendido</option></select></div>
+        <app-report-chart title="Top 10 productos" [data]="rankingData" type="horizontal" [currency]="rankingMetric === 'importe'"></app-report-chart>
+      </article>
+    </div>
+
+    <article class="table-card">
+      <div class="section-heading"><div><h2>Resumen mensual por producto</h2><p class="hint">{{ result.totalFilas | number }} filas · El Excel incluye todas las filas, organizadas en hojas por mes y año.</p></div></div>
+      <div class="empty-state" *ngIf="!result.totalFilas"><mat-icon>search_off</mat-icon><h3>Sin ventas para estos filtros</h3><p>Prueba otro período o cambia el producto. Las ventas anuladas no se incluyen.</p></div>
+      <div class="table-scroll" *ngIf="result.totalFilas" tabindex="0" role="region" aria-label="Tabla de ventas mensuales, desplazable horizontalmente">
+        <table><caption class="sr-only">Productos vendidos por mes</caption>
+          <thead><tr><th scope="col">Mes</th><th scope="col">Producto / ID</th><th scope="col">Categoría actual</th><th scope="col" class="numeric">Cantidad</th><th scope="col" class="numeric">Venta promedio<br><small>ponderado · S/</small></th><th scope="col" class="numeric">Importe vendido<br><small>S/</small></th></tr></thead>
+          <tbody><tr *ngFor="let row of result.filas"><td>{{ monthLabel(row.mes) }}</td><td class="product-cell"><strong>{{ row.producto }}</strong><small [title]="row.productoId">{{ row.productoId || 'Sin ID histórico' }}</small></td>
+            <td>{{ row.categoriaActual || 'No disponible' }}</td><td class="numeric">{{ row.cantidad | number:'1.0-3' }}</td><td class="numeric">{{ row.precioVentaPromedio | number:'1.2-4' }}</td><td class="numeric amount">{{ row.importeVendido | number:'1.2-2' }}</td>
+            </tr></tbody>
+          <tfoot><tr><th colspan="3" scope="row">Total de todos los resultados</th><td class="numeric">{{ result.resumen.unidadesVendidas | number:'1.0-3' }}</td><td></td><td class="numeric">{{ result.resumen.importeVendido | number:'1.2-2' }}</td></tr></tfoot>
+        </table>
+      </div>
+      <mat-paginator *ngIf="result.totalFilas" [length]="result.totalFilas" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[10,25,50,100]" [disabled]="loading || exporting || pendingFilters" showFirstLastButtons (page)="changePage($event)" aria-label="Páginas del reporte"></mat-paginator>
+    </article>
+  </ng-container>
+</section>

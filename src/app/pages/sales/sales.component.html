@@ -62,7 +62,9 @@
             <!-- <button *ngIf="this.permissions == 1 ? true : false" class="btn-add" (click)="openWindowSale()">Nueva venta</button>  -->
         </div>
     </div>
-    <div class="mat-elevation-z8">
+    <p class="table-scroll-hint"><mat-icon>swipe</mat-icon> Desliza la tabla para ver más columnas</p>
+    <div class="mat-elevation-z8 data-table-card">
+        <div class="table-scroll" role="region" tabindex="0" aria-label="Tabla de ventas: desplaza horizontalmente para ver todas las columnas">
         <table mat-table [dataSource]="dataSource" matSort>
           <!-- nameClient Column -->
           <ng-container matColumnDef="clientName">
@@ -139,7 +141,8 @@
             <td class="mat-cell" colspan="4">No data matching the filter "{{input.value}}"</td>
           </tr>
         </table>
+        </div>
       
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Select page of users"></mat-paginator>
+        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Paginación de ventas"></mat-paginator>
     </div>
 </div>

@@ -1,4 +1,5 @@
 import { newOperationId } from '../shared/cash.utils';
+import { SalesReportFilters, SalesReportResponse } from '../models/internal/report.model';
 import { CashCurrent, CashJournal, CashMovement, CashPage, CashResponse, CashOpeningRequest, CashMovementRequest, CashClosingRequest } from '../models/internal/cash.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ExpenseModel, ExpenseOptions, ExpenseProviderPage } from '../models/internal/expense.model';
@@ -28,6 +29,23 @@ const base_url = "https://almacenback.onrender.com/api";
   providedIn: 'root'
 })
 export class DataService {
+
+  loadSalesReport(filters: SalesReportFilters, page = 1, xpage = 25): Observable<SalesReportResponse> {
+    const params = this.reportParams(filters).set('page', page).set('xpage', xpage);
+    return this.http.get<SalesReportResponse>(`${base_url}/reports/sales`, { params });
+  }
+
+  downloadSalesReport(filters: SalesReportFilters): Observable<Blob> {
+    return this.http.get(`${base_url}/reports/sales/excel`, { params: this.reportParams(filters), responseType: 'blob' });
+  }
+
+  private reportParams(filters: SalesReportFilters): HttpParams {
+    let params = new HttpParams();
+    for (const key of ['fecha_desde', 'fecha_hasta', 'producto', 'categoria', 'ventas'] as const) {
+      if (filters[key]) { params = params.set(key, filters[key]); }
+    }
+    return params;
+  }
 
 
   loadExpenseOptions(): Observable<ExpenseApiResponse<ExpenseOptions>> {

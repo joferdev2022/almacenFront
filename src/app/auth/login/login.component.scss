@@ -35,3 +35,10 @@
 .button-login {
     background-color: #324c05;
 }
+@media (max-width: 768px) {
+  .login-register { position: relative; min-height: 100vh; min-height: 100dvh; height: auto; padding: 0; }
+  .login-sidebar .login-box { position: relative; width: 100%; min-height: 100vh; min-height: 100dvh; height: auto; border: 0; }
+  .login-box .card-body { width: 100%; max-width: 440px; margin: auto; padding: 24px 20px; }
+  .logo { width: min(200px, 60vw); height: auto; }
+  .button-login { min-height: 44px; width: 100%; }
+}

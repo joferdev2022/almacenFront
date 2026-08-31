@@ -1,0 +1,29 @@
+:host { display: block; min-width: 0; }
+figure { margin: 0; }
+h2 { margin: 0; color: #24364c; font-size: 16px; font-weight: 600; }
+figcaption p { margin: 6px 0 16px; color: #728198; font-size: 12px; }
+.plot-scroll { overflow-x: auto; width: 100%; }
+.plot-scroll:focus-visible { outline: 2px solid #168344; outline-offset: -2px; }
+svg { width: 100%; display: block; max-height: 290px; }
+.grid-line { stroke: #e6edf3; stroke-dasharray: 3 4; }
+.tick { fill: #728198; font: 11px Roboto,sans-serif; }
+.year { fill: #8c99aa; font-size: 10px; }
+.trend { fill: none; stroke: #168344; stroke-width: 2.5; stroke-linejoin: round; }
+.point { fill: white; stroke: #168344; stroke-width: 2; }
+.column { fill: #579acb; }
+.column:hover,.column:focus { fill: #2f78af; }
+.point:focus { fill: #b8ebc9; outline: none; }
+.ranking-list { clear: both; list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px 32px; }
+.ranking-list li { display: flex; gap: 12px; min-width: 0; }
+.rank { width: 25px; height: 25px; display: grid; place-items: center; flex-shrink: 0; background: #eff7f2; color: #19804b; border-radius: 7px; font-size: 11px; }
+.rank-product { flex: 1; min-width: 0; }
+.rank-label { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; font-size: 13px; }
+.product-name { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: #33475f; }
+.rank-label strong { white-space: nowrap; font-variant-numeric: tabular-nums; color: #167740; }
+.bar-track { margin-top: 8px; height: 7px; background: #edf4ef; border-radius: 4px; overflow: hidden; }
+.bar-track span { display: block; height: 100%; background: #58a777; border-radius: inherit; }
+.rank-product small { font-size: 9px; color: #7b899a; overflow-wrap: anywhere; }
+.no-data { padding: 36px 0; text-align: center; font-size: 13px; }
+.scroll-hint { margin: 10px 0 0; color: #728198; font-size: 11px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; }
+@media(max-width:750px) { .ranking-list { grid-template-columns: 1fr; } }

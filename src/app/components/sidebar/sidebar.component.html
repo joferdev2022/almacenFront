@@ -1,40 +1,35 @@
 <div class="side-nav-content">
-    <div class="nav-list" [ngClass]="{'nav-list-open': sideNavStatus}">
-        <a  routerLink="./inicio" routerLinkActive="active">
-            <mat-icon fontIcon="grid_view"></mat-icon>
-            <h3>Dashboard</h3>
-        </a>
-        <a  routerLink="./graficos" routerLinkActive="active">
-            <mat-icon fontIcon="area_chart"></mat-icon>
-            <h3>Gráficos</h3>
-        </a>
-        <a  routerLink="./productos" routerLinkActive="active">
-            <mat-icon fontIcon="shopping_cart"></mat-icon>
-            <h3>Productos</h3>
-        </a>
-        <a routerLink="./ventas" routerLinkActive="active">
-            <mat-icon fontIcon="receipt_long"></mat-icon>
-            <h3>Ventas</h3>
-        </a>
-        <a routerLink="./creditos" routerLinkActive="active">
-            <mat-icon fontIcon="credit_score"></mat-icon>
-            <h3>Créditos</h3>
-        </a>
-        <a routerLink="./caja" routerLinkActive="active">
-            <mat-icon fontIcon="point_of_sale"></mat-icon>
-            <h3>Caja</h3>
-        </a>
-        <a routerLink="./gastos" routerLinkActive="active">
-            <mat-icon fontIcon="payments"></mat-icon>
-            <h3>Gastos</h3>
-        </a>
-        <a routerLink="./vendedores" routerLinkActive="active">
-            <mat-icon fontIcon="person_pin"></mat-icon>
-            <h3>Vendedores</h3>
-        </a>
-        <a routerLink="./proveedores" routerLinkActive="active">
-            <mat-icon fontIcon="factory"></mat-icon>
-            <h3>Proveedores</h3>
-        </a>
-    </div>
+  <div *ngIf="isMobile" class="mobile-heading">
+    <span>Navegación</span>
+    <button type="button" cdkFocusInitial aria-label="Cerrar menú" (click)="closeRequested.emit()"><mat-icon>close</mat-icon></button>
+  </div>
+  <nav class="nav-list" [class.nav-list-open]="sideNavStatus" aria-label="Secciones">
+    <a routerLink="./inicio" routerLinkActive="active" ariaCurrentWhenActive="page" aria-label="Dashboard" title="Dashboard" (click)="navigationSelected.emit()">
+      <mat-icon fontIcon="grid_view"></mat-icon><h3>Dashboard</h3>
+    </a>
+    <a *ngIf="showReports" routerLink="./reportes" routerLinkActive="active" ariaCurrentWhenActive="page" aria-label="Reportes" title="Reportes de ventas" (click)="navigationSelected.emit()">
+      <mat-icon fontIcon="area_chart"></mat-icon><h3>Reportes</h3>
+    </a>
+    <a routerLink="./productos" routerLinkActive="active" ariaCurrentWhenActive="page" aria-label="Productos" title="Productos" (click)="navigationSelected.emit()">
+      <mat-icon fontIcon="shopping_cart"></mat-icon><h3>Productos</h3>
+    </a>
+    <a routerLink="./ventas" routerLinkActive="active" ariaCurrentWhenActive="page" aria-label="Ventas" title="Ventas" (click)="navigationSelected.emit()">
+      <mat-icon fontIcon="receipt_long"></mat-icon><h3>Ventas</h3>
+    </a>
+    <a routerLink="./creditos" routerLinkActive="active" ariaCurrentWhenActive="page" aria-label="Créditos" title="Créditos" (click)="navigationSelected.emit()">
+      <mat-icon fontIcon="credit_score"></mat-icon><h3>Créditos</h3>
+    </a>
+    <a routerLink="./caja" routerLinkActive="active" ariaCurrentWhenActive="page" aria-label="Caja" title="Caja" (click)="navigationSelected.emit()">
+      <mat-icon fontIcon="point_of_sale"></mat-icon><h3>Caja</h3>
+    </a>
+    <a routerLink="./gastos" routerLinkActive="active" ariaCurrentWhenActive="page" aria-label="Gastos" title="Gastos" (click)="navigationSelected.emit()">
+      <mat-icon fontIcon="payments"></mat-icon><h3>Gastos</h3>
+    </a>
+    <a routerLink="./vendedores" routerLinkActive="active" ariaCurrentWhenActive="page" aria-label="Vendedores" title="Vendedores" (click)="navigationSelected.emit()">
+      <mat-icon fontIcon="person_pin"></mat-icon><h3>Vendedores</h3>
+    </a>
+    <a routerLink="./proveedores" routerLinkActive="active" ariaCurrentWhenActive="page" aria-label="Proveedores" title="Proveedores" (click)="navigationSelected.emit()">
+      <mat-icon fontIcon="factory"></mat-icon><h3>Proveedores</h3>
+    </a>
+  </nav>
 </div>

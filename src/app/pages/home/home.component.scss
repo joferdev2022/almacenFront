@@ -31,7 +31,7 @@
 .dashboard .insights {
 
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
     gap: 1.6rem;
 }
 
@@ -158,7 +158,7 @@
     display: grid;
     margin-top: 2rem;
     // background-color: red;
-    grid-template-columns: 2fr 1fr;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
     gap: 1.6rem;
 }
 
@@ -221,4 +221,20 @@ table tbody tr:last-child td {
 .list-stock ul li {
     display: flex;
     justify-content: space-around;
+}
+.dashboard .insights > div, .table-reports > div { min-width: 0; }
+.dashboard .insights .left { min-width: 0; overflow-wrap: anywhere; }
+.dashboard .insights .progress { flex-shrink: 0; }
+.dashboard .table-scroll { max-width: 100%; overflow-x: auto; border-radius: 12px; }
+.dashboard .table-scroll table { min-width: 360px; }
+.dashboard .table-scroll:focus-visible { outline: 2px solid #7380ec; outline-offset: 2px; }
+@media (max-width: 1100px) {
+  .table-reports { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 768px) {
+  .dashboard { margin: 16px 12px 0; }
+  .dashboard .insights { gap: 12px; }
+  .dashboard .insights > div { padding: 20px; border-radius: 16px; margin-top: 0; }
+  .table-reports { margin-top: 24px; gap: 24px; }
+  .table-reports h2 { font-size: 17px; }
 }

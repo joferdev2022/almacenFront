@@ -1,0 +1,52 @@
+// Shared layout rules for the routed views. Tables scroll without widening the page.
+app-pages .display-area > :not(router-outlet) { display: block; width: 100%; min-width: 0; }
+
+.display-area > :is(app-products, app-sales, app-credits, app-vendedores, app-providers) {
+  .products, .sales, .credits, .vendedores, .providers { margin: 20px 24px 0; min-width: 0; }
+  .data-table-card { min-width: 0; border-radius: 12px; background: #fff; }
+  .data-table-card mat-paginator { border-radius: 0 0 12px 12px; }
+  .table-scroll { width: 100%; overflow-x: auto; overscroll-behavior-x: contain; border-radius: 12px 12px 0 0; }
+  .table-scroll:focus-visible { outline: 2px solid #7380ec; outline-offset: 2px; }
+  table { width: 100%; }
+  th { white-space: nowrap; }
+  .table-scroll-hint { display: none; }
+  .table-controls, .sales-controls, .vendedores-controls, .providers-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .table-controls > mat-form-field, .sales-controls > mat-form-field, .vendedores-controls > mat-form-field, .providers-controls > mat-form-field { flex: 1 1 260px; width: auto; min-width: 0; }
+  .btn-add, .btn-add-excel, .btn-download-excel { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; gap: 8px; height: auto; min-height: 44px; padding: 8px 18px; margin: 0; line-height: 1.3; white-space: nowrap; cursor: pointer; }
+  .btn-add-excel, .btn-download-excel { width: 44px; padding: 8px; }
+  .btn-add-excel mat-icon, .btn-download-excel mat-icon { margin: 0; }
+  .btn-actions { gap: 4px; }
+  .btn-actions button { display: grid; place-items: center; width: 40px; height: 44px; padding: 0; border-radius: 8px; flex-shrink: 0; cursor: pointer; }
+  .btn-actions button:disabled { cursor: not-allowed; opacity: .45; }
+  .btn-actions button:focus-visible, .btn-add:focus-visible, .btn-add-excel:focus-visible, .btn-download-excel:focus-visible { outline: 2px solid #7380ec; outline-offset: 2px; }
+  .summary-content { flex-wrap: wrap; }
+  .summary-item { min-width: 0; flex: 1 1 160px; overflow-wrap: anywhere; }
+  .summary-header { flex-wrap: wrap; gap: 12px; }
+}
+app-products .table-scroll table { min-width: 900px; }
+app-sales .table-scroll table, app-credits .table-scroll table, app-providers .table-scroll table { min-width: 980px; }
+app-vendedores .table-scroll table { min-width: 480px; }
+
+@media (max-width: 768px) {
+  .display-area > :is(app-products, app-sales, app-credits, app-vendedores, app-providers) {
+    .products, .sales, .credits, .vendedores, .providers { margin: 16px 12px 0; }
+    .table-scroll-hint { display: flex; align-items: center; gap: 6px; margin: 0 0 10px; font-size: 12px; color: #748297; }
+    .table-scroll-hint mat-icon { width: 18px; height: 18px; font-size: 18px; margin: 0; }
+    .table-controls > mat-form-field, .sales-controls > mat-form-field, .vendedores-controls > mat-form-field, .providers-controls > mat-form-field { flex-basis: 100%; width: 100%; }
+    .table-controls .btn-add, .controls, .controls .btn-add { flex: 1; width: 100%; }
+    .table-controls .btn-add { width: auto; }
+    .summary-card { padding: 16px; }
+    .summary-content { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .summary-item { padding: 14px 12px; }
+    .item-title { font-size: 13px; }
+    .item-value { font-size: 20px; }
+    .summary-title { font-size: 17px; }
+    .summary-date { font-size: 12px; }
+    .mat-mdc-paginator-container { padding: 8px; justify-content: center; flex-wrap: wrap; gap: 6px; }
+    .mat-mdc-paginator-range-label { margin: 0 12px; }
+  }
+  app-cash .cash-page { margin: 16px 12px 0; }
+}
+@media (max-width: 380px) {
+  .display-area > :is(app-sales, app-vendedores, app-providers) .summary-content { grid-template-columns: minmax(0, 1fr); }
+}

@@ -1,0 +1,27 @@
+<figure>
+  <figcaption><h2>{{ title }}</h2><p>{{ currency ? 'Importes en soles (S/)' : 'Cantidades vendidas' }}</p></figcaption>
+  <p class="no-data" *ngIf="!data.length">No hay productos vendidos en este período.</p>
+  <ol *ngIf="type === 'horizontal' && data.length" class="ranking-list">
+    <li *ngFor="let row of data; let index = index"><span class="rank">{{ index + 1 }}</span><div class="rank-product">
+      <div class="rank-label"><span class="product-name" [title]="row.label + ' · ' + row.detail">{{ row.label }}</span><strong>{{ format(row.value) }}</strong></div>
+      <div class="bar-track" aria-hidden="true"><span [style.width.%]="row.value / maximum * 100"></span></div>
+      <small>{{ row.detail }}</small>
+    </div></li>
+  </ol>
+  <div *ngIf="type !== 'horizontal' && data.length" class="plot-scroll" tabindex="0" role="region" [attr.aria-label]="title + ', gráfico desplazable'">
+    <svg [attr.viewBox]="'0 0 ' + width + ' 250'" [style.min-width.px]="data.length > 12 ? width : 420" role="img" [attr.aria-label]="title">
+      <title>{{ title }}</title><desc>{{ currency ? 'Importe de ventas por mes, no cobros.' : 'Unidades vendidas por mes.' }} Los valores exactos están en la tabla accesible y el resumen mensual.</desc>
+      <g *ngFor="let tick of ticks"><line x1="70" [attr.x2]="width - 20" [attr.y1]="tick.y" [attr.y2]="tick.y" class="grid-line"></line>
+        <text x="62" [attr.y]="tick.y + 4" text-anchor="end" class="tick">{{ format(tick.value, true) }}</text></g>
+      <polyline *ngIf="type === 'line'" [attr.points]="polyline" class="trend"></polyline>
+      <g *ngFor="let point of points">
+        <circle *ngIf="type === 'line'" [attr.cx]="point.x" [attr.cy]="point.y" r="4" class="point" tabindex="0" [attr.aria-label]="point.label + ': ' + format(point.value)"><title>{{ point.label }}: {{ format(point.value) }}</title></circle>
+        <rect *ngIf="type === 'bar'" [attr.x]="point.x - barWidth / 2" [attr.y]="point.y" [attr.width]="barWidth" [attr.height]="point.height" rx="3" class="column" tabindex="0" [attr.aria-label]="point.label + ': ' + format(point.value)"><title>{{ point.label }}: {{ format(point.value) }}</title></rect>
+        <text [attr.x]="point.x" y="224" text-anchor="middle" class="tick month">{{ point.label.slice(0, 3) }}</text>
+        <text [attr.x]="point.x" y="240" text-anchor="middle" class="tick year">{{ point.label.slice(-4) }}</text>
+      </g>
+    </svg>
+  </div>
+  <p class="scroll-hint" *ngIf="type !== 'horizontal' && data.length">Si no ves todos los meses, desliza el gráfico horizontalmente.</p>
+  <div class="sr-only" *ngIf="type !== 'horizontal' && data.length"><table><caption>{{ title }}: valores exactos</caption><thead><tr><th scope="col">Mes</th><th scope="col">{{ currency ? 'Importe vendido' : 'Cantidad vendida' }}</th></tr></thead><tbody><tr *ngFor="let row of data"><th scope="row">{{ row.label }}</th><td>{{ format(row.value) }}</td></tr></tbody></table></div>
+</figure>

@@ -1,9 +1,26 @@
-<div class="container-fluid g-0">
-    <app-navbar (sideNavToggled)="sideNavStatus = $event;"></app-navbar>
-    <main>
-        <app-sidebar [sideNavStatus]="sideNavStatus" [ngClass]="{'app-side-nav-open': sideNavStatus}"></app-sidebar>
-        <div class="display-area" [ngClass]="{'display-area-shrink': sideNavStatus}">
-            <router-outlet></router-outlet>
-        </div>
-    </main>
+<div class="app-shell" [class.sidebar-expanded]="sideNavStatus" [class.mobile-menu-open]="mobileMenuOpen">
+  <app-navbar
+    [navigationExpanded]="navigationExpanded"
+    [isMobile]="isMobile"
+    (sideNavToggled)="toggleNavigation()">
+  </app-navbar>
+
+  <aside id="primary-navigation" class="sidebar" aria-label="Menú principal" [attr.inert]="isMobile && !mobileMenuOpen ? '' : null">
+    <app-sidebar
+      *ngIf="!isMobile || mobileMenuOpen"
+      [sideNavStatus]="isMobile || sideNavStatus"
+      [isMobile]="isMobile"
+      [cdkTrapFocus]="isMobile"
+      [cdkTrapFocusAutoCapture]="isMobile"
+      (navigationSelected)="closeMobileMenu()"
+      (closeRequested)="closeMobileMenu()">
+    </app-sidebar>
+  </aside>
+
+  <button *ngIf="isMobile && mobileMenuOpen" class="sidebar-backdrop" type="button" tabindex="-1"
+    aria-label="Cerrar menú de navegación" (click)="closeMobileMenu()"></button>
+
+  <main class="display-area" [attr.inert]="isMobile && mobileMenuOpen ? '' : null">
+    <router-outlet></router-outlet>
+  </main>
 </div>

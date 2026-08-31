@@ -1,54 +1,65 @@
+:host { display: block; }
 
-
-
-
-main {
-    position: absolute;
-    width: 100%;
-    top: 4rem;
-    z-index: 1;
+.app-shell {
+  --header-height: 76px;
+  --sidebar-width: 76px;
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  grid-template-rows: var(--header-height) 1fr;
+  min-height: 100vh;
+  min-height: 100dvh;
+  transition: grid-template-columns 200ms ease;
 }
-
+.sidebar-expanded { --sidebar-width: 240px; }
 app-navbar {
-    // position: fixed;
+  grid-column: 1 / -1;
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
-
-app-sidebar {
-    position: fixed;
-    left: 0rem;
-    width: 70px;
-    // margin-top: 15px;
-    height: calc(100vh - 4rem);
-    // box-shadow: 0px 0px 10px rgba(0,0,0,0.5);
-    // background-color: rgba(34,34,34,1);
-    // background-color: #242a33;
-    background-color: #f6f6f9;
-    border-top: 1px solid white;
-    overflow-x: hidden;
-    white-space: nowrap;
-    transition: 0.8s cubic-bezier(.36,-0.01,0,.77);
-    // transition: 2.2s cubic-bezier(.36,-0.01,0,.77);
+.sidebar {
+  position: fixed;
+  inset: var(--header-height) auto 0 0;
+  z-index: 40;
+  width: var(--sidebar-width);
+  box-sizing: border-box;
+  background: #f6f6f9;
+  border-right: 1px solid #e7e9ef;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  transition: width 200ms ease;
 }
-
-.app-side-nav-open {
-    width: 250px;
-    transition: 0.8s cubic-bezier(.36,-0.01,0,.77);
-}
-
 .display-area {
-    position: absolute;
-    // transition: 2.2s cubic-bezier(.36,-0.01,0,.77);
-    // left: 60px;
-    // margin: 15px;
-    // margin-left: 15px;
-    // margin-top: 15px;
-    left: 70px;
-    transition: 0.8s cubic-bezier(.36,-0.01,0,.77);
-    // width: calc(100% - 60px);
+  grid-column: 2;
+  min-width: 0;
+  padding-bottom: 24px;
 }
-
-.display-area-shrink {
-    transition: 0.8s cubic-bezier(.36,-0.01,0,.77);
-    left: 250px;
-    width: calc(100% - 250px);
+.sidebar-backdrop {
+  position: fixed;
+  inset: var(--header-height) 0 0;
+  z-index: 30;
+  border: 0;
+  background: rgba(24, 35, 53, .38);
+}
+@media (max-width: 768px) {
+  .app-shell {
+    --header-height: 68px;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .display-area { grid-column: 1; }
+  .sidebar {
+    width: min(280px, 86vw);
+    visibility: hidden;
+    transform: translateX(-100%);
+    transition: transform 200ms ease, visibility 200ms;
+  }
+  .mobile-menu-open .sidebar {
+    visibility: visible;
+    transform: translateX(0);
+    box-shadow: 12px 0 30px #1823351a;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .app-shell, .sidebar { transition: none; }
 }
