@@ -11,7 +11,7 @@ export class ModalPinProviderComponent {
 
 
     pin: string = '';
-    correctPin: string = '1901';
+    correctPin: string = '1712'; // PIN correcto
   
     constructor(
                     public dialogRef: MatDialogRef<ModalPinProviderComponent>,
