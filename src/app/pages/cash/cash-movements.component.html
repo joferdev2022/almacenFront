@@ -6,6 +6,7 @@
     <mat-form-field appearance="outline"><mat-label>Tipo</mat-label><mat-select formControlName="tipo"><mat-option value="">Todos</mat-option><mat-option *ngFor="let type of types | keyvalue" [value]="type.key">{{ type.value }}</mat-option></mat-select></mat-form-field>
     <mat-form-field appearance="outline"><mat-label>Naturaleza</mat-label><mat-select formControlName="naturaleza"><mat-option value="">Todas</mat-option><mat-option value="INGRESO">Ingresos</mat-option><mat-option value="EGRESO">Egresos</mat-option></mat-select></mat-form-field>
     <mat-form-field appearance="outline"><mat-label>Origen</mat-label><mat-select formControlName="origen_tipo"><mat-option value="">Todos</mat-option><mat-option value="VENTA">Ventas</mat-option><mat-option value="GASTO">Gastos</mat-option><mat-option value="MANUAL">Manual</mat-option><mat-option value="CIERRE">Cierre</mat-option></mat-select></mat-form-field>
+    <mat-form-field appearance="outline"><mat-label>Método</mat-label><mat-select formControlName="metodo_pago"><mat-option value="">Todos</mat-option><mat-option *ngFor="let method of methods" [value]="method.value">{{ method.label }}</mat-option></mat-select></mat-form-field>
     <button class="button secondary" type="button" (click)="clearFilters()">Limpiar</button>
   </form>
   <p *ngIf="filters.invalid" class="filter-error">Revisa el rango de fechas.</p>
@@ -24,11 +25,12 @@
         <small *ngIf="row.origenAnulado" class="origin-note">Origen anulado</small>
         <small *ngIf="row.correccionPosterior" class="origin-note">Corregido después del cierre</small>
       </td></ng-container>
+      <ng-container matColumnDef="metodo"><th mat-header-cell *matHeaderCellDef>Método</th><td mat-cell *matCellDef="let row"><span class="method-badge" [class.cash]="row.afectaEfectivo">{{ methodLabel(row.metodoPago) }}</span></td></ng-container>
       <ng-container matColumnDef="ingreso"><th mat-header-cell *matHeaderCellDef>Ingreso</th><td mat-cell *matCellDef="let row" class="positive">{{ row.naturaleza === 'INGRESO' ? '+ S/. ' + (row.monto | number:'1.2-2') : '—' }}</td></ng-container>
       <ng-container matColumnDef="egreso"><th mat-header-cell *matHeaderCellDef>Egreso</th><td mat-cell *matCellDef="let row">{{ row.naturaleza === 'EGRESO' ? '− S/. ' + (row.monto | number:'1.2-2') : '—' }}</td></ng-container>
       <ng-container matColumnDef="usuario"><th mat-header-cell *matHeaderCellDef>Usuario</th><td mat-cell *matCellDef="let row">{{ row.usuarioNombre }}</td></ng-container>
       <tr mat-header-row *matHeaderRowDef="columns"></tr><tr mat-row *matRowDef="let row; columns: columns"></tr>
-      <tr *matNoDataRow><td class="empty-table" [attr.colspan]="columns.length"><mat-icon>receipt_long</mat-icon><strong>{{ loading ? 'Cargando movimientos…' : error ? 'No se pudieron cargar los movimientos' : 'No hay movimientos para mostrar' }}</strong><span *ngIf="!loading && !error">Las operaciones en efectivo aparecerán aquí automáticamente.</span></td></tr>
+      <tr *matNoDataRow><td class="empty-table" [attr.colspan]="columns.length"><mat-icon>receipt_long</mat-icon><strong>{{ loading ? 'Cargando movimientos…' : error ? 'No se pudieron cargar los movimientos' : 'No hay movimientos para mostrar' }}</strong><span *ngIf="!loading && !error">Las operaciones de todos los medios de pago aparecerán aquí automáticamente.</span></td></tr>
     </table>
   </div>
   <mat-paginator [length]="total" [pageIndex]="pageIndex" [pageSize]="pageSize" [pageSizeOptions]="[10, 25, 50]" (page)="page($event)" aria-label="Paginación de movimientos"></mat-paginator>

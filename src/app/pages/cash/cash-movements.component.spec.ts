@@ -19,10 +19,12 @@ describe('Movimientos de Caja', () => {
   });
   afterEach(() => component.ngOnDestroy());
   it('envía filtros y pagina en backend, rechazando fechas invertidas', fakeAsync(() => {
-    component.filters.patchValue({ naturaleza: 'EGRESO', tipo: 'GASTO_EFECTIVO' });
+    component.filters.patchValue({ naturaleza: 'EGRESO', tipo: 'GASTO_NO_EFECTIVO', metodo_pago: 'YAPE' });
     tick(251);
     expect(service.loadCashMovements.calls.mostRecent().args).toEqual([
-      'jornada', 1, 10, jasmine.objectContaining({ naturaleza: 'EGRESO', tipo: 'GASTO_EFECTIVO' })
+      'jornada', 1, 10, jasmine.objectContaining({
+        naturaleza: 'EGRESO', tipo: 'GASTO_NO_EFECTIVO', metodo_pago: 'YAPE'
+      })
     ]);
     component.page({ pageIndex: 1, pageSize: 25, length: 50 });
     expect(service.loadCashMovements.calls.mostRecent().args[1]).toBe(2);

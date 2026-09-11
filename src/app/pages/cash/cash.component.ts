@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
 import { Observable, Subject, catchError, combineLatest, debounceTime, finalize, of, startWith, switchMap, takeUntil } from 'rxjs';
 import Swal from 'sweetalert2';
-import { CashCurrent, CashJournal, CashMovement, CashPage } from 'src/app/models/internal/cash.model';
+import { CashCurrent, CashJournal, CashMovement, CashPage, CashPaymentMethod } from 'src/app/models/internal/cash.model';
 import { SaleModel } from 'src/app/models/internal/sale.model';
 import { DataService } from 'src/app/services/data.service';
 import { operationError } from 'src/app/shared/cash.utils';
@@ -19,6 +19,13 @@ import { ModalInfoSaleComponent } from 'src/app/components/modal-info-sale/modal
   styleUrls: ['./cash-table.scss', './cash-summary.scss', './cash.component.scss'], providers: [MatPaginatorIntl]
 })
 export class CashComponent implements OnInit, OnDestroy {
+  readonly nonCashMethods: { value: Exclude<CashPaymentMethod, 'EFECTIVO'>; label: string; image?: string; icon?: string }[] = [
+    { value: 'YAPE', label: 'Yape', image: 'assets/icons/payment-methods/yape.png' },
+    { value: 'PLIN', label: 'Plin', image: 'assets/icons/payment-methods/plin.png' },
+    { value: 'TRANSFERENCIA', label: 'Transferencia', image: 'assets/icons/payment-methods/transferencia.png' },
+    { value: 'TARJETA', label: 'Tarjeta', icon: 'credit_card' },
+    { value: 'OTRO', label: 'Otro', image: 'assets/icons/payment-methods/otro.png' }
+  ];
   readonly canWrite = Number(localStorage.getItem('permissions') || 0) === 1;
   readonly columns = ['fecha', 'responsable', 'apertura', 'ingresos', 'egresos', 'esperado', 'contado', 'diferencia', 'estado', 'acciones'];
   readonly filters = this.fb.nonNullable.group({

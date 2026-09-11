@@ -2,7 +2,7 @@
   <header class="page-heading">
     <div class="heading-title"><span class="page-icon"><mat-icon>point_of_sale</mat-icon></span><div>
       <h1>{{ view === 'history' ? 'Historial de Caja' : view === 'detail' ? 'Detalle de jornada' : 'Caja' }}</h1>
-      <p>{{ view === 'history' ? 'Aperturas, cierres y diferencias de tu local.' : 'Control del efectivo físico de tu local.' }}</p>
+      <p>{{ view === 'history' ? 'Aperturas, cierres y operaciones de tu local.' : 'Control de efectivo y medios de pago de tu local.' }}</p>
     </div></div>
     <nav class="heading-actions" aria-label="Navegación de Caja">
       <a class="button secondary" *ngIf="view !== 'current'" routerLink="/almacen/caja"><mat-icon>arrow_back</mat-icon>Caja actual</a>
@@ -18,7 +18,7 @@
       <span class="closed-icon"><mat-icon>lock_outline</mat-icon></span>
       <span class="state closed">Caja cerrada</span>
       <h2>No hay una jornada abierta</h2>
-      <p>{{ current.caja?.inicioControl ? 'Abre Caja antes de registrar ventas, cobros o gastos en efectivo.' : 'Abre tu primera jornada con el efectivo que tienes físicamente. Desde ese momento comenzará el control.' }}</p>
+      <p>{{ current.caja?.inicioControl ? 'Abre Caja antes de registrar ventas, cobros, gastos o movimientos manuales.' : 'Abre tu primera jornada con el efectivo que tienes físicamente. Desde ese momento se controlarán todos los medios de pago.' }}</p>
       <div class="previous-fund" *ngIf="current.ultimoCierre">
         <span>Fondo del último cierre · {{ current.ultimoCierre.fechaCierre | date:'dd/MM/yyyy HH:mm':'-0500' }}</span>
         <strong>S/. {{ current.fondoSugerido | number:'1.2-2' }}</strong>
@@ -50,6 +50,33 @@
         <article class="summary-card"><span class="metric-icon expense"><mat-icon>payments</mat-icon></span><div><span>Gastos en efectivo</span><strong>− S/. {{ day.resumen.gastosEfectivo | number:'1.2-2' }}</strong></div></article>
         <article class="summary-card"><span class="metric-icon expense"><mat-icon>north_east</mat-icon></span><div><span>Retiros</span><strong>− S/. {{ day.resumen.retiros | number:'1.2-2' }}</strong></div></article>
       </div>
+      <section class="method-summary-section" aria-labelledby="non-cash-title">
+        <div class="method-summary-heading">
+          <div><span class="section-kicker">Medios de pago</span><h2 id="non-cash-title">Operaciones no efectivas</h2></div>
+          <div class="non-cash-total">
+            <span>Neto de la jornada</span>
+            <strong [class.negative]="day.resumen.noEfectivo.neto < 0">S/. {{ day.resumen.noEfectivo.neto | number:'1.2-2' }}</strong>
+            <small>{{ day.resumen.noEfectivo.operaciones }} operaciones</small>
+          </div>
+        </div>
+        <div class="method-summary-grid">
+          <article class="method-card" *ngFor="let method of nonCashMethods">
+            <div class="method-card-title">
+              <span class="payment-logo">
+                <img *ngIf="method.image; else materialPaymentIcon" [src]="method.image" [alt]="method.label">
+                <ng-template #materialPaymentIcon><mat-icon>{{ method.icon }}</mat-icon></ng-template>
+              </span>
+              <div><strong>{{ method.label }}</strong><small>{{ day.resumen.metodos[method.value].operaciones }} operaciones</small></div>
+            </div>
+            <div class="method-net"><span>Neto</span><strong [class.negative]="day.resumen.metodos[method.value].neto < 0">S/. {{ day.resumen.metodos[method.value].neto | number:'1.2-2' }}</strong></div>
+            <div class="method-flow">
+              <span>Ingresos <b>+ S/. {{ day.resumen.metodos[method.value].ingresos | number:'1.2-2' }}</b></span>
+              <span>Egresos <b>− S/. {{ day.resumen.metodos[method.value].egresos | number:'1.2-2' }}</b></span>
+            </div>
+          </article>
+        </div>
+        <p class="method-note"><mat-icon>info_outline</mat-icon>Estos netos resumen lo registrado durante la jornada; no representan el saldo real de una cuenta bancaria o billetera.</p>
+      </section>
       <div class="adjustments" *ngIf="day.resumen.ajustesEntrada || day.resumen.ajustesSalida">
         <mat-icon>swap_vert</mat-icon>Ajustes y anulaciones:
         <strong>+ S/. {{ day.resumen.ajustesEntrada | number:'1.2-2' }}</strong>
@@ -58,8 +85,9 @@
       <div *ngIf="day.resumen.saldoEsperado < 0" class="notice">El saldo esperado es negativo. Revisa los movimientos y los fondos registrados.</div>
       <div *ngIf="day.diferenciaApertura" class="notice">La apertura difirió del fondo anterior en S/. {{ day.diferenciaApertura | number:'1.2-2' }}. El cierre anterior permanece intacto.</div>
       <div class="cash-actions" *ngIf="day.estado === 'ABIERTA' && canWrite">
-        <button class="button secondary" (click)="operate('income')"><mat-icon>add</mat-icon>Registrar ingreso</button>
-        <button class="button secondary" (click)="operate('withdrawal')"><mat-icon>remove</mat-icon>Registrar retiro</button>
+        <button class="button secondary" (click)="operate('income')"><mat-icon>add</mat-icon>Ingreso en efectivo</button>
+        <button class="button secondary" (click)="operate('withdrawal')"><mat-icon>remove</mat-icon>Retiro en efectivo</button>
+        <button class="button secondary digital-action" (click)="operate('digital')"><mat-icon>account_balance_wallet</mat-icon>Movimiento no efectivo</button>
         <button class="button primary" (click)="operate('close')"><mat-icon>lock_outline</mat-icon>Cerrar caja</button>
       </div>
 

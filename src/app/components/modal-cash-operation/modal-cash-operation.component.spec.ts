@@ -79,6 +79,17 @@ describe('Formulario de Caja', () => {
     expect(service.cashMovement.calls.mostRecent().args[2].operacionId).toBe(id);
     expect(dialog.close).toHaveBeenCalledWith(true);
   });
+  it('registra un egreso no efectivo con método y sin cambiar el flujo de efectivo', () => {
+    create('digital');
+    component.form.patchValue({ monto: '35.50', motivo: 'Pago por aplicativo',
+      naturaleza: 'EGRESO', metodoPago: 'PLIN' });
+    component.save();
+    expect(service.cashMovement.calls.mostRecent().args).toEqual([
+      'jornada', 'withdrawal', jasmine.objectContaining({
+        monto: 35.5, motivo: 'Pago por aplicativo', metodoPago: 'PLIN'
+      })
+    ]);
+  });
   it('actualiza la versión del cierre y bloquea jornadas cerradas por otro usuario', () => {
     create('close');
     service.getCashJournal.and.returnValue(of({ data: { ...journal, version: 7 }, code: 200, message: '' }));

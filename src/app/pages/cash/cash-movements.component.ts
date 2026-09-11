@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, S
 import { FormBuilder } from '@angular/forms';
 import { MatPaginatorIntl, PageEvent } from '@angular/material/paginator';
 import { Subject, catchError, debounceTime, finalize, of, startWith, switchMap, takeUntil } from 'rxjs';
-import { CashMovement } from 'src/app/models/internal/cash.model';
+import { CashMovement, CashPaymentMethod } from 'src/app/models/internal/cash.model';
 import { DataService } from 'src/app/services/data.service';
 import { operationError } from 'src/app/shared/cash.utils';
 import { expenseDateValidator } from 'src/app/shared/expense.utils';
@@ -16,15 +16,22 @@ export class CashMovementsComponent implements OnInit, OnChanges, OnDestroy {
   @Input() refresh = 0;
   @Input() sourceBusy = '';
   @Output() openSource = new EventEmitter<CashMovement>();
-  readonly columns = ['fecha', 'descripcion', 'origen', 'ingreso', 'egreso', 'usuario'];
+  readonly columns = ['fecha', 'descripcion', 'origen', 'metodo', 'ingreso', 'egreso', 'usuario'];
   readonly types: Record<string, string> = {
     VENTA_EFECTIVO: 'Venta en efectivo', GASTO_EFECTIVO: 'Gasto en efectivo',
+    VENTA_NO_EFECTIVO: 'Venta no efectiva', GASTO_NO_EFECTIVO: 'Gasto no efectivo',
     INGRESO_MANUAL: 'Ingreso manual', RETIRO: 'Retiro', AJUSTE_ENTRADA: 'Ajuste de entrada',
+    INGRESO_NO_EFECTIVO: 'Ingreso no efectivo', EGRESO_NO_EFECTIVO: 'Egreso no efectivo',
     AJUSTE_SALIDA: 'Ajuste de salida', RETIRO_CIERRE: 'Retiro de cierre'
   };
+  readonly methods: { value: CashPaymentMethod; label: string }[] = [
+    { value: 'EFECTIVO', label: 'Efectivo' }, { value: 'YAPE', label: 'Yape' },
+    { value: 'PLIN', label: 'Plin' }, { value: 'TRANSFERENCIA', label: 'Transferencia' },
+    { value: 'TARJETA', label: 'Tarjeta' }, { value: 'OTRO', label: 'Otro' }
+  ];
   readonly filters = this.fb.nonNullable.group({
     fecha_desde: ['', expenseDateValidator], fecha_hasta: ['', expenseDateValidator],
-    tipo: '', naturaleza: '', origen_tipo: ''
+    tipo: '', naturaleza: '', origen_tipo: '', metodo_pago: ''
   }, { validators: group => {
     const from = group.get('fecha_desde')?.value, to = group.get('fecha_hasta')?.value;
     return from && to && from > to ? { range: true } : null;
@@ -61,6 +68,7 @@ export class CashMovementsComponent implements OnInit, OnChanges, OnDestroy {
     if (changes['journalId'] || changes['refresh']) { this.reload(); }
   }
   reload(): void { this.reload$.next(); }
+  methodLabel(value: CashPaymentMethod): string { return this.methods.find(method => method.value === value)?.label || value; }
   clearFilters(): void { this.filters.reset(); }
   page(event: PageEvent): void { this.pageIndex = event.pageIndex; this.pageSize = event.pageSize; this.reload(); }
   ngOnDestroy(): void { this.destroy$.next(); this.destroy$.complete(); }

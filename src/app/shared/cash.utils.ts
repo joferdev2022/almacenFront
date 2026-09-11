@@ -14,7 +14,7 @@ export function operationError(error: HttpErrorResponse): string {
   return 'No se pudo completar la operación. Intenta nuevamente.';
 }
 export const CASH_CLOSED_ALERT =
-  'No se puede registrar esta operación en efectivo porque no hay una Caja abierta. Abre la Caja e intenta nuevamente.';
+  'No se puede registrar la operación porque no hay una Caja abierta. Abre la Caja e intenta nuevamente.';
 
 export function isCashClosedError(error: HttpErrorResponse): boolean {
   const detail = error.error?.detail;

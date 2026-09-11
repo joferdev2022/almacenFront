@@ -2,12 +2,12 @@ import { Component, Inject, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Observable, Subject, finalize, takeUntil } from 'rxjs';
-import { CashJournal, CashResponse } from 'src/app/models/internal/cash.model';
+import { CashJournal, CashPaymentMethod, CashResponse } from 'src/app/models/internal/cash.model';
 import { DataService } from 'src/app/services/data.service';
 import { cashAmountValidator, amountValue, newOperationId, operationError } from 'src/app/shared/cash.utils';
 import { expenseAmountValidator } from 'src/app/shared/expense.utils';
 
-export type CashDialogMode = 'open' | 'close' | 'income' | 'withdrawal';
+export type CashDialogMode = 'open' | 'close' | 'income' | 'withdrawal' | 'digital';
 @Component({
   selector: 'app-modal-cash-operation',
   templateUrl: './modal-cash-operation.component.html',
@@ -15,17 +15,27 @@ export type CashDialogMode = 'open' | 'close' | 'income' | 'withdrawal';
 })
 export class ModalCashOperationComponent implements OnDestroy {
   readonly operationId = newOperationId();
-  readonly form = this.fb.nonNullable.group({ monto: '', contado: '', fondo: '', motivo: '', observaciones: '' });
+  readonly form = this.fb.nonNullable.group({
+    monto: '', contado: '', fondo: '', motivo: '', observaciones: '',
+    metodoPago: 'YAPE' as CashPaymentMethod, naturaleza: 'INGRESO' as 'INGRESO' | 'EGRESO'
+  });
+  readonly digitalMethods: { value: Exclude<CashPaymentMethod, 'EFECTIVO'>; label: string }[] = [
+    { value: 'YAPE', label: 'Yape' }, { value: 'PLIN', label: 'Plin' },
+    { value: 'TRANSFERENCIA', label: 'Transferencia' }, { value: 'TARJETA', label: 'Tarjeta' },
+    { value: 'OTRO', label: 'Otro' }
+  ];
   private readonly destroy$ = new Subject<void>();
   saving = false;
   refreshing = false;
   closedElsewhere = false;
   error = '';
   readonly titles: Record<CashDialogMode, string> = {
-    open: 'Abrir caja', close: 'Cerrar caja', income: 'Ingreso de efectivo', withdrawal: 'Retiro de efectivo'
+    open: 'Abrir caja', close: 'Cerrar caja', income: 'Ingreso de efectivo', withdrawal: 'Retiro de efectivo',
+    digital: 'Movimiento no efectivo'
   };
   get title(): string { return this.titles[this.data.mode]; }
-  get isManual(): boolean { return this.data.mode === 'income' || this.data.mode === 'withdrawal'; }
+  get isManual(): boolean { return this.data.mode === 'income' || this.data.mode === 'withdrawal' || this.data.mode === 'digital'; }
+  get isDigital(): boolean { return this.data.mode === 'digital'; }
   get expected(): number { return this.data.journal?.resumen.saldoEsperado ?? 0; }
   get counted(): number { return amountValue(this.form.controls.contado.value); }
   get difference(): number { return this.counted - this.expected; }
@@ -47,6 +57,10 @@ export class ModalCashOperationComponent implements OnDestroy {
       if (this.isManual) {
         this.form.controls.motivo.setValidators([Validators.required, Validators.maxLength(250),
           control => String(control.value).trim().length >= 3 ? null : { reason: true }]);
+      }
+      if (this.isDigital) {
+        this.form.controls.metodoPago.setValidators(Validators.required);
+        this.form.controls.naturaleza.setValidators(Validators.required);
       }
     }
     Object.values(this.form.controls).forEach(control => control.updateValueAndValidity());
@@ -78,8 +92,10 @@ export class ModalCashOperationComponent implements OnDestroy {
       request = this.service.closeCash(this.data.journal!.id, { ...base,
         montoContado: amountValue(value.contado), fondoSiguiente: amountValue(value.fondo), version: this.data.journal!.version });
     } else {
-      request = this.service.cashMovement(this.data.journal!.id, this.data.mode, {
-        ...base, monto: amountValue(value.monto), motivo: value.motivo.trim() });
+      const type = this.isDigital ? (value.naturaleza === 'INGRESO' ? 'income' : 'withdrawal') : this.data.mode;
+      request = this.service.cashMovement(this.data.journal!.id, type as 'income' | 'withdrawal', {
+        ...base, monto: amountValue(value.monto), motivo: value.motivo.trim(),
+        metodoPago: this.isDigital ? value.metodoPago : 'EFECTIVO' });
     }
     this.saving = true;
     this.error = '';

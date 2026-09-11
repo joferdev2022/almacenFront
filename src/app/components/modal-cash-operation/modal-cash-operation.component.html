@@ -1,5 +1,5 @@
 <header class="dialog-header">
-  <span class="header-icon"><mat-icon>{{ data.mode === 'close' ? 'lock_outline' : 'point_of_sale' }}</mat-icon></span>
+  <span class="header-icon"><mat-icon>{{ data.mode === 'close' ? 'lock_outline' : isDigital ? 'account_balance_wallet' : 'point_of_sale' }}</mat-icon></span>
   <h2 mat-dialog-title>{{ title }}</h2>
   <button type="button" class="icon-button" aria-label="Cerrar formulario" [disabled]="saving" (click)="dialogRef.close()"><mat-icon>close</mat-icon></button>
 </header>
@@ -28,7 +28,7 @@
       <dt>Ajustes de salida</dt><dd>− S/. {{ day.resumen.ajustesSalida | number:'1.2-2' }}</dd>
     </dl>
   </details>
-  <p *ngIf="isManual" class="hint">{{ data.mode === 'income' ? 'Registra un fondo adicional u otro ingreso propio de Caja.' : 'Un retiro reduce el efectivo físico; no crea un gasto comercial.' }}</p>
+  <p *ngIf="isManual" class="hint">{{ isDigital ? 'Registra un ingreso o egreso manual de una billetera o medio no efectivo. No modifica el efectivo físico.' : data.mode === 'income' ? 'Registra un fondo adicional u otro ingreso propio de Caja.' : 'Un retiro reduce el efectivo físico; no crea un gasto comercial.' }}</p>
   <form id="cash-operation-form" [formGroup]="form" (ngSubmit)="save()" novalidate>
     <fieldset class="payment-fields" [disabled]="saving">
       <div class="field" *ngIf="data.mode !== 'close'">
@@ -39,9 +39,32 @@
           Diferencia con el fondo anterior: <strong>S/. {{ openingDifference | number:'1.2-2' }}</strong>. Se guardará sin alterar el cierre anterior.
         </p>
       </div>
+      <div class="digital-fields" *ngIf="isDigital">
+        <div class="field">
+          <span class="field-label">Tipo de movimiento <span class="required">*</span></span>
+          <div class="nature-options" role="radiogroup" aria-label="Tipo de movimiento">
+            <label [class.selected]="form.controls.naturaleza.value === 'INGRESO'">
+              <input type="radio" formControlName="naturaleza" value="INGRESO"><mat-icon>south_west</mat-icon>
+              <span><strong>Ingreso</strong><small>Dinero recibido</small></span>
+            </label>
+            <label [class.selected]="form.controls.naturaleza.value === 'EGRESO'">
+              <input type="radio" formControlName="naturaleza" value="EGRESO"><mat-icon>north_east</mat-icon>
+              <span><strong>Egreso</strong><small>Dinero enviado</small></span>
+            </label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label" for="cash-method">Método de pago <span class="required">*</span></label>
+          <div class="control select-control"><mat-icon>account_balance_wallet</mat-icon>
+            <select id="cash-method" formControlName="metodoPago">
+              <option *ngFor="let method of digitalMethods" [value]="method.value">{{ method.label }}</option>
+            </select><mat-icon>expand_more</mat-icon>
+          </div>
+        </div>
+      </div>
       <div class="field" *ngIf="isManual">
         <label class="field-label" for="cash-reason">Motivo <span class="required">*</span></label>
-        <div class="control"><input id="cash-reason" formControlName="motivo" maxlength="250" placeholder="Ej. Fondo adicional / retiro para depósito"></div>
+        <div class="control"><input id="cash-reason" formControlName="motivo" maxlength="250" [placeholder]="isDigital ? 'Ej. Transferencia recibida / pago de servicio' : 'Ej. Fondo adicional / retiro para depósito'"></div>
         <p class="hint field-error" *ngIf="form.controls.motivo.touched && form.controls.motivo.invalid">Describe el motivo con al menos 3 caracteres.</p>
       </div>
       <ng-container *ngIf="data.mode === 'close'">
