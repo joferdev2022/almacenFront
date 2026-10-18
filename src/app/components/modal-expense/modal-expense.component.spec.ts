@@ -3,11 +3,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpErrorResponse } from '@angular/common/http';
-import { of, Subject } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
+import { MatSelectHarness } from '@angular/material/select/testing';
+import { TestbedHarnessEnvironment } from '@angular/cdk/testing/testbed';
 import { DataService } from 'src/app/services/data.service';
 import { MaterialModule } from 'src/app/shared/material.module';
 import Swal from 'sweetalert2';
 import { ExpenseDialogData, ModalExpenseComponent } from './modal-expense.component';
+import { ExpenseDatepickerComponent } from '../expense-datepicker/expense-datepicker.component';
 
 describe('ModalExpenseComponent', () => {
   let fixture: ComponentFixture<ModalExpenseComponent>;
@@ -22,14 +25,15 @@ describe('ModalExpenseComponent', () => {
 
   beforeEach(async () => {
     operation = new Subject();
-    service = jasmine.createSpyObj('DataService', ['loadExpenseProviders', 'saveExpense', 'updateExpense']);
+    service = jasmine.createSpyObj('DataService', ['loadExpenseProviders', 'loadExpenseSellers', 'saveExpense', 'updateExpense']);
+    service.loadExpenseSellers.and.returnValue(of({ data: [], code: 200, message: '' }));
     service.loadExpenseProviders.and.returnValue(of({ data: { items: [], total: 0, page: 1, xpage: 20 }, code: 200, message: '' }));
     service.saveExpense.and.returnValue(operation);
     service.updateExpense.and.returnValue(operation);
     dialog = { close: jasmine.createSpy('close'), disableClose: false };
     await TestBed.configureTestingModule({
       declarations: [ModalExpenseComponent],
-      imports: [ReactiveFormsModule, MaterialModule, NoopAnimationsModule],
+      imports: [ReactiveFormsModule, MaterialModule, NoopAnimationsModule, ExpenseDatepickerComponent],
       providers: [{ provide: DataService, useValue: service }, { provide: MatDialogRef, useValue: dialog },
         { provide: MAT_DIALOG_DATA, useValue: data }]
     }).compileComponents();
@@ -43,6 +47,89 @@ describe('ModalExpenseComponent', () => {
   function validPaid(): void {
     component.form.patchValue({ fecha: '2026-08-28', categoria: 'Servicios', monto: '50', metodoPago: 'EFECTIVO' });
   }
+
+  it('defaults to TIENDA when there are no registered sellers', async () => {
+    const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(
+      MatSelectHarness.with({ selector: '[formControlName="vendedorId"]' }));
+    expect(await select.getValueText()).toBe('TIENDA');
+    expect(fixture.nativeElement.querySelector('#expense-seller-help')).toBeNull();
+    validPaid();
+    component.save();
+    expect(service.saveExpense.calls.mostRecent().args[0].vendedorId).toBeNull();
+  });
+
+  it('lets the user select a registered seller and sends their ID', async () => {
+    service.loadExpenseSellers.and.returnValue(of({ data: [
+      { id: 'seller-ana', nombreVendedor: 'Ana Pérez', aliasVendedor: 'Ana' },
+      { id: 'seller-luis', nombreVendedor: 'Luis Díaz' }
+    ], code: 200, message: '' }));
+    component.loadSellers();
+    fixture.detectChanges();
+    const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(
+      MatSelectHarness.with({ selector: '[formControlName="vendedorId"]' }));
+    await select.open();
+    expect((await select.getOptions()).length).toBe(3);
+    await select.clickOptions({ text: 'Ana Pérez (Ana)' });
+    validPaid();
+    component.save();
+    expect(service.saveExpense.calls.mostRecent().args[0].vendedorId).toBe('seller-ana');
+  });
+
+  it('allows an expense to be reassigned from a seller to TIENDA', async () => {
+    fixture.destroy();
+    data.expense = { id: 'saved-id', monto: 50, vendedorId: 'seller-ana', vendedorNombre: 'Ana Pérez' } as any;
+    fixture = TestBed.createComponent(ModalExpenseComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(
+      MatSelectHarness.with({ selector: '[formControlName="vendedorId"]' }));
+    await select.open();
+    await select.clickOptions({ text: 'TIENDA' });
+    expect(await select.getValueText()).toBe('TIENDA');
+    validPaid();
+    component.save();
+    expect(service.updateExpense.calls.mostRecent().args[1].vendedorId).toBeNull();
+  });
+
+  it('preserves the saved seller even after deletion from the catalog', async () => {
+    fixture.destroy();
+    data.expense = { id: 'saved-id', monto: 50, vendedorId: 'removed-seller', vendedorNombre: 'Ana Pérez' } as any;
+    fixture = TestBed.createComponent(ModalExpenseComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    const select = await TestbedHarnessEnvironment.loader(fixture).getHarness(
+      MatSelectHarness.with({ selector: '[formControlName="vendedorId"]' }));
+    expect(await select.getValueText()).toBe('Ana Pérez');
+    validPaid();
+    component.save();
+    expect(service.updateExpense.calls.mostRecent().args[1].vendedorId).toBe('removed-seller');
+  });
+
+  it('shows a retry on seller load failure and retains the current selection', () => {
+    component.form.controls['vendedorId'].setValue('seller-ana');
+    service.loadExpenseSellers.and.returnValue(throwError(() => new HttpErrorResponse({ status: 500 })));
+    component.loadSellers();
+    fixture.detectChanges();
+    expect(component.form.controls['vendedorId'].value).toBe('seller-ana');
+    expect(fixture.nativeElement.querySelector('#expense-seller-help').textContent).toContain('No se pudieron cargar');
+    expect(fixture.nativeElement.querySelector('.responsible-field button').textContent).toContain('Reintentar');
+    service.loadExpenseSellers.and.returnValue(of({ data: [], code: 200, message: '' }));
+    fixture.nativeElement.querySelector('.responsible-field button').click();
+    expect(component.sellerError).toBe('');
+  });
+
+  it('waits for seller choices before allowing a save', () => {
+    const pending = new Subject<any>();
+    service.loadExpenseSellers.and.returnValue(pending);
+    component.loadSellers();
+    validPaid();
+    component.save();
+    expect(service.saveExpense).not.toHaveBeenCalled();
+    pending.next({ data: [], code: 200, message: '' });
+    pending.complete();
+    component.save();
+    expect(service.saveExpense).toHaveBeenCalledTimes(1);
+  });
 
   it('requires a method for paid expenses and defaults the payment date', () => {
     component.form.patchValue({ categoria: 'Servicios', monto: '50' });

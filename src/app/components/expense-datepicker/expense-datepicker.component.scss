@@ -1,0 +1,8 @@
+:host { display: flex; align-items: center; gap: 8px; width: 100%; min-width: 0; }
+input { width: 100%; min-width: 0; height: 41px; padding: 0; border: 0; outline: 0; color: inherit; background: transparent; font: inherit; }
+input::placeholder { color: #718096; }
+button.calendar-trigger { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; width: 34px; min-height: 34px; padding: 0; margin-right: -7px; border: 0; border-radius: 7px; background: #edf8f0; color: #15803d; cursor: pointer; }
+button.calendar-trigger:hover:not(:disabled) { background: #dff2e5; }
+button.calendar-trigger:focus-visible { outline: 2px solid #15803d; outline-offset: 2px; }
+button.calendar-trigger:disabled { opacity: .5; cursor: not-allowed; }
+mat-icon { width: 19px; height: 19px; font-size: 19px; }

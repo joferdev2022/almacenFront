@@ -23,6 +23,13 @@ describe('DataService Gastos', () => {
 
   afterEach(() => http.verify());
 
+  it('loads sellers through the authenticated expense API without choosing a local', () => {
+    service.loadExpenseSellers().subscribe(result => expect(result.data[0].nombreVendedor).toBe('Ana Pérez'));
+    const request = http.expectOne(req => req.url.endsWith('/expenses/sellers'));
+    expect(request.request.params.has('local')).toBeFalse();
+    request.flush({ data: [{ id: 'seller-ana', nombreVendedor: 'Ana Pérez' }], code: 200, message: '' });
+  });
+
   it('maps the existing response envelope and sends server-side filters', () => {
     service.loadExpenses(2, 10, { search: 'Internet Perú', estado: 'PAGADO', categoria: '' })
       .subscribe(result => expect(result.data).toEqual([]));

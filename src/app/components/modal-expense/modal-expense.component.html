@@ -11,60 +11,69 @@
         <div class="field">
           <label class="field-label" for="expense-date">Fecha <span class="required">*</span></label>
           <div class="control" [class.invalid]="invalid('fecha')">
-            <mat-icon class="muted-icon" aria-hidden="true">calendar_today</mat-icon>
-            <input id="expense-date" type="date" formControlName="fecha" required aria-describedby="expense-date-help" [attr.aria-invalid]="invalid('fecha')">
+            <app-expense-datepicker inputId="expense-date" label="Fecha" formControlName="fecha" [required]="true" [describedBy]="invalid('fecha') ? 'expense-date-help' : null" [invalid]="invalid('fecha')"></app-expense-datepicker>
           </div>
-          <p id="expense-date-help" class="hint" [class.field-error]="invalid('fecha')">{{ invalid('fecha') ? 'Ingresa una fecha válida.' : 'Fecha en la que se generó el gasto.' }}</p>
+          <p *ngIf="invalid('fecha')" id="expense-date-help" class="hint field-error" role="alert">Ingresa una fecha válida.</p>
         </div>
         <div class="field">
           <label id="expense-category-label" class="field-label">Categoría <span class="required">*</span></label>
           <div class="control" [class.invalid]="invalid('categoria')">
             <span class="field-icon blue" aria-hidden="true"><mat-icon>category</mat-icon></span>
-            <mat-select formControlName="categoria" required aria-labelledby="expense-category-label" aria-describedby="expense-category-help" placeholder="Selecciona una categoría" panelClass="expense-select-panel">
+            <mat-select formControlName="categoria" required aria-labelledby="expense-category-label" [attr.aria-describedby]="invalid('categoria') ? 'expense-category-help' : null" placeholder="Selecciona una categoría" panelClass="expense-select-panel">
               <mat-option *ngFor="let category of data.options.categorias" [value]="category">{{ category }}</mat-option>
             </mat-select>
           </div>
-          <p id="expense-category-help" class="hint" [class.field-error]="invalid('categoria')">{{ invalid('categoria') ? 'Selecciona una categoría.' : 'Organiza tus gastos por tipo.' }}</p>
+          <p *ngIf="invalid('categoria')" id="expense-category-help" class="hint field-error" role="alert">Selecciona una categoría.</p>
         </div>
         <div class="field">
           <label class="field-label" for="expense-description">Descripción <span class="optional">(opcional)</span></label>
-          <div class="control"><input id="expense-description" formControlName="descripcion" placeholder="¿Qué se pagó?" maxlength="250" aria-describedby="expense-description-help"></div>
-          <p id="expense-description-help" class="hint">Ej. Pago de internet o compra de bolsas.</p>
+          <div class="control"><input id="expense-description" formControlName="descripcion" placeholder="¿Qué se pagó?" maxlength="250"></div>
         </div>
         <div class="field">
           <label id="expense-state-label" class="field-label">Estado <span class="required">*</span></label>
           <div class="control">
             <span class="field-icon" [class.amber]="!isPaid" aria-hidden="true"><span class="state-dot"></span></span>
-            <mat-select formControlName="estado" required aria-labelledby="expense-state-label" aria-describedby="expense-state-help" panelClass="expense-select-panel">
+            <mat-select formControlName="estado" required aria-labelledby="expense-state-label" panelClass="expense-select-panel">
               <mat-option *ngFor="let state of data.options.estados" [value]="state">{{ state | titlecase }}</mat-option>
             </mat-select>
           </div>
-          <p id="expense-state-help" class="hint">Indica si el gasto ya fue pagado.</p>
         </div>
         <div class="field">
           <label class="field-label" for="expense-amount">Monto <span class="required">*</span></label>
           <div class="control amount-control" [class.invalid]="invalid('monto')">
             <span class="currency" aria-hidden="true">S/.</span>
-            <input id="expense-amount" type="text" inputmode="decimal" formControlName="monto" placeholder="0.00" required aria-describedby="expense-amount-help" [attr.aria-invalid]="invalid('monto')">
+            <input id="expense-amount" type="text" inputmode="decimal" formControlName="monto" placeholder="0.00" required [attr.aria-describedby]="invalid('monto') ? 'expense-amount-help' : null" [attr.aria-invalid]="invalid('monto')">
           </div>
-          <p id="expense-amount-help" class="hint" [class.field-error]="invalid('monto')">{{ invalid('monto') ? 'Ingresa un monto mayor a cero, con hasta 2 decimales.' : 'Importe del gasto en soles.' }}</p>
+          <p *ngIf="invalid('monto')" id="expense-amount-help" class="hint field-error" role="alert">Ingresa un monto mayor a cero, con hasta 2 decimales.</p>
         </div>
         <div class="field">
           <label id="expense-method-label" class="field-label">Método de pago <span *ngIf="isPaid" class="required">*</span><span *ngIf="!isPaid" class="optional"> (opcional)</span></label>
           <div class="control" [class.invalid]="invalid('metodoPago')">
             <span class="field-icon" aria-hidden="true"><mat-icon>payments</mat-icon></span>
-            <mat-select formControlName="metodoPago" [required]="isPaid" aria-labelledby="expense-method-label" aria-describedby="expense-method-help" placeholder="Selecciona un método" panelClass="expense-select-panel">
+            <mat-select formControlName="metodoPago" [required]="isPaid" aria-labelledby="expense-method-label" [attr.aria-describedby]="invalid('metodoPago') ? 'expense-method-help' : null" placeholder="Selecciona un método" panelClass="expense-select-panel">
               <mat-option *ngIf="!isPaid" [value]="null">Sin definir</mat-option>
               <mat-option *ngFor="let method of data.options.metodosPago" [value]="method">{{ method | titlecase }}</mat-option>
             </mat-select>
           </div>
-          <p id="expense-method-help" class="hint" [class.field-error]="invalid('metodoPago')">{{ invalid('metodoPago') ? 'Selecciona el método de pago.' : 'Cómo realizaste el pago de este gasto.' }}</p>
+          <p *ngIf="invalid('metodoPago')" id="expense-method-help" class="hint field-error" role="alert">Selecciona el método de pago.</p>
         </div>
       </div>
+      <div class="field responsible-field">
+        <label id="expense-seller-label" class="field-label">Responsable del gasto</label>
+        <div class="control">
+          <mat-icon class="muted-icon" aria-hidden="true">person_outline</mat-icon>
+          <mat-select formControlName="vendedorId" aria-labelledby="expense-seller-label" [attr.aria-describedby]="sellersLoading || sellerError ? 'expense-seller-help' : null" panelClass="expense-select-panel">
+            <mat-option value="TIENDA">TIENDA</mat-option>
+            <mat-option *ngFor="let seller of sellers" [value]="seller.id">{{ seller.nombreVendedor }}{{ seller.aliasVendedor ? ' (' + seller.aliasVendedor + ')' : '' }}</mat-option>
+          </mat-select>
+        </div>
+        <p *ngIf="sellersLoading || sellerError" id="expense-seller-help" class="hint" [class.field-error]="sellerError" [attr.role]="sellerError ? 'alert' : 'status'">{{ sellersLoading ? 'Cargando vendedores…' : sellerError }}</p>
+        <button *ngIf="sellerError" type="button" class="text-button" (click)="loadSellers()" [disabled]="saving || sellersLoading">Reintentar cargar vendedores</button>
+      </div>
       <div *ngIf="isPaid" class="payment-date">
-        <div class="payment-date-label"><mat-icon aria-hidden="true">event_available</mat-icon><label for="expense-payment-date">Fecha de pago <span class="required">*</span><small>Fecha en la que se realizó el pago.</small></label></div>
+        <div class="payment-date-label"><mat-icon aria-hidden="true">event_available</mat-icon><label for="expense-payment-date">Fecha de pago <span class="required">*</span></label></div>
         <div class="field">
-          <div class="control" [class.invalid]="invalid('fechaPago')"><input id="expense-payment-date" type="date" formControlName="fechaPago" required aria-describedby="expense-payment-date-error" [attr.aria-invalid]="invalid('fechaPago')"></div>
+          <div class="control" [class.invalid]="invalid('fechaPago')"><app-expense-datepicker inputId="expense-payment-date" label="Fecha de pago" formControlName="fechaPago" [required]="true" [describedBy]="invalid('fechaPago') ? 'expense-payment-date-error' : null" [invalid]="invalid('fechaPago')"></app-expense-datepicker></div>
           <p *ngIf="invalid('fechaPago')" id="expense-payment-date-error" class="hint field-error">Ingresa una fecha de pago válida.</p>
         </div>
       </div>
@@ -119,7 +128,7 @@
 </mat-dialog-content>
 <mat-dialog-actions class="dialog-actions" align="end">
   <button type="button" class="btn-secondary" [disabled]="saving" (click)="dialogRef.close()"><mat-icon aria-hidden="true">close</mat-icon>Cancelar</button>
-  <button type="submit" form="expense-form" class="btn-primary" [disabled]="saving || form.invalid">
+  <button type="submit" form="expense-form" class="btn-primary" [disabled]="saving || sellersLoading || form.invalid">
     <mat-icon aria-hidden="true">{{ saving ? 'hourglass_top' : 'save' }}</mat-icon>{{ saving ? 'Guardando…' : 'Guardar gasto' }}
   </button>
 </mat-dialog-actions>

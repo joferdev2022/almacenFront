@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { DataService } from 'src/app/services/data.service';
 import { MaterialModule } from 'src/app/shared/material.module';
 import { ModalPayExpenseComponent } from './modal-pay-expense.component';
+import { ExpenseDatepickerComponent } from '../expense-datepicker/expense-datepicker.component';
 
 describe('ModalPayExpenseComponent', () => {
   let fixture: ComponentFixture<ModalPayExpenseComponent>;
@@ -19,7 +20,7 @@ describe('ModalPayExpenseComponent', () => {
     service.payExpense.and.returnValue(payment);
     await TestBed.configureTestingModule({
       declarations: [ModalPayExpenseComponent],
-      imports: [ReactiveFormsModule, MaterialModule, NoopAnimationsModule],
+      imports: [ReactiveFormsModule, MaterialModule, NoopAnimationsModule, ExpenseDatepickerComponent],
       providers: [{ provide: DataService, useValue: service },
         { provide: MatDialogRef, useValue: { close: jasmine.createSpy('close'), disableClose: false } },
         { provide: MAT_DIALOG_DATA, useValue: { expense: { id: 'pending-id', monto: 200 },

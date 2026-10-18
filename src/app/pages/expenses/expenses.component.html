@@ -101,6 +101,10 @@
             <small *ngIf="row.numeroComprobante">{{ row.numeroComprobante }}</small>
           </td>
         </ng-container>
+        <ng-container matColumnDef="responsable">
+          <th mat-header-cell *matHeaderCellDef>Responsable</th>
+          <td mat-cell *matCellDef="let row" class="responsible-cell">{{ row.vendedorNombre || 'TIENDA' }}</td>
+        </ng-container>
         <ng-container matColumnDef="categoria">
           <th mat-header-cell *matHeaderCellDef>Categoría</th>
           <td mat-cell *matCellDef="let row"><span class="category-tag">{{ row.categoria }}</span></td>

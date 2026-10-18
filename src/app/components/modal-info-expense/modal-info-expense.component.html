@@ -12,6 +12,7 @@
     <div><dt>Fecha</dt><dd>{{ expense.fecha | date:'dd/MM/yyyy':'-0500' }}</dd></div>
     <div><dt>Categoría</dt><dd>{{ expense.categoria }}</dd></div>
     <div class="full-width"><dt>Descripción</dt><dd>{{ expense.descripcion || 'Sin descripción' }}</dd></div>
+    <div class="full-width"><dt>Responsable del gasto</dt><dd>{{ expense.vendedorNombre || 'TIENDA' }}</dd></div>
     <div><dt>Método de pago</dt><dd>{{ expense.metodoPago ? (expense.metodoPago | titlecase) : 'Sin definir' }}</dd></div>
     <div><dt>Fecha de pago</dt><dd>{{ expense.fechaPago ? (expense.fechaPago | date:'dd/MM/yyyy':'-0500') : 'Sin pago registrado' }}</dd></div>
     <div><dt>Proveedor</dt><dd>{{ expense.proveedorNombre || 'Sin proveedor' }}</dd></div>

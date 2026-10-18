@@ -3,6 +3,7 @@ fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
 .form-grid, .more-grid, .detail-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 24px; }
 .full-width { grid-column: 1 / -1; }
 .field { min-width: 0; }
+.responsible-field { margin-top: 16px; }
 .field-label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 13px; }
 .required, .field-error { color: #cf303b; }
 .optional { color: #718096; font-weight: 400; font-size: 12px; }

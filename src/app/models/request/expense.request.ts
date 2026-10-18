@@ -10,6 +10,7 @@ export interface ExpenseRequest {
   metodoPago: ExpensePaymentMethod | null;
   fechaPago: string | null;
   proveedorId: string | null;
+  vendedorId?: string | null;
   tipoComprobante: ExpenseReceiptType;
   numeroComprobante: string | null;
   observaciones: string | null;

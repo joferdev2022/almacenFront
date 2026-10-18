@@ -24,8 +24,7 @@
       <div class="field">
         <label class="field-label" for="payment-date">Fecha de pago <span class="required">*</span></label>
         <div class="control" [class.invalid]="form.controls.fechaPago.touched && form.controls.fechaPago.invalid">
-          <mat-icon class="muted-icon" aria-hidden="true">calendar_today</mat-icon>
-          <input id="payment-date" type="date" formControlName="fechaPago" required aria-describedby="payment-date-help" [attr.aria-invalid]="form.controls.fechaPago.touched && form.controls.fechaPago.invalid">
+          <app-expense-datepicker inputId="payment-date" label="Fecha de pago" formControlName="fechaPago" [required]="true" describedBy="payment-date-help" [invalid]="form.controls.fechaPago.touched && form.controls.fechaPago.invalid"></app-expense-datepicker>
         </div>
         <p id="payment-date-help" class="hint" [class.field-error]="form.controls.fechaPago.touched && form.controls.fechaPago.invalid">{{ form.controls.fechaPago.touched && form.controls.fechaPago.invalid ? 'Ingresa una fecha válida.' : 'El gasto quedará registrado como pagado.' }}</p>
       </div>

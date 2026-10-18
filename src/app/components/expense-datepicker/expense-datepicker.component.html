@@ -1,0 +1,8 @@
+<input [id]="inputId" type="text" [matDatepicker]="calendar" [formControl]="date"
+  [required]="required" placeholder="dd/mm/aaaa" maxlength="10" autocomplete="off"
+  [attr.aria-label]="label" [attr.aria-describedby]="describedBy" [attr.aria-invalid]="invalid" (blur)="onTouched()">
+<button class="calendar-trigger" type="button" [disabled]="disabled" (click)="calendar.open()"
+  [attr.aria-label]="'Abrir calendario de ' + label.toLowerCase()" [attr.aria-expanded]="calendar.opened" aria-haspopup="dialog">
+  <mat-icon aria-hidden="true">calendar_month</mat-icon>
+</button>
+<mat-datepicker #calendar panelClass="expense-calendar-panel" [disabled]="disabled"></mat-datepicker>

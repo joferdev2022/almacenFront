@@ -18,7 +18,7 @@ import { expenseDateValidator, expenseError } from 'src/app/shared/expense.utils
   styleUrls: ['./expenses.component.scss', './expenses-table.scss']
 })
 export class ExpensesComponent implements OnInit, OnDestroy {
-  readonly displayedColumns = ['fecha', 'descripcion', 'categoria', 'proveedor', 'estado', 'metodo', 'monto', 'acciones'];
+  readonly displayedColumns = ['fecha', 'descripcion', 'responsable', 'categoria', 'proveedor', 'estado', 'metodo', 'monto', 'acciones'];
   readonly filters = this.fb.nonNullable.group({
     search: ['', Validators.maxLength(100)], fecha_desde: ['', expenseDateValidator],
     fecha_hasta: ['', expenseDateValidator], categoria: '', estado: '', metodo_pago: ''

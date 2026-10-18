@@ -44,6 +44,17 @@ describe('ExpensesComponent', () => {
     expect(service.loadExpenses.calls.mostRecent().args.slice(0, 2)).toEqual([3, 25]);
   });
 
+  it('shows who made each expense and TIENDA for older records', () => {
+    component.expenses = [
+      { id: 'one', monto: 10, estado: 'PENDIENTE', vendedorNombre: 'Ana Pérez' } as any,
+      { id: 'two', monto: 20, estado: 'PENDIENTE' } as any
+    ];
+    fixture.detectChanges();
+    const cells = fixture.nativeElement.querySelectorAll('.responsible-cell');
+    expect(cells[0].textContent.trim()).toBe('Ana Pérez');
+    expect(cells[1].textContent.trim()).toBe('TIENDA');
+  });
+
   it('sends search, date, state and method filters and resets pagination', fakeAsync(() => {
     component.pageIndex = 4;
     component.filters.patchValue({ search: 'internet', fecha_desde: '2026-08-28',

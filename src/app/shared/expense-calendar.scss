@@ -1,0 +1,24 @@
+.mat-datepicker-content:has(.expense-calendar-panel) {
+  padding: 8px;
+  border: 1px solid #dfe8e2;
+  border-radius: 16px;
+  background: #fff;
+  color: #182335;
+  box-shadow: 0 14px 40px #163b2526;
+  overflow: hidden;
+  font-family: Roboto, sans-serif;
+}
+.mat-datepicker-content .mat-calendar.expense-calendar-panel { width: min(304px, calc(100vw - 40px)); height: auto; }
+.expense-calendar-panel .mat-calendar-header { padding: 10px 8px 12px; border-bottom: 1px solid #e4ede7; border-radius: 10px 10px 0 0; background: #f4faf6; }
+.expense-calendar-panel .mat-calendar-controls { margin: 0; gap: 6px; }
+.expense-calendar-panel .mat-calendar-period-button { color: #14532d; font-size: 14px; font-weight: 600; }
+.expense-calendar-panel .mat-calendar-arrow { fill: #15803d; }
+.expense-calendar-panel .mat-calendar-previous-button,
+.expense-calendar-panel .mat-calendar-next-button { width: 36px; height: 36px; border: 1px solid #dfe8e2; border-radius: 10px; color: #526176; background: #fff; }
+.expense-calendar-panel .mat-calendar-table-header th { color: #526176; font-size: 12px; font-weight: 600; }
+.expense-calendar-panel .mat-calendar-body-label { color: #64748b; }
+.expense-calendar-panel .mat-calendar-body-cell-content { border-radius: 10px; color: #26354b; font-size: 13px; font-weight: 500; }
+.expense-calendar-panel .mat-calendar-body-today:not(.mat-calendar-body-selected) { border-color: #15803d; color: #166534; background: #f0faf3; }
+.expense-calendar-panel .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected) { background: #e6f5eb; }
+.expense-calendar-panel .mat-calendar-body-cell-content.mat-calendar-body-selected { color: #fff; background: #15803d; box-shadow: 0 2px 6px #15803d30; }
+.expense-calendar-panel .cdk-keyboard-focused .mat-calendar-body-active > .mat-calendar-body-cell-content { outline: 2px solid #15803d; outline-offset: 2px; }

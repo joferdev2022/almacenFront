@@ -17,6 +17,8 @@ export interface ExpenseModel {
   fechaPago: string | null;
   proveedorId: string | null;
   proveedorNombre: string | null;
+  vendedorId?: string | null;
+  vendedorNombre?: string;
   tipoComprobante: ExpenseReceiptType;
   numeroComprobante: string | null;
   observaciones: string | null;
@@ -51,4 +53,10 @@ export interface ExpenseProviderPage {
   total: number;
   page: number;
   xpage: number;
+}
+
+export interface ExpenseSeller {
+  id: string;
+  nombreVendedor: string;
+  aliasVendedor?: string;
 }

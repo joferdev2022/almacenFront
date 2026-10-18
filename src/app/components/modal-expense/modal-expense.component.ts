@@ -5,7 +5,7 @@ import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Subject, finalize, takeUntil } from 'rxjs';
-import { ExpenseModel, ExpenseOptions, ExpenseProvider } from 'src/app/models/internal/expense.model';
+import { ExpenseModel, ExpenseOptions, ExpenseProvider, ExpenseSeller } from 'src/app/models/internal/expense.model';
 import { ExpenseRequest } from 'src/app/models/request/expense.request';
 import { DataService } from 'src/app/services/data.service';
 import { expenseAmountValidator, expenseDateInput, expenseDateValidator, expenseError, expenseToday } from 'src/app/shared/expense.utils';
@@ -28,6 +28,9 @@ export class ModalExpenseComponent implements OnInit, OnDestroy {
   saving = false;
   error = '';
   providers: ExpenseProvider[] = [];
+  sellers: ExpenseSeller[] = [];
+  sellersLoading = false;
+  sellerError = '';
   providersLoading = false;
   providerError = '';
   providerPage = 0;
@@ -52,6 +55,7 @@ export class ModalExpenseComponent implements OnInit, OnDestroy {
       metodoPago: [expense?.metodoPago || null],
       fechaPago: [expenseDateInput(expense?.fechaPago)],
       proveedorId: [expense?.proveedorId || null],
+      vendedorId: [expense?.vendedorId || 'TIENDA'],
       tipoComprobante: [expense?.tipoComprobante || 'SIN_COMPROBANTE'],
       numeroComprobante: [expense?.numeroComprobante || '', Validators.maxLength(100)],
       observaciones: [expense?.observaciones || '', Validators.maxLength(2000)]
@@ -72,6 +76,7 @@ export class ModalExpenseComponent implements OnInit, OnDestroy {
       }
     });
     this.loadProviders();
+    this.loadSellers();
   }
 
   get isPaid(): boolean { return this.form.controls['estado'].value === 'PAGADO'; }
@@ -90,6 +95,33 @@ export class ModalExpenseComponent implements OnInit, OnDestroy {
   invalid(field: string): boolean {
     const control = this.form.controls[field];
     return control.invalid && control.touched;
+  }
+
+  loadSellers(): void {
+    if (this.sellersLoading || this.saving) { return; }
+    this.sellersLoading = true;
+    this.sellerError = '';
+    this.dataService.loadExpenseSellers().pipe(
+      takeUntil(this.destroy$), finalize(() => this.sellersLoading = false)
+    ).subscribe({
+      next: response => {
+        this.sellers = [...response.data];
+        const expense = this.data.expense;
+        if (expense?.vendedorId) {
+          const index = this.sellers.findIndex(seller => seller.id === expense.vendedorId);
+          const recorded = { id: expense.vendedorId, nombreVendedor: expense.vendedorNombre || 'Vendedor registrado' };
+          if (index < 0) { this.sellers.unshift(recorded); }
+          else { this.sellers[index] = { ...this.sellers[index], ...recorded }; }
+        }
+      },
+      error: () => {
+        this.sellerError = 'No se pudieron cargar los vendedores. Puedes usar TIENDA o reintentar.';
+        const expense = this.data.expense;
+        if (expense?.vendedorId && !this.sellers.some(seller => seller.id === expense.vendedorId)) {
+          this.sellers = [{ id: expense.vendedorId, nombreVendedor: expense.vendedorNombre || 'Vendedor registrado' }];
+        }
+      }
+    });
   }
 
   loadProviders(more = false): void {
@@ -124,7 +156,7 @@ export class ModalExpenseComponent implements OnInit, OnDestroy {
   }
 
   save(): void {
-    if (this.saving) { return; }
+    if (this.saving || this.sellersLoading) { return; }
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     const value = this.form.getRawValue();
     const optional = (text: string) => text.trim() || null;
@@ -133,6 +165,7 @@ export class ModalExpenseComponent implements OnInit, OnDestroy {
       monto: String(value.monto).trim().replace(',', '.'), estado: value.estado,
       metodoPago: value.metodoPago || null, fechaPago: this.isPaid ? value.fechaPago : null,
       proveedorId: value.proveedorId || null, tipoComprobante: value.tipoComprobante,
+      vendedorId: value.vendedorId === 'TIENDA' ? null : value.vendedorId || null,
       numeroComprobante: optional(value.numeroComprobante), observaciones: optional(value.observaciones)
     };
     this.saving = true;

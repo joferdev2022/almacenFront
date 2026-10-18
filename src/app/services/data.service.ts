@@ -2,7 +2,7 @@ import { newOperationId } from '../shared/cash.utils';
 import { SalesReportFilters, SalesReportResponse } from '../models/internal/report.model';
 import { CashCurrent, CashJournal, CashMovement, CashPage, CashResponse, CashOpeningRequest, CashMovementRequest, CashClosingRequest } from '../models/internal/cash.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { ExpenseModel, ExpenseOptions, ExpenseProviderPage } from '../models/internal/expense.model';
+import { ExpenseModel, ExpenseOptions, ExpenseProviderPage, ExpenseSeller } from '../models/internal/expense.model';
 import { ExpenseFilters, ExpensePaymentRequest, ExpenseRequest } from '../models/request/expense.request';
 import { ExpenseApiResponse, ExpenseListApiResponse, ExpenseResponse } from '../models/response/expense.response';
 import { Injectable } from '@angular/core';
@@ -50,6 +50,10 @@ export class DataService {
 
   loadExpenseOptions(): Observable<ExpenseApiResponse<ExpenseOptions>> {
     return this.http.get<ExpenseApiResponse<ExpenseOptions>>(`${base_url}/expenses/options`);
+  }
+
+  loadExpenseSellers(): Observable<ExpenseApiResponse<ExpenseSeller[]>> {
+    return this.http.get<ExpenseApiResponse<ExpenseSeller[]>>(`${base_url}/expenses/sellers`);
   }
 
   loadExpenseProviders(search = '', page = 1): Observable<ExpenseApiResponse<ExpenseProviderPage>> {

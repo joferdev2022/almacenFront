@@ -11,6 +11,7 @@ tr.mat-mdc-row:hover { background: #fafcfb; }
 .description { min-width: 160px; max-width: 260px; overflow-wrap: anywhere; font-weight: 500; }
 .description small { display: block; margin-top: 4px; font-size: 11px; color: #8793a4; font-weight: 400; }
 .provider-cell { color: #748297; max-width: 180px; overflow-wrap: anywhere; }
+.responsible-cell { min-width: 100px; max-width: 180px; overflow-wrap: anywhere; }
 .date-cell, .method-cell { color: #596b81; white-space: nowrap; }
 .amount { text-align: right; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums; }
 .category-tag { display: inline-block; padding: 4px 8px; border-radius: 5px; background: #f3f5f8; color: #62748a; font-size: 12px; }
