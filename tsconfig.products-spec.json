@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.spec.json",
+  "include": [
+    "src/app/components/product-history*/**/*.spec.ts",
+    "src/app/pages/products/product-history.spec.ts",
+    "src/app/services/product-history.service.spec.ts",
+    "src/**/*.d.ts"
+  ]
+}

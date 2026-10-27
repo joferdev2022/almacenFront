@@ -3,6 +3,10 @@
 @use './app/shared/expense-calendar';
 @use './app/shared/responsive-layout';
 
+.product-history-panel .mat-mdc-dialog-container .mdc-dialog__surface {
+    border-radius: 14px 0 0 14px;
+}
+
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }

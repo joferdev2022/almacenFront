@@ -10,6 +10,7 @@ import { Observable, Subject, map } from 'rxjs';
 
 
 import { ProductResponse } from '../models/response/product.response';
+import { ProductHistory } from '../models/internal/product-history.model';
 import { SaleResponse } from '../models/response/sale.response';
 import { DashboardResponse } from '../models/response/dashboard.response';
 import { ProductRequest } from '../models/request/product.request';
@@ -93,6 +94,10 @@ export class DataService {
   excelUploadResponse$ = new Subject<any>();
 
   constructor(private http: HttpClient) { }
+
+  loadProductHistory(id: string, pin: string): Observable<{ data: ProductHistory }> {
+    return this.http.post<{ data: ProductHistory }>(`${base_url}/products/${id}/history`, { pin });
+  }
 
 
 

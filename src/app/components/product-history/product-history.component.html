@@ -1,0 +1,47 @@
+<header class="panel-header">
+  <span class="header-icon"><mat-icon>history</mat-icon></span>
+  <h2 mat-dialog-title>Historial de cambios</h2>
+  <button type="button" class="close" mat-dialog-close aria-label="Cerrar historial" cdkFocusInitial>
+    <mat-icon>close</mat-icon>
+  </button>
+</header>
+<mat-dialog-content class="panel-content">
+  <section class="product-summary" aria-label="Producto">
+    <span class="eyebrow">PRODUCTO</span>
+    <h3>{{ data.producto.nombre }}</h3>
+    <div class="product-meta"><span>{{ data.producto.unidadDeMedida }}</span>
+      <span class="stock">Stock actual <strong>{{ data.producto.cantidadEnStock }}</strong></span>
+    </div>
+  </section>
+  <div class="section-heading">
+    <h3>Últimos 3 cambios</h3>
+    <span class="read-only"><mat-icon>lock_outline</mat-icon> Solo lectura</span>
+  </div>
+  <div class="timeline" *ngIf="data.eventos.length; else emptyHistory">
+    <article class="event" *ngFor="let event of data.eventos">
+      <span class="event-dot"><mat-icon>{{ event.ventaId ? 'receipt_long' : 'edit' }}</mat-icon></span>
+      <div class="event-heading">
+        <h4>{{ actions[event.accion] || event.accion }}</h4>
+        <time [attr.datetime]="event.fecha">{{ formatDate(event.fecha) }}</time>
+      </div>
+      <p class="actor">{{ event.usuarioNombre }}</p>
+      <div class="changes" role="table" aria-label="Valores modificados">
+        <div class="change-labels" role="row"><span role="columnheader">Campo</span>
+          <span role="columnheader">Antes</span><span aria-hidden="true"></span><span role="columnheader">Después</span></div>
+        <div class="change" role="row" *ngFor="let change of event.cambios">
+          <span class="field" role="cell">{{ labels[change.campo] || change.campo }}</span>
+          <span class="before" role="cell">{{ formatValue(change.campo, change.antes) }}</span>
+          <mat-icon aria-hidden="true">arrow_forward</mat-icon>
+          <strong role="cell">{{ formatValue(change.campo, change.despues) }}</strong>
+        </div>
+      </div>
+      <p class="reference" *ngIf="event.ventaId">Venta · {{ event.ventaId.slice(-8).toUpperCase() }}</p>
+      <p class="reason" *ngIf="event.motivo">{{ event.motivo }}</p>
+    </article>
+  </div>
+  <ng-template #emptyHistory>
+    <div class="empty-state"><mat-icon>history</mat-icon><h4>Aún no hay cambios registrados</h4>
+      <p>Los próximos cambios de este producto aparecerán aquí.</p></div>
+  </ng-template>
+</mat-dialog-content>
+<footer *ngIf="data.total">Mostrando {{ data.eventos.length }} de {{ data.total }} registros</footer>

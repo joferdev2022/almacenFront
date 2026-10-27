@@ -15,6 +15,8 @@ import { ModalProductComponentComponent } from 'src/app/components/modal-product
 import { ModalChoiceComponentComponent } from 'src/app/components/modal-choice.component/modal-choice.component.component';
 import { ModalPinComponent } from 'src/app/components/modal-pin/modal-pin.component';
 import { ModalProductExcelComponent } from 'src/app/components/modal-product-excel/modal-product-excel.component';
+import { ProductHistoryPinComponent } from 'src/app/components/product-history-pin/product-history-pin.component';
+import { ProductHistoryComponent } from 'src/app/components/product-history/product-history.component';
 
 
 @Component({
@@ -93,6 +95,20 @@ export class ProductsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.isPurchasePriceVisible = result === true;
+    });
+  }
+
+  openProductHistory(product: ProductModel): void {
+    this.dialog.open(ProductHistoryPinComponent, {
+      width: '360px', maxWidth: '94vw', autoFocus: 'input',
+      data: { productId: product.id }
+    }).afterClosed().subscribe(history => {
+      if (!history) { return; }
+      this.dialog.open(ProductHistoryComponent, {
+        data: history, width: '690px', maxWidth: '96vw', height: '100dvh', maxHeight: '100dvh',
+        position: { right: '0', top: '0' }, panelClass: 'product-history-panel',
+        autoFocus: 'first-tabbable'
+      });
     });
   }
 

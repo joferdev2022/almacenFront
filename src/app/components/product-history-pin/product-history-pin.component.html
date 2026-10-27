@@ -1,0 +1,18 @@
+<form class="history-pin" (ngSubmit)="confirm()">
+  <h2 mat-dialog-title>Ingresa tu PIN</h2>
+  <p>Historial de cambios</p>
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>PIN</mat-label>
+    <input matInput type="password" name="pin" maxlength="4" inputmode="numeric"
+      autocomplete="off" [(ngModel)]="pin" [disabled]="pending" cdkFocusInitial
+      aria-label="PIN de 4 dígitos" [attr.aria-invalid]="error ? true : null"
+      [attr.aria-describedby]="error ? 'history-pin-error' : null">
+  </mat-form-field>
+  <p *ngIf="error" id="history-pin-error" class="error" role="alert">{{ error }}</p>
+  <div class="actions">
+    <button type="button" class="secondary" mat-dialog-close>Cancelar</button>
+    <button type="submit" class="primary" [disabled]="pending || !pin.match('^[0-9]{4}$')">
+      {{ pending ? 'Consultando…' : 'Continuar' }}
+    </button>
+  </div>
+</form>

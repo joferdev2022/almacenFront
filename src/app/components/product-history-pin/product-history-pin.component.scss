@@ -1,0 +1,14 @@
+:host { display: block; color: #363949; }
+.history-pin { padding: 26px; text-align: center; }
+h2.mat-mdc-dialog-title { padding: 0; margin: 0; font-size: 21px; font-weight: 600; }
+h2::before { display: none; }
+p { margin: 8px 0 24px; font-size: 14px; }
+mat-form-field { width: 150px; }
+input { text-align: center; font-size: 24px; letter-spacing: 8px; }
+.error { margin: 18px 0 0; color: #b42335; font-size: 13px; }
+.actions { display: flex; gap: 12px; margin-top: 26px; }
+button { flex: 1; min-height: 40px; border: 1px solid #dfe3ec; border-radius: 8px; font: 500 14px Roboto, sans-serif; cursor: pointer; }
+.secondary { background: white; color: #526176; }
+.primary { background: #7380ec; color: white; border-color: #7380ec; }
+button:disabled { opacity: .5; cursor: not-allowed; }
+button:focus-visible { outline: 2px solid #7380ec; outline-offset: 3px; }
