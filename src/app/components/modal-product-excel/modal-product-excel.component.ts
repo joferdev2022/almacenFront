@@ -1,100 +1,109 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject } from 'rxjs';
-
-import { MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { finalize } from 'rxjs';
 import { DataService } from '../../services/data.service';
-import { ModalProductComponentComponent } from '../modal-product.component/modal-product.component.component';
+import { ProductExcelPreview, ProductExcelResult } from '../../models/internal/product-excel.model';
 
 @Component({
   selector: 'app-modal-product-excel',
   templateUrl: './modal-product-excel.component.html',
   styleUrls: ['./modal-product-excel.component.scss']
 })
-export class ModalProductExcelComponent implements OnInit {
-
-  
-
-
+export class ModalProductExcelComponent {
   file: File | null = null;
-  progress = 0;
-  status = 'Pendiente';
+  status = 'Selecciona el Excel del conteo completo del local.';
   dragging = false;
-  local!: any;
-  constructor(public dialogRef: MatDialogRef<ModalProductComponentComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private fb: FormBuilder,
-    private dataService: DataService,
-    public dialog: MatDialog) {
+  busy: 'validating' | 'saving' | null = null;
+  validation: ProductExcelPreview | null = null;
+  local: number;
 
-    this.local = JSON.parse(localStorage.getItem('local')!) ? JSON.parse(localStorage.getItem('local')!) : '';
-
-  }
-  ngOnInit(): void {
-
+  constructor(public dialogRef: MatDialogRef<ModalProductExcelComponent, ProductExcelResult>,
+    @Inject(MAT_DIALOG_DATA) public data: { operation: string },
+    private dataService: DataService) {
+    this.local = Number(JSON.parse(localStorage.getItem('local') || 'null'));
   }
 
-  onDragOver(event: DragEvent) {
+  onDragOver(event: DragEvent): void {
     event.preventDefault();
-    this.dragging = true;
+    this.dragging = !this.busy;
   }
 
-  onDragLeave(event: DragEvent) {
+  onDragLeave(event: DragEvent): void {
     event.preventDefault();
     this.dragging = false;
   }
 
-  onDrop(event: DragEvent) {
+  onDrop(event: DragEvent): void {
     event.preventDefault();
     this.dragging = false;
-
-    if (event.dataTransfer?.files.length) {
-      this.setFile(event.dataTransfer.files[0]);
-    }
+    const file = event.dataTransfer?.files[0];
+    if (file) { this.setFile(file); }
   }
 
-  onFileSelected(event: any) {
-    this.setFile(event.target.files[0]);
+  onFileSelected(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) { this.setFile(file); }
   }
 
-  setFile(file: File) {
-    if (!file.name.match(/\.(xls|xlsx)$/)) {
-      this.status = 'Formato inválido';
+  setFile(file: File): void {
+    if (this.busy) { return; }
+    this.file = null;
+    this.validation = null;
+    if (!/\.xlsx$/i.test(file.name)) {
+      this.status = 'Formato inválido. Selecciona un archivo .xlsx.';
       return;
     }
     this.file = file;
-    this.status = 'Archivo listo para subir';
+    this.status = 'Archivo seleccionado. Valídalo para revisar los cambios antes de importar.';
   }
 
-  onUpload() {
-
-    if (!this.file) {
-      this.status = 'Por favor selecciona un archivo';
-      return;
-    }
-
-    this.status = 'Subiendo...';
-    this.progress = 0;
-
-    this.dataService.uploadProductsExcel(this.file, this.local).subscribe(
-      (response: any) => {
-        console.log(response);
-        
-        this.progress = 100;
-        this.status = `Completado - ${response.inserted_count} insertados, ${response.deleted_count} eliminados`;
-
-
-        this.dataService.excelUploadResponse$.next(response);
-        // Cerrar el diálogo después de 2 segundos
-        setTimeout(() => {
-          this.dialogRef.close(true);
-        }, 2000);
+  onValidate(): void {
+    if (!this.file || this.busy) { return; }
+    this.validation = null;
+    this.start('validating', 'Validando todas las filas…');
+    this.dataService.previewProductsExcel(this.file, this.local).pipe(finalize(() => this.finish())).subscribe({
+      next: result => {
+        this.validation = result;
+        this.status = result.valid
+          ? 'Validación completada. Revisa los cambios y pulsa Importar.'
+          : `${result.errors.length === 1 ? 'Se encontró 1 error' : `Se encontraron ${result.errors.length} errores`}. Revisa los detalles, corrige el archivo o los productos registrados y vuelve a validar. No se guardó ningún cambio.`;
       },
-      (error: any) => {
-        this.progress = 0;
-        this.status = `Error: ${error.error.detail || 'Error al procesar el archivo'}`;
-        console.error('Error al subir archivo:', error);
-      }
-    );
+      error: error => this.showError(error)
+    });
+  }
+
+  onUpload(): void {
+    if (!this.file || !this.validation?.valid || this.busy) { return; }
+    this.start('saving', 'Actualizando el inventario…');
+    this.dataService.uploadProductsExcel(this.file, this.local, this.validation.catalog_version)
+      .pipe(finalize(() => this.finish())).subscribe({
+        next: result => this.dialogRef.close(result),
+        error: error => this.showError(error)
+      });
+  }
+
+  private start(state: 'validating' | 'saving', status: string): void {
+    this.busy = state;
+    this.status = status;
+    this.dialogRef.disableClose = true;
+  }
+
+  private finish(): void {
+    this.busy = null;
+    this.dialogRef.disableClose = false;
+  }
+
+  private showError(error: { error?: { detail?: unknown } }): void {
+    const detail = error.error?.detail;
+    if (detail && typeof detail === 'object' && 'errors' in detail && Array.isArray(detail.errors)) {
+      this.validation = {
+        valid: false, errors: detail.errors, preview: [], catalog_version: '',
+        total_processed: 0, inserted_count: 0, updated_count: 0, zeroed_count: 0
+      };
+      this.status = 'Corrige los errores indicados. No se modificó ningún producto.';
+    } else {
+      this.validation = null;
+      this.status = typeof detail === 'string' ? detail : 'No se pudo completar la operación. Revisa el inventario y vuelve a validar el archivo.';
+    }
   }
 }

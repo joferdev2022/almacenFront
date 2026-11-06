@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 
 import { DataService } from 'src/app/services/data.service';
 import { ProductModel } from 'src/app/models/internal/product.model';
+import { ProductExcelImport } from 'src/app/models/internal/product-excel.model';
 import { ModalProductComponentComponent } from 'src/app/components/modal-product.component/modal-product.component.component';
 import { ModalChoiceComponentComponent } from 'src/app/components/modal-choice.component/modal-choice.component.component';
 import { ModalPinComponent } from 'src/app/components/modal-pin/modal-pin.component';
@@ -37,6 +38,10 @@ export class ProductsComponent implements OnInit {
   local!: any;
   permissions!: any;
   isPurchasePriceVisible: boolean = false;
+  lastImport: ProductExcelImport | null = null;
+  loadingLastImport = false;
+  lastImportError = false;
+  private lastImportRequest = 0;
 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -54,6 +59,7 @@ export class ProductsComponent implements OnInit {
   }
   ngOnInit(): void {
     this.loadAllProducts();
+    this.loadLastImport();
 
   }
 
@@ -81,6 +87,25 @@ export class ProductsComponent implements OnInit {
       }
     })
 
+  }
+
+  loadLastImport(): void {
+    const request = ++this.lastImportRequest;
+    this.loadingLastImport = true;
+    this.lastImportError = false;
+    this.lastImport = null;
+    this.dataService.loadLatestProductImport(this.local).subscribe({
+      next: response => {
+        if (request !== this.lastImportRequest) { return; }
+        this.lastImport = response.data;
+        this.loadingLastImport = false;
+      },
+      error: () => {
+        if (request !== this.lastImportRequest) { return; }
+        this.lastImportError = true;
+        this.loadingLastImport = false;
+      }
+    });
   }
 
   togglePurchasePriceVisibility(): void {
@@ -160,31 +185,16 @@ export class ProductsComponent implements OnInit {
     const dialogRef = this.dialog.open(ModalPinComponent, {
       data: { info: 'excel' }
     });
-
     dialogRef.afterClosed().subscribe(result => {
-      if (result == true) {
-        this.dataService.excelUploadResponse$.subscribe((response: any) => {
-          Swal.fire({
-            title: "Hecho!",
-            text: `Los productos se han agregado correctamente.\n${response.inserted_count} insertados, ${response.deleted_count} eliminados`,
-            icon: "success"
-          });
-          timer(1000).subscribe(() => {
-            this.loadAllProducts();
-          });
-        });
-      } else if (result === false) {
-        Swal.fire({
-          title: "Error",
-          text: "No se pudo actualizar los productos. Intenta nuevamente.",
-          icon: "error"
-        });
-      }
-
-      // console.log(result);
-      console.log(`Dialog result: ${result}`);
+      if (!result || typeof result.inserted_count !== 'number') { return; }
+      Swal.fire({
+        title: 'Hecho!',
+        text: `Inventario actualizado: ${result.inserted_count} nuevos, ${result.updated_count} existentes y ${result.zeroed_count} ausentes con stock 0.`,
+        icon: 'success'
+      });
+      this.loadAllProducts();
+      this.loadLastImport();
     });
-
   }
   openDialogCreate() {
     const dialogRef = this.dialog.open(ModalProductComponentComponent, {

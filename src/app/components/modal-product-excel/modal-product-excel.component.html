@@ -1,5 +1,5 @@
 <h2 *ngIf="data.operation == 'excel'" mat-dialog-title>Importar Productos desde Excel</h2>
-<mat-dialog-content class="mat-typography dialog-content">
+<mat-dialog-content class="mat-typography dialog-content" [attr.aria-busy]="!!busy">
   <!-- Drop zone -->
   <div
     class="drop-zone"
@@ -20,13 +20,14 @@
 
     <p>Arrastra y suelta el archivo Excel aquí</p>
 
-    <button mat-raised-button color="primary" (click)="fileInput.click()">
+    <button mat-raised-button color="primary" (click)="fileInput.value = ''; fileInput.click()" [disabled]="!!busy">
       Seleccionar Archivo
     </button>
 
     <input
       type="file"
-      accept=".xls,.xlsx"
+      accept=".xlsx"
+      [disabled]="!!busy"
       hidden
       #fileInput
       (change)="onFileSelected($event)"
@@ -38,27 +39,67 @@
 
   </div>
 
-  <!-- Progreso -->
-  <!-- <div class="progress-container" *ngIf="file">
-    <mat-progress-bar
-      mode="determinate"
-      [value]="progress">
-    </mat-progress-bar>
-    <small>Progreso: {{ progress }}% - {{ status }}</small>
-  </div> -->
+  <p class="status" role="status" aria-live="polite">{{ status }}</p>
 
   <!-- Info -->
   <div class="info-text">
     <p>
-      Formato requerido: <b>.xlsx, .xls</b> Asegúrese de que el archivo contenga las columnas correctas:<br />
+      Formato: <b>.xlsx</b>. El Excel descargado incluye las columnas en este orden:<br />
       <b>
-        CANTIDAD, PRODUCTO, PRESENTACION, MARCA,
+        CODIGO, CANTIDAD, PRODUCTO, PRESENTACION, MARCA,
          CATEGORIA , DESCRIPCION , P. UNITARIO, P. VENTA
       </b>
     </p>
+    <p>Para productos nuevos deja CODIGO vacío. Conserva los códigos de los productos existentes.</p>
+    <p>Si tu Excel anterior no incluye CODIGO, se buscarán coincidencias por nombre y presentación. Si hay varios productos registrados que coinciden, debes resolver esa duplicidad antes de importar.</p>
+    <p>Obligatorios: PRODUCTO, PRESENTACION, P. UNITARIO y P. VENTA. Una CANTIDAD vacía se interpreta como 0. MARCA, CATEGORIA y DESCRIPCION pueden quedar vacías.</p>
+    <p>Este archivo reemplaza el conteo del local: los productos ausentes quedarán con stock 0 y conservarán su registro.</p>
   </div>
+
+  <section *ngIf="validation && !validation.valid" class="validation-errors" aria-label="Errores del Excel">
+    <h3>La importación está bloqueada</h3>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Fila</th><th>Columna</th><th>Error</th></tr></thead>
+        <tbody><tr *ngFor="let error of validation.errors">
+          <td>{{ error.row === null ? 'Archivo' : error.row }}</td>
+          <td>{{ error.column }}</td>
+          <td>
+            {{ error.message }}
+            <div *ngIf="error.conflicts?.length" class="catalog-conflicts">
+              <p><strong>Productos registrados en conflicto:</strong></p>
+              <ul>
+                <li *ngFor="let product of error.conflicts">
+                  <strong>{{ product.name }} / {{ product.presentation }}</strong> · Stock: {{ product.stock }}
+                  <span *ngIf="product.category"> · Categoría: {{ product.category }}</span>
+                  <span class="conflict-code">Código: <code>{{ product.code }}</code></span>
+                </li>
+              </ul>
+            </div>
+          </td>
+        </tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section *ngIf="validation?.valid" class="preview" aria-label="Vista previa del inventario">
+    <h3>Revisa los cambios antes de importar</h3>
+    <p>{{ validation!.inserted_count }} nuevos · {{ validation!.updated_count }} existentes · {{ validation!.zeroed_count }} ausentes quedarán en cero.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Acción</th><th>Fila</th><th>Producto</th><th>Presentación</th><th>Stock actual</th><th>Nuevo stock</th></tr></thead>
+        <tbody><tr *ngFor="let row of validation!.preview" [class.zero-row]="row.action === 'zero'">
+          <td>{{ row.action === 'create' ? 'Crear' : row.action === 'zero' ? 'Dejar en cero' : 'Actualizar' }}</td>
+          <td>{{ row.row === null ? 'Ausente' : row.row }}</td>
+          <td>{{ row.name }}</td><td>{{ row.presentation }}</td>
+          <td>{{ row.stock_before === null ? 'Nuevo' : row.stock_before }}</td><td>{{ row.stock_after }}</td>
+        </tr></tbody>
+      </table>
+    </div>
+  </section>
 </mat-dialog-content>
 <mat-dialog-actions align="end" class="dialog-actions">
-  <button class="btn-cancel" mat-raised-button mat-dialog-close>Cancelar</button>
-  <button *ngIf="data.operation == 'excel'" class="btn-upload" mat-raised-button (click)="onUpload()" [mat-dialog-close]="true" cdkFocusInitial>Subir</button>
+  <button class="btn-cancel" mat-raised-button mat-dialog-close [disabled]="!!busy">Cancelar</button>
+  <button class="btn-validate" mat-raised-button (click)="onValidate()" [disabled]="!file || !!busy">{{ busy === 'validating' ? 'Validando…' : 'Validar archivo' }}</button>
+  <button class="btn-upload" mat-raised-button (click)="onUpload()" [disabled]="!validation?.valid || !!busy">{{ busy === 'saving' ? 'Importando…' : 'Importar' }}</button>
 </mat-dialog-actions>

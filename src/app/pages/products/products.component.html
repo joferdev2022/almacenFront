@@ -1,5 +1,20 @@
 <div class="products">
     <h1>Productos</h1>
+
+    <section class="last-import" aria-label="Última importación de productos" aria-live="polite" [attr.aria-busy]="loadingLastImport">
+        <p *ngIf="loadingLastImport">Consultando última importación…</p>
+        <p *ngIf="!loadingLastImport && lastImportError">
+            No se pudo consultar la última importación.
+            <button type="button" (click)="loadLastImport()">Reintentar</button>
+        </p>
+        <ng-container *ngIf="!loadingLastImport && !lastImportError">
+            <ng-container *ngIf="lastImport as info; else noImports">
+                <p><strong>Última importación:</strong> {{ info.imported_at | date:'dd/MM/yyyy, HH:mm':'-0500' }} (hora de Lima) — {{ info.filename }}</p>
+                <p class="import-summary">{{ info.inserted_count }} nuevos · {{ info.updated_count }} actualizados · {{ info.zeroed_count }} dejados en cero</p>
+            </ng-container>
+            <ng-template #noImports><p>Sin importaciones registradas para este local.</p></ng-template>
+        </ng-container>
+    </section>
     
     <!-- todo: Data table with sorting, pagination, and filtering. -->
     <div class="table-controls">

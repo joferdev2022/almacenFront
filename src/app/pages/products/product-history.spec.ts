@@ -15,7 +15,8 @@ describe('ProductsComponent history flow', () => {
   let service: jasmine.SpyObj<DataService>;
   const product = Object.assign(new ProductModel(), { id: 'product', name: 'Arroz', stock: 8 });
   beforeEach(async () => {
-    service = jasmine.createSpyObj('DataService', ['loadProducts']);
+    service = jasmine.createSpyObj('DataService', ['loadProducts', 'loadLatestProductImport']);
+    service.loadLatestProductImport.and.returnValue(of({ data: null }));
     service.loadProducts.and.returnValue(of({ data: [product], total: 1, page: 1, xpage: 10 } as any));
     dialog = jasmine.createSpyObj('MatDialog', ['open']);
     await TestBed.configureTestingModule({ declarations: [ProductsComponent],

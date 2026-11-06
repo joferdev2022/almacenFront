@@ -6,7 +6,8 @@ import { ExpenseModel, ExpenseOptions, ExpenseProviderPage, ExpenseSeller } from
 import { ExpenseFilters, ExpensePaymentRequest, ExpenseRequest } from '../models/request/expense.request';
 import { ExpenseApiResponse, ExpenseListApiResponse, ExpenseResponse } from '../models/response/expense.response';
 import { Injectable } from '@angular/core';
-import { Observable, Subject, map } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import { ProductExcelImport, ProductExcelPreview, ProductExcelResult } from '../models/internal/product-excel.model';
 
 
 import { ProductResponse } from '../models/response/product.response';
@@ -90,8 +91,6 @@ export class DataService {
   deleteExpense(id: string, motivo = "Anulación solicitada", key = newOperationId()): Observable<ExpenseApiResponse<ExpenseModel>> {
     return this.http.delete<ExpenseApiResponse<ExpenseModel>>(`${base_url}/expenses/${id}`, { ...this.operationOptions(key), body: { motivo } });
   }
-
-  excelUploadResponse$ = new Subject<any>();
 
   constructor(private http: HttpClient) { }
 
@@ -281,13 +280,26 @@ export class DataService {
     return this.http.get<any>(url).pipe(map(res => {return res;}));
   }
 
-  uploadProductsExcel(file: File, local: any): Observable<any> {
+  loadLatestProductImport(local: number): Observable<{ data: ProductExcelImport | null }> {
+    const params = new HttpParams().set('local', local);
+    return this.http.get<{ data: ProductExcelImport | null }>(`${base_url}/products/imports/latest`, { params });
+  }
+
+  previewProductsExcel(file: File, local: number): Observable<ProductExcelPreview> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('local', String(local));
+    return this.http.post<ProductExcelPreview>(`${base_url}/products/preview-excel`, formData);
+  }
+
+  uploadProductsExcel(file: File, local: number, catalogVersion: string): Observable<ProductExcelResult> {
     const url = `${base_url}/products/upload-excel`;
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('local', local);
+    formData.append('local', String(local));
+    formData.append('catalog_version', catalogVersion);
     
-    return this.http.post<any>(url, formData);
+    return this.http.post<ProductExcelResult>(url, formData);
   }
 
   DownloadProductsExcel(local: any){

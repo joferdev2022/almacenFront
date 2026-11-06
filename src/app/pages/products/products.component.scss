@@ -7,6 +7,19 @@
     font-size: 1.5rem;
 }
 
+.last-import {
+    margin: 0 0 18px;
+    color: #424957;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+    p { margin: 4px 0; line-height: 1.5; }
+    .import-summary { color: #626b78; }
+    button {
+        margin-left: 6px; padding: 2px 4px; border: 0; background: transparent;
+        color: #4858bd; cursor: pointer; text-decoration: underline;
+    }
+}
+
 .product-name-cell { display: flex; align-items: center; gap: 6px; min-width: 170px; }
 .product-menu-button {
     display: inline-flex; align-items: center; justify-content: center;
