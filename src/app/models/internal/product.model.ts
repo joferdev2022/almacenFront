@@ -1,4 +1,4 @@
-
+import { normalizeProductMeasure } from '../../shared/product-measure.utils';
 export class ProductModel {
 
     id!: string;
@@ -23,7 +23,7 @@ export class ProductModel {
         newObj.priceBuy = obj.precioCompra;
         newObj.priceSale = obj.precioVenta;
         newObj.stock = obj.cantidadEnStock;
-        newObj.measure = obj.unidadDeMedida;
+        newObj.measure = normalizeProductMeasure(obj.unidadDeMedida);
         newObj.proovId = obj.proveedorId;
         newObj.expirationDate = obj.fechaDeCaducidad;
         newObj.creationDate = obj.fechaDeCreacion;

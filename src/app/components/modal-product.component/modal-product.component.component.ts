@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {MatDialog, MAT_DIALOG_DATA, MatDialogRef, MatDialogModule} from '@angular/material/dialog';
 import { DataService } from '../../services/data.service';
 import { ProductRequest } from 'src/app/models/request/product.request';
+import { normalizeProductMeasure, PRODUCT_MEASURE_OPTIONS } from 'src/app/shared/product-measure.utils';
 
 
 @Component({
@@ -28,20 +29,7 @@ export class ModalProductComponentComponent implements OnInit {
     {value: 'Fertilizantes edáficos', viewValue: 'Fertilizantes edáficos'},
   ]
 
-  measure = [
-    {value: 'Unidad', viewValue: 'Unidad'},
-    {value: 'Caja', viewValue: 'Caja'},
-    {value: '100 GRAMOS', viewValue: '100 GR'},
-    {value: '500 GRAMOS', viewValue: '500 GR'},
-    {value: 'KILOGRAMO', viewValue: 'KG'},
-    {value: '10 KILOGRAMOS', viewValue: '10 KG'},
-    {value: '25 KILOGRAMOS', viewValue: '25 KG'},
-    {value: '50 KILOGRAMOS', viewValue: '50 KG'},
-    {value: '125 MILILITROS', viewValue: '125 ML'},
-    {value: '250 MILILITROS', viewValue: '250 ML'},
-    {value: 'LITRO', viewValue: 'LT'},
-    {value: '4 LITROS', viewValue: '4 LT'},
-  ]
+  measure = [...PRODUCT_MEASURE_OPTIONS];
 
   constructor(public dialogRef: MatDialogRef<ModalProductComponentComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
@@ -60,12 +48,16 @@ export class ModalProductComponentComponent implements OnInit {
   }
 
   createForm() {
+    const currentMeasure = normalizeProductMeasure(this.data.product?.measure);
+    if (currentMeasure && !this.measure.some(option => option.value === currentMeasure)) {
+      this.measure.push({ value: currentMeasure, viewValue: currentMeasure });
+    }
     this.productForm = this.fb.group({
       // tel: new FormControl()
       nameProduct: [  this.data.product ? this.data.product.name : '' , Validators.required ],
       description: [ this.data.product ? this.data.product.description : '', [ Validators.required] ],
       category: [ this.data.product ? this.data.product.category : '', Validators.required ],
-      measure: [ this.data.product ? this.data.product.measure : '', Validators.required ],
+      measure: [ currentMeasure, Validators.required ],
       buyPrice: [ this.data.product ? this.data.product.priceBuy : '', Validators.required ],
       salePrice: [ this.data.product ? this.data.product.priceSale : '', Validators.required ],
       Stock: [ this.data.product ? this.data.product.stock : '', Validators.required ],

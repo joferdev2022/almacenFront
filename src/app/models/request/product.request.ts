@@ -1,4 +1,4 @@
-
+import { normalizeProductMeasure } from '../../shared/product-measure.utils';
 export class ProductRequest {
     nombre!: string;
     descripcion!: string;
@@ -19,11 +19,10 @@ export class ProductRequest {
       newObj.precioCompra = product.buyPrice;
       newObj.precioVenta = product.salePrice;
       newObj.cantidadEnStock = product.Stock;
-      newObj.unidadDeMedida = product.measure;
+      newObj.unidadDeMedida = normalizeProductMeasure(product.measure);
       newObj.local = product.local;
       // newObj.fechaDeCaducidad = product.startDate;
    
       return newObj;
     }
   }
-  

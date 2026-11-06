@@ -23,7 +23,7 @@ app-pages .display-area > :not(router-outlet) { display: block; width: 100%; min
   .summary-item { min-width: 0; flex: 1 1 160px; overflow-wrap: anywhere; }
   .summary-header { flex-wrap: wrap; gap: 12px; }
 }
-app-products .table-scroll table { min-width: 900px; }
+app-products .table-scroll table { min-width: 1040px; }
 app-sales .table-scroll table, app-credits .table-scroll table, app-providers .table-scroll table { min-width: 980px; }
 app-vendedores .table-scroll table { min-width: 480px; }
 

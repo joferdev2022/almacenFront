@@ -7,6 +7,7 @@ import { DataService } from '../../services/data.service';
 import { MaterialModule } from '../../shared/material.module';
 import { ProductsComponent } from './products.component';
 import { ProductExcelImport } from '../../models/internal/product-excel.model';
+import { ProductModel } from '../../models/internal/product.model';
 
 describe('ProductsComponent Excel result', () => {
   let fixture: ComponentFixture<ProductsComponent>;
@@ -51,6 +52,19 @@ describe('ProductsComponent Excel result', () => {
   it('shows a clear empty state for the selected local before its first recorded import', () => {
     expect(service.loadLatestProductImport).toHaveBeenCalledOnceWith(1);
     expect(fixture.nativeElement.querySelector('.last-import').textContent).toContain('Sin importaciones registradas para este local.');
+  });
+
+  it('displays existing long or unspaced product measures as 50 KG in the table', () => {
+    for (const measure of ['50 KILOGRAMOS', '50KG']) {
+      const product = ProductModel.createFromObject({
+        id: 'papa', nombre: 'PAPA SIERRA CERES', unidadDeMedida: measure,
+        descripcion: '', categoria: 'Fertilizantes', precioCompra: 120, precioVenta: 158, cantidadEnStock: 0
+      });
+      service.loadProducts.and.returnValue(of({ data: [product], total: 1, page: 1, xpage: 10 } as any));
+      fixture.componentInstance.loadAllProducts();
+      fixture.detectChanges();
+      expect(fixture.nativeElement.querySelector('td.mat-column-measure').textContent.trim()).toBe('50 KG');
+    }
   });
 
   it('renders the persisted UTC date in Lima time including the previous calendar day', () => {

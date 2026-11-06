@@ -20,7 +20,26 @@
     }
 }
 
-.product-name-cell { display: flex; align-items: center; gap: 6px; min-width: 170px; }
+.product-name-cell { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.product-name-cell > span { min-width: 0; overflow-wrap: anywhere; }
+
+// Keep the columns stable across paginator pages; long text wraps inside its cell.
+table { width: 100%; table-layout: fixed; }
+th, td { box-sizing: border-box; }
+.mat-column-name { width: 20%; }
+.mat-column-category { width: 13%; }
+.mat-column-measure { width: 100px; }
+.mat-column-priceBuy { width: 164px; }
+.mat-column-priceSale { width: 136px; }
+.mat-column-stock { width: 88px; }
+.mat-column-actions { width: 120px; }
+.mat-column-name, .mat-column-description, .mat-column-category {
+    white-space: normal;
+    overflow-wrap: anywhere;
+    overflow: visible;
+    text-overflow: clip;
+}
+td.mat-column-priceBuy, td.mat-column-priceSale, td.mat-column-stock { white-space: nowrap; }
 .product-menu-button {
     display: inline-flex; align-items: center; justify-content: center;
     flex-shrink: 0; width: 28px; height: 30px; padding: 0; border: 0;
@@ -91,7 +110,9 @@ mat-icon{
     display: flex;
     align-items: center;
     gap: 8px;
+    min-width: 0;
 }
+.purchase-price-header > span { min-width: 0; white-space: normal; }
 
 .purchase-price-toggle {
     display: inline-flex;
