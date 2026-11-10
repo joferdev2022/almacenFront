@@ -12,6 +12,7 @@ import { ProductExcelImport, ProductExcelPreview, ProductExcelResult } from '../
 
 import { ProductResponse } from '../models/response/product.response';
 import { ProductHistory } from '../models/internal/product-history.model';
+import { ProductDosage, ProductDosageUpdate } from '../models/internal/product-dosage.model';
 import { SaleResponse } from '../models/response/sale.response';
 import { DashboardResponse } from '../models/response/dashboard.response';
 import { ProductRequest } from '../models/request/product.request';
@@ -96,6 +97,14 @@ export class DataService {
 
   loadProductHistory(id: string, pin: string): Observable<{ data: ProductHistory }> {
     return this.http.post<{ data: ProductHistory }>(`${base_url}/products/${id}/history`, { pin });
+  }
+
+  loadProductDosage(id: string): Observable<{ data: ProductDosage }> {
+    return this.http.get<{ data: ProductDosage }>(`${base_url}/products/${encodeURIComponent(id)}/dosages`);
+  }
+
+  saveProductDosage(id: string, data: ProductDosageUpdate): Observable<{ data: ProductDosage }> {
+    return this.http.put<{ data: ProductDosage }>(`${base_url}/products/${encodeURIComponent(id)}/dosages`, data);
   }
 
 

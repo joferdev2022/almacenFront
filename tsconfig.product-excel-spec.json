@@ -3,7 +3,9 @@
   "include": [
     "src/app/components/modal-product-excel/*.spec.ts",
     "src/app/components/modal-product.component/*.spec.ts",
+    "src/app/components/product-dosage/*.spec.ts",
     "src/app/services/data-product-excel.service.spec.ts",
+    "src/app/services/product-dosage.service.spec.ts",
     "src/app/pages/products/product-excel.spec.ts",
     "src/app/pages/products/product-layout.spec.ts",
     "src/**/*.d.ts"

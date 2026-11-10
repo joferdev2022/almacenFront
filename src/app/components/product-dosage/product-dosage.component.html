@@ -1,0 +1,101 @@
+<header class="panel-header">
+  <span class="header-icon"><mat-icon>science</mat-icon></span>
+  <h2 mat-dialog-title>Dosificación</h2>
+  <button type="button" class="icon-button close" mat-dialog-close aria-label="Cerrar dosificación" [disabled]="saving" cdkFocusInitial>
+    <mat-icon>close</mat-icon>
+  </button>
+</header>
+
+<mat-dialog-content class="panel-content" [attr.aria-busy]="loading || saving">
+  <p *ngIf="loading" class="loading" role="status">Consultando dosificación…</p>
+  <div *ngIf="loadError" class="load-error" role="alert">
+    <p>{{ loadError }}</p><button type="button" class="secondary" (click)="load()">Reintentar</button>
+  </div>
+
+  <ng-container *ngIf="record && !loading">
+    <section class="product-summary" aria-label="Producto">
+      <span class="eyebrow">PRODUCTO</span>
+      <h3>{{ record.producto.nombre }}</h3>
+      <span class="measure">Presentación: {{ formatMeasure(record.producto.unidadDeMedida) }}</span>
+    </section>
+    <p *ngIf="notice" class="success" role="status">{{ notice }}</p>
+
+    <ng-container *ngIf="!editing; else dosageEditor">
+      <div class="section-heading"><h3>Usos y dosificaciones</h3><span *ngIf="!record.puedeEditar" class="read-only">Solo lectura</span></div>
+      <div *ngIf="!record.dosificaciones.length" class="empty-state">
+        <mat-icon>science</mat-icon><h4>Sin dosificación registrada</h4>
+        <p>{{ record.puedeEditar ? 'Agrega la información de la etiqueta o ficha técnica de este producto.' : 'Un administrador puede registrar esta información.' }}</p>
+      </div>
+      <article class="dosage-card" *ngFor="let entry of record.dosificaciones">
+        <h4>{{ entry.cultivo }}</h4>
+        <p *ngIf="entry.objetivo" class="objective">{{ entry.objetivo }}</p>
+        <dl class="dose-values">
+          <div><dt>Dosis</dt><dd>{{ entry.dosis }}</dd></div>
+          <div><dt>Base de aplicación</dt><dd>{{ entry.baseAplicacion }}</dd></div>
+        </dl>
+        <dl class="details">
+          <ng-container *ngIf="entry.aplicacion"><dt>Forma de aplicación</dt><dd>{{ entry.aplicacion }}</dd></ng-container>
+          <ng-container *ngIf="entry.observaciones"><dt>Observaciones</dt><dd>{{ entry.observaciones }}</dd></ng-container>
+          <ng-container *ngIf="entry.fuente"><dt>Fuente / ficha técnica</dt><dd>{{ entry.fuente }}</dd></ng-container>
+        </dl>
+      </article>
+    </ng-container>
+
+    <ng-template #dosageEditor>
+      <p class="editor-hint">Transcribe la información de la etiqueta o ficha técnica. La dosis y su base son independientes de la presentación del envase.</p>
+      <div *ngIf="saveError" class="save-error" role="alert">
+        <p>{{ saveError }}</p>
+        <button *ngIf="conflict" type="button" class="secondary" (click)="load()">Descartar cambios y recargar</button>
+      </div>
+      <form id="product-dosage-form" [formGroup]="form" (ngSubmit)="save()">
+        <div formArrayName="dosificaciones">
+          <section class="entry-editor" *ngFor="let entry of entries.controls; let i = index" [formGroupName]="i">
+            <div class="entry-heading"><h3>Uso {{ i + 1 }}</h3>
+              <button type="button" class="icon-button remove-entry" (click)="removeEntry(i)" [disabled]="saving" [attr.aria-label]="'Quitar uso ' + (i + 1)" title="Quitar este uso al guardar"><mat-icon>delete_outline</mat-icon></button>
+            </div>
+            <div class="form-grid">
+              <mat-form-field appearance="outline"><mat-label>Cultivo o uso</mat-label>
+                <input matInput formControlName="cultivo" maxlength="150" required [readonly]="saving">
+                <mat-error>Indica el cultivo o uso.</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline"><mat-label>Objetivo / plaga / enfermedad</mat-label>
+                <input matInput formControlName="objetivo" maxlength="250" [readonly]="saving">
+              </mat-form-field>
+              <mat-form-field appearance="outline"><mat-label>Dosis y unidad</mat-label>
+                <input matInput formControlName="dosis" maxlength="250" required [readonly]="saving" placeholder="Cantidad o rango según etiqueta">
+                <mat-error>Indica la dosis y su unidad.</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline"><mat-label>Base de aplicación</mat-label>
+                <input matInput formControlName="baseAplicacion" maxlength="200" required [readonly]="saving" placeholder="Agua, superficie u otra referencia">
+                <mat-error>Indica a qué volumen, superficie o referencia corresponde.</mat-error>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full"><mat-label>Forma de aplicación</mat-label>
+                <textarea matInput formControlName="aplicacion" rows="2" maxlength="500" [readonly]="saving"></textarea>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full"><mat-label>Observaciones</mat-label>
+                <textarea matInput formControlName="observaciones" rows="3" maxlength="2000" [readonly]="saving"></textarea>
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="full"><mat-label>Fuente / ficha técnica</mat-label>
+                <input matInput formControlName="fuente" maxlength="500" [readonly]="saving" placeholder="Etiqueta, documento o enlace de referencia">
+              </mat-form-field>
+            </div>
+          </section>
+        </div>
+        <p *ngIf="!entries.length" class="empty-draft">Al guardar se quitarán las dosificaciones registradas.</p>
+        <button type="button" class="secondary add-entry" (click)="addEntry()" [disabled]="saving || !record.puedeEditar || entries.length >= maxEntries"><mat-icon>add</mat-icon> Agregar otro uso</button>
+        <p *ngIf="entries.length >= maxEntries" class="editor-hint">Puedes registrar hasta {{ maxEntries }} usos por producto.</p>
+      </form>
+    </ng-template>
+  </ng-container>
+</mat-dialog-content>
+
+<footer *ngIf="record && !loading">
+  <p *ngIf="record.actualizadoEn" class="updated">Última actualización: {{ record.actualizadoEn | date:'dd/MM/yyyy, HH:mm':'-0500' }} (Lima)<span *ngIf="record.actualizadoPor"> · {{ record.actualizadoPor.nombre }}</span></p>
+  <div class="panel-actions" *ngIf="record.puedeEditar || editing">
+    <button *ngIf="!editing" type="button" class="primary edit-dosage" (click)="beginEdit()">{{ record.dosificaciones.length ? 'Editar dosificación' : 'Agregar dosificación' }}</button>
+    <ng-container *ngIf="editing">
+      <button type="button" class="secondary cancel-edit" (click)="cancelEdit()" [disabled]="saving">Cancelar</button>
+      <button type="submit" form="product-dosage-form" class="primary save-dosage" [disabled]="saving || form.invalid || conflict || !record.puedeEditar">{{ saving ? 'Guardando…' : 'Guardar cambios' }}</button>
+    </ng-container>
+  </div>
+</footer>

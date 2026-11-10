@@ -8,6 +8,7 @@ import { MaterialModule } from '../../shared/material.module';
 import { ProductsComponent } from './products.component';
 import { ProductExcelImport } from '../../models/internal/product-excel.model';
 import { ProductModel } from '../../models/internal/product.model';
+import { ProductDosageComponent } from '../../components/product-dosage/product-dosage.component';
 
 describe('ProductsComponent Excel result', () => {
   let fixture: ComponentFixture<ProductsComponent>;
@@ -52,6 +53,22 @@ describe('ProductsComponent Excel result', () => {
   it('shows a clear empty state for the selected local before its first recorded import', () => {
     expect(service.loadLatestProductImport).toHaveBeenCalledOnceWith(1);
     expect(fixture.nativeElement.querySelector('.last-import').textContent).toContain('Sin importaciones registradas para este local.');
+  });
+
+  it('opens a dedicated dosage side panel from the accessible action even for a read-only user', () => {
+    const product = Object.assign(new ProductModel(), { id: 'producto', name: 'Producto seleccionado', measure: '50 KG' });
+    service.loadProducts.and.returnValue(of({ data: [product], total: 1, page: 1, xpage: 10 } as any));
+    fixture.componentInstance.permissions = 0;
+    fixture.componentInstance.loadAllProducts();
+    fixture.detectChanges();
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector('.dosage-button');
+    expect(button.disabled).toBeFalse();
+    expect(button.getAttribute('aria-label')).toBe('Ver dosificación de Producto seleccionado');
+    button.click();
+    expect(dialog.open).toHaveBeenCalledOnceWith(ProductDosageComponent, jasmine.objectContaining({
+      data: { productId: 'producto' }, position: { right: '0', top: '0' }, panelClass: 'product-dosage-panel'
+    }));
+    expect(service.loadProducts).toHaveBeenCalledTimes(2);
   });
 
   it('displays existing long or unspaced product measures as 50 KG in the table', () => {

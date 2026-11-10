@@ -3,7 +3,8 @@
 @use './app/shared/expense-calendar';
 @use './app/shared/responsive-layout';
 
-.product-history-panel .mat-mdc-dialog-container .mdc-dialog__surface {
+.product-history-panel .mat-mdc-dialog-container .mdc-dialog__surface,
+.product-dosage-panel .mat-mdc-dialog-container .mdc-dialog__surface {
     border-radius: 14px 0 0 14px;
 }
 

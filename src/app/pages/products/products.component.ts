@@ -18,6 +18,7 @@ import { ModalPinComponent } from 'src/app/components/modal-pin/modal-pin.compon
 import { ModalProductExcelComponent } from 'src/app/components/modal-product-excel/modal-product-excel.component';
 import { ProductHistoryPinComponent } from 'src/app/components/product-history-pin/product-history-pin.component';
 import { ProductHistoryComponent } from 'src/app/components/product-history/product-history.component';
+import { ProductDosageComponent } from 'src/app/components/product-dosage/product-dosage.component';
 
 
 @Component({
@@ -120,6 +121,13 @@ export class ProductsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       this.isPurchasePriceVisible = result === true;
+    });
+  }
+
+  openProductDosage(product: ProductModel): void {
+    this.dialog.open(ProductDosageComponent, {
+      data: { productId: product.id }, width: '690px', maxWidth: '100vw', height: '100dvh', maxHeight: '100dvh',
+      position: { right: '0', top: '0' }, panelClass: 'product-dosage-panel', autoFocus: 'first-tabbable'
     });
   }
 

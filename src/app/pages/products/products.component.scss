@@ -32,7 +32,7 @@ th, td { box-sizing: border-box; }
 .mat-column-priceBuy { width: 164px; }
 .mat-column-priceSale { width: 136px; }
 .mat-column-stock { width: 88px; }
-.mat-column-actions { width: 120px; }
+.mat-column-actions { width: 168px; }
 .mat-column-name, .mat-column-description, .mat-column-category {
     white-space: normal;
     overflow-wrap: anywhere;
@@ -158,3 +158,4 @@ mat-icon{
     color: #7d8da1;;
     // color: #7380ec;
 }
+.btn-actions .dosage-button mat-icon { color: #6877dc; }

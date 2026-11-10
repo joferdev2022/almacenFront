@@ -39,8 +39,8 @@ export class TokenInterceptor implements HttpInterceptor {
       // catchError(this.manageError)
       catchError((error: HttpErrorResponse) => {
         // Un 403 de estos módulos es de permisos, no requiere renovar el login.
-        const historyPinError = /\/products\/[^/]+\/history(?:\?|$)/.test(req.url);
-        if(error.status === 403 && !historyPinError && !/\/(?:expenses|cash|sales|reports)(?:\/|\?|$)/.test(req.url)) {
+        const productPermissionError = /\/products\/[^/]+\/(?:history|dosages)(?:\?|$)/.test(req.url);
+        if(error.status === 403 && !productPermissionError && !/\/(?:expenses|cash|sales|reports)(?:\/|\?|$)/.test(req.url)) {
           return this.handle403Error(req, next);
         }
         return throwError(() => error);
